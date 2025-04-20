@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './siteInstitucional.css';
+import CarroselAdvogados from '../Carrosel/CarroselAdvogados.jsx';
+import PlayerVideo from '../podcast/playerVideo.jsx';
+import MidiaSocial from '../podcast/midiaSocial.jsx';
+import CatalogoVideos from '../podcast/catalogoVideos.jsx';
 
 function SiteInstitucional() {
     const [selectedEspecialidade, setSelectedEspecialidade] = useState({});
-
-    useEffect(() => {
-        const defaultEspecialidade = especialidades[0];
-        setSelectedEspecialidade(defaultEspecialidade);
-    }, []);
 
     const especialidades = [
         { id: 1, name: "Direito Civil", icon: "./Scales.svg", text: "Nossa equipe assessora clientes em uma ampla gama de questões no Direito Civil, incluindo contratos e litígios. Trabalhamos de maneira próxima aos clientes para compreender suas necessidades específicas e oferecer soluções jurídicas que protejam seus interesses, sempre com uma abordagem estratégica e assertiva.", link: "" },
@@ -17,9 +16,14 @@ function SiteInstitucional() {
         { id: 5, name: "Direito Imobiliario", icon: "./LawCourt.svg", text: "Com vasta experiência no setor imobiliário, atuamos em contratos de compra e venda, locações, regularização de imóveis, usucapião, entre outros. Nossa equipe compreende as particularidades do mercado e busca sempre soluções rápidas e eficientes para nossos clientes, com uma atuação estratégica e assertiva.", link: "" },
         { id: 6, name: "Marcas e patentes", icon: "./Quail.svg", text: "A proteção da propriedade intelectual é fundamental, e nosso escritório oferece um suporte completo para o registro, monitoramento e defesa de marcas e patentes. Acompanhamos cada etapa do processo, garantindo que os direitos de nossos clientes sobre suas criações e inovações estejam sempre resguardados.", link: "" },
         { id: 7, name: "Consultoria Juridica", icon: "./Consultation.svg", text: "Nossa consultoria é voltada para pessoas físicas e jurídicas que buscam orientação sobre riscos e melhores práticas jurídicas. Nos empenhamos em entender o contexto e os objetivos de nossos clientes, oferecendo soluções personalizadas que atendam suas necessidades e promovam segurança jurídica em suas operações.", link: "" },
-    ];
+    ]
 
-    
+    useEffect(() => {
+        const defaultEspecialidade = especialidades[0];
+        setSelectedEspecialidade(defaultEspecialidade);
+    }, []);
+
+
 
     const seletorEspecialidade = (especialidade) => {
         setSelectedEspecialidade(especialidade);
@@ -44,7 +48,7 @@ function SiteInstitucional() {
                     </ul>
                 </div>
             </header>
-            <section alt="banner introdutorio" className='container banner-intro banner-intro'>
+            <section alt="banner introdutorio" className='container banner-intro'>
                 <h2 className='titulos-containers'>Compromisso com a excelência e <br /> soluções personalizadas em advocacia</h2>
                 <p className='textos-containers'>Oferecemos soluções judiciais personalizadas, focados na defesa dos interesses e direitos de nossos clientes. Atuamos em diversas áreas do mundo jurídico com expertise, para garantir um atendimento de excelência e confiança</p>
                 <button className='button-gold-style'>Saiba Mais</button>
@@ -55,7 +59,7 @@ function SiteInstitucional() {
                     <p>
                         A Lauriano & Leão Sociedade de Advogados é um escritório comprometido em oferecer serviços jurídicos de excelência, com foco em Direito Civil, Direito de Família e áreas correlatas. Atuamos de forma estratégica e personalizada, sempre buscando soluções eficazes que atendam às necessidades e interesses de nossos clientes.
                     </p>
-                    <p>       
+                    <p>
                         Nossa equipe é especializada em uma ampla gama de questões, incluindo contratos, litígios, ações de divórcio, união estável, reconhecimento de paternidade, guarda e visitas. Trabalhamos com responsabilidade e proximidade, oferecendo um atendimento que preza pela ética, transparência e resultados sólidos.
                     </p>
                     <p>
@@ -87,7 +91,7 @@ function SiteInstitucional() {
                         <div alt="texto direita" className='especialidade-texto'>
                             <img src={selectedEspecialidade.icon} alt="icone de cada especialidade" className='icon' />
                             <p className='textos-containers'>{selectedEspecialidade.text}</p>
-                            <button className='button-gold-style'>saiba mais</button>
+                            <button className='button-gold-style'>Saiba Mais</button>
                         </div>
                     </div>
                 </div>
@@ -95,29 +99,48 @@ function SiteInstitucional() {
 
             <section alt="banner advogados" className='container'>
                 <h2 className='titulos-containers'>Nosso Advogados</h2>
+                <CarroselAdvogados />
             </section>
 
             <section alt="banner podcast" className='container'>
                 <h2 className='titulos-containers'>Lauriano & Leão Cast</h2>
+                {/* Todo, player video, dois icones de spotify e yotube com links para o podcast, e catalogo de videos */}
+                <div className='banner-podcast'>
+                    <div className='podcast-container'>
+                        <PlayerVideo />
+                    </div>
+                    <div className='podcast-icon'>
+                        <MidiaSocial />
+                    </div>
+                    <div className='podcast-catalog'>
+                        <CatalogoVideos />
+                    </div>
+                </div>
             </section>
-
-
-            <section alt="banner contato" className='container'>
+            <section alt="banner contato" className='container banner-contatos'>
+                <hr className='hr-style'/>
                 <h2 className='titulos-containers'>Nossos Contatos</h2>
-                <img src="/instagram.svg" alt="icone instagram" className="icon" />
-                <p>@laurianoleaoadv</p>
-
-                <img src="/whatsapp.svg" alt="icone whatsapp" className="icon" />
-                <p>+55 11 98983-3914</p>
-
-                <img src="/whatsapp.svg" alt="icone whatsapp" className="icon" />
-                <p>+55 11 93207-4268</p>
-
-                <img src="/email.svg" alt="Icone Email" className="icon" />
-                <p>raissaleao@laurianoleaoadvogados.com.br</p>
-
-                <img src="/email.svg" alt="Icone Email" className="icon" />
-                <p>felipelauriano@laurianoleaoadvogados.comm.br</p>
+                <div className='contato-container'>
+                    <img src="/instagram.svg" alt="icone instagram" className="icon-maior" />
+                    <p className='sublinhado'>@laurianoleaoadv</p>
+                </div>
+                <div className='contato-container'>
+                    <img src="/whatsapp.svg" alt="icone whatsapp" className="icon" />
+                    <p className='sublinhado'>+55 11 98983-3914</p>
+                </div>
+                <div className='contato-container'>
+                    <img src="/whatsapp.svg" alt="icone whatsapp" className="icon" />
+                    <p className='sublinhado'>+55 11 93207-4268</p>
+                </div>
+                <div className='contato-container'>
+                    <img src="/email.svg" alt="Icone Email" className="icon" />
+                    <p className='sublinhado'>raissaleao@laurianoleaoadvogados.com.br</p>
+                </div>
+                <div className='contato-container'>
+                    <img src="/email.svg" alt="Icone Email" className="icon" />
+                    <p className='sublinhado'>felipelauriano@laurianoleaoadvogados.comm.br</p>
+                </div>
+                <hr className='hr-style'/>
             </section>
 
             <footer alt="rodape" className='footer-container'>
