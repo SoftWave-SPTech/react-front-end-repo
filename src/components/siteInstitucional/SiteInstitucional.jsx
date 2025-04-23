@@ -41,9 +41,9 @@ function SiteInstitucional() {
                 </div>
                 <div alt="div para o menu" className='header-menu'>
                     <ul className='header-list'>
-                        <li><button className='button-gold-style'>Sobre nós</button> </li>
-                        <li><button className='button-gold-style'>Contato</button> </li>
-                        <li><button className='button-gold-style'>PodCast</button></li>
+                        <li><button className='button-gold-style' onClick={() => document.getElementById('sobre').scrollIntoView({ behavior: 'smooth' })}>Sobre Nós</button></li>
+                        <li><button className='button-gold-style' onClick={() => document.getElementById('contatos').scrollIntoView({ behavior: 'smooth' })}>Contato</button></li>
+                        <li><button className='button-gold-style' onClick={() => document.getElementById('podcast').scrollIntoView({ behavior: 'smooth' })}>PodCast</button></li>
                         <li><button className='button-gold-style'>login</button></li>
                     </ul>
                 </div>
@@ -53,7 +53,7 @@ function SiteInstitucional() {
                 <p className='textos-containers'>Oferecemos soluções judiciais personalizadas, focados na defesa dos interesses e direitos de nossos clientes. Atuamos em diversas áreas do mundo jurídico com expertise, para garantir um atendimento de excelência e confiança</p>
                 <button className='button-gold-style'>Saiba Mais</button>
             </section>
-            <section alt="banner duplo" className='container banner-duplo'>
+            <section id='sobre' alt="banner duplo" className='container banner-duplo'>
                 <div className='sobre-nos'>
                     <h2 className='titulos-containers'>Sobre nós</h2>
                     <p>
@@ -102,7 +102,7 @@ function SiteInstitucional() {
                 <CarroselAdvogados />
             </section>
 
-            <section alt="banner podcast" className='container'>
+            <section id='podcast' alt="banner podcast" className='container'>
                 <h2 className='titulos-containers'>Lauriano & Leão Cast</h2>
                 {/* Todo, player video, dois icones de spotify e yotube com links para o podcast, e catalogo de videos */}
                 <div className='banner-podcast'>
@@ -117,7 +117,7 @@ function SiteInstitucional() {
                     </div>
                 </div>
             </section>
-            <section alt="banner contato" className='container banner-contatos'>
+            <section id='contatos' alt="banner contato" className='container banner-contatos'>
                 <hr className='hr-style'/>
                 <h2 className='titulos-containers'>Nossos Contatos</h2>
                 <div className='contato-container'>
