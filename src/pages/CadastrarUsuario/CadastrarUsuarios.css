@@ -1,0 +1,24 @@
+.cadastrar-usuarios 
+{
+    display: flex;
+    height: 100vh; 
+}
+  
+.cadastro-container 
+{
+    flex: 1; 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    transition: padding-left 0.3s; 
+}
+  
+.menu-lateral.fechado ~ .cadastro-container 
+{
+  padding-left: 15%;
+}
+  
+.menu-lateral:not(.fechado) ~ .cadastro-container 
+{
+  padding-left: 35%; 
+}

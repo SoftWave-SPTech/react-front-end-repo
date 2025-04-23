@@ -1,18 +1,12 @@
-
 import './App.css'
-
+import { RouterProvider } from "react-router-dom";
 import React from 'react';
-import SiteInstitucional from './components/siteInstitucional/siteInstitucional';
-import CarroselAdvogados from './components/Carrosel/CarroselAdvogados';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import PlayerVideo from './components/podcast/playerVideo';
-import MidiaSocial from './components/podcast/midiaSocial';
-import CatalogoVideos from './components/podcast/catalogoVideos';
+import { AppRouter } from './routes/AppRouter';
 
 function App() {
   return (
     <>
-      {<SiteInstitucional/>}
+      <RouterProvider router={AppRouter} />
     </>
   );
 }
