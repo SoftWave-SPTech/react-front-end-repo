@@ -5,11 +5,13 @@ import CadastrarSenha from './components/CadastrarSenha';
 
 const App = () => {
   return (
+    <>
     <div>
       <Login />
       <PrimeiroAcesso />
       <CadastrarSenha />
     </div>
+    </>
   );
 };
 
