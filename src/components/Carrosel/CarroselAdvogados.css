@@ -1,0 +1,145 @@
+.carrosel {
+    display: flex;
+    justify-content: space-between; /* Espaça os advogados igualmente */
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.carrosel .advogado-card {
+    display: flex;
+    flex-direction: row; /* Coloca a imagem e o texto lado a lado */
+    align-items: center;
+    justify-content: center;
+    width: 1000px; /* Largura fixa */
+    height: 500px; /* Altura fixa */
+    background-color: var(--azulEscuroForte);
+    padding: 20px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    overflow: hidden; /* Garante que o conteúdo não vaze */
+}
+
+.non-view{
+    opacity: 0 !important; /* Torna o elemento transparente */
+    pointer-events: none !important; /* Impede interações com o elemento */
+}
+
+.button-right,
+.button-left {
+    all: unset; /* Remove todos os estilos padrão do botão */
+    font-size: 2rem; /* Aumenta o tamanho da letra */
+    color: var(--branco); /* Define a cor do texto */
+    cursor: pointer; /* Altera o cursor para indicar que é clicável */
+    user-select: none; /* Impede a seleção do texto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px; /* Define uma largura fixa */
+    height: 50px; /* Define uma altura fixa */
+    background-color: transparent; /* Fundo transparente */
+    border-radius: 50%; /* Deixa o botão circular */
+    transition: transform 0.2s ease; /* Adiciona uma transição suave */
+}
+
+.button-right:hover,
+.button-left:hover {
+    transform: scale(1.2); /* Aumenta o botão ao passar o mouse */
+}
+
+
+
+.carrosel .advogado-card img {
+    border-radius: 8px;
+    margin-right: 20px; /* Espaçamento entre a imagem e o texto */
+    object-fit: cover; /* Garante que a imagem se ajuste ao espaço */
+}
+
+.carrosel .advogado-card p {
+    font-size: clamp(10px, 2vw, 12px); /* Ajusta o tamanho da fonte dinamicamente */
+    color: var(--branco);
+    text-align: justify;
+    overflow: hidden; /* Garante que o texto não vaze */
+    text-overflow: ellipsis; /* Adiciona reticências se o texto for muito longo */
+    white-space: normal; /* Permite que o texto quebre em várias linhas */
+    word-wrap: break-word; /* Quebra palavras longas */
+    width: 20rem;
+}
+
+/* Estilo para o container de informações do advogado */
+.advogado-info {
+    display: flex;
+    flex-direction: column; /* Coloca a imagem e os detalhes lado a lado */
+    align-items: center;
+    gap: 5px; /* Espaçamento entre a imagem e os detalhes */
+    width: 100%; /* Ocupa toda a largura disponível */
+    box-sizing: border-box;
+    overflow: hidden; /* Garante que o conteúdo não vaze */
+}   
+
+/* Estilo para a imagem do advogado */
+.advogado-info img {
+    width: 200px; /* Largura fixa para a imagem */
+    height: 300px; /* Altura fixa para a imagem */
+    border-radius: 50%; /* Deixa a imagem circular */
+    object-fit: cover; /* Ajusta a imagem ao espaço disponível */
+    flex-shrink: 0; /* Garante que a imagem não encolha */
+}
+
+/* Estilo para os detalhes do advogado */
+.advogado-details {
+    display: flex;
+    flex-direction: column; /* Alinha os textos verticalmente */
+    justify-content: center;
+    align-items: center;    
+    overflow: hidden; /* Garante que o conteúdo não vaze */
+    width: 100%; /* Ocupa o restante do espaço disponível */
+    h3{
+        display: flex;
+        align-items: center;
+        width: 200px;
+        height: 55px;
+        font-size: clamp(16px, 2vw, 20px); /* Ajusta o tamanho da fonte dinamicamente */
+        color: var(--dourado);
+        margin: 0;
+        overflow: hidden; /* Garante que o texto não vaze */
+        /* white-space: nowrap; Impede que o texto quebre */
+    }
+}
+
+
+/* Estilo para o cargo do advogado */
+.advogado-details h4 {
+    font-size: clamp(14px, 1.5vw, 18px); /* Ajusta o tamanho da fonte dinamicamente */
+    color: var(--branco);
+    margin-top: 10px;
+    /* text-overflow: ellipsis; Adiciona reticências se o texto for muito longo */
+    overflow: hidden; /*Garante que o texto não vaze */
+    /* white-space: nowrap; Impede que o texto quebre */
+    text-align: center;
+    height: 45px;
+    width: 200px;
+}
+
+/* Estilo para o texto principal do advogado */
+
+
+.advogado-card p {
+    font-size: clamp(14px, 1.5vw, 16px); /* Ajusta o tamanho da fonte dinamicamente */
+    color: var(--branco);
+    text-align: justify;
+    overflow: hidden; /* Garante que o texto não vaze */
+    text-overflow: ellipsis; /* Adiciona reticências se o texto for muito longo */
+    white-space: normal; /* Permite que o texto quebre em várias linhas */
+    word-wrap: break-word; /* Quebra palavras longas */
+    margin-top: 10px;
+
+}
+
+.advogado-texto{
+    width: 325px;
+    display: flex;
+    flex-direction: column;
+}

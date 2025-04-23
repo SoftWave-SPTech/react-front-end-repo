@@ -1,18 +1,14 @@
+import './App.css'
+import { RouterProvider } from "react-router-dom";
 import React from 'react';
-import Login from './components/Login';
-import PrimeiroAcesso from './components/PrimeiroAcesso';
-import CadastrarSenha from './components/CadastrarSenha';
+import { AppRouter } from './routes/AppRouter';
 
-const App = () => {
+function App() {
   return (
     <>
-    <div>
-      <Login />
-      <PrimeiroAcesso />
-      <CadastrarSenha />
-    </div>
+      <RouterProvider router={AppRouter} />
     </>
   );
-};
+}
 
 export default App;
