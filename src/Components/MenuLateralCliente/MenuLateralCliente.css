@@ -1,0 +1,239 @@
+* 
+{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.menu-lateral 
+{
+  background-color: #050e26;
+  color: white;
+  height: 100vh;
+  width: clamp(12%, 21rem, 20%);
+  padding: 1rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: width 0.3s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+}
+
+.menu-lateral.fechado 
+{
+  width: clamp(4%, 5rem, 6%);
+}
+
+.menu-lateral.fechado .lista-menu 
+{
+  font-size: 1.2rem;
+}
+
+.menu-lateral.fechado .item-menu 
+{
+  justify-content: center;
+  margin-bottom: 1rem;
+  padding: 20%;
+}
+
+.menu-lateral.fechado .sair 
+{
+  justify-content: center;
+  padding: 12%;
+}
+
+.menu-lateral.fechado .avatar 
+{
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.menu-lateral.fechado .cartao-perfil:hover 
+{
+  background-color: #0F2A5E;
+}
+
+.menu-lateral.fechado .cartao-perfil 
+{
+  border: none;
+  justify-content: center;
+  border-radius: 0;
+  margin-bottom: 2.5rem;
+}
+
+.barra-superior 
+{
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+}
+
+.icone-menu 
+{
+    font-size: clamp(1rem, 2vw, 1.3rem); 
+}
+
+.barra-superior:hover 
+{
+  color: #D9B166;
+}
+
+.cartao-perfil 
+{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2.2rem;
+  background-color: #050e26;
+  border: 1px solid white;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.9rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cartao-perfil:hover 
+{
+  border: 1px solid #D9B166;
+  cursor: pointer;
+}
+
+.cartao-perfil:hover .nome-perfil 
+{
+  color: #D9B166;
+}
+
+.cartao-perfil:hover .icone-editar 
+{
+  color: #D9B166;
+}
+
+.cartao-perfil:hover .email-perfil 
+{
+  color: #D9B166;
+}
+
+.avatar 
+{
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.info-perfil 
+{
+  display: flex;
+  flex-direction: column;
+  gap: 0.20rem;
+  flex: 1;
+  align-items: flex-start;
+  justify-content: center;
+  background-color: #050e26;
+  overflow: hidden;
+  padding: 0.20rem 0.5rem;
+  border-radius: 0.5rem;
+  max-width: 100%;
+  text-align: left;
+}
+
+.nome-perfil 
+{
+  display: flex;
+  align-items: flex-start;
+  font-weight: 600;
+  gap: 2.6rem;
+  word-break: break-word;
+  font-size: 100%;
+  width: 100%;
+}
+
+.email-perfil 
+{
+  font-size: 1rem;
+  color: #d1d5db;
+  word-break: break-word;
+  width: 100%;
+}
+
+.lista-menu 
+{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #050e26;
+}
+
+.item-menu 
+{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 4%;
+}
+
+.item-menu:hover 
+{
+  color: #D9B166;
+  background-color: #0F2A5E;
+}
+
+.sair 
+{
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding-left: 0.25rem;
+  margin-bottom: 1rem;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  padding: 4%;
+}
+
+.sair:hover 
+{
+  color: #D9B166;
+  background-color: #0F2A5E;
+}
+
+.item-menu i,
+.sair i 
+{
+  font-size: clamp(1rem, 2vw, 1.3rem);
+}
+
+.icone-menu 
+{
+  font-size: clamp(1.2rem, 1.5vw, 1.7rem);
+}
+
+.conteudo-principal 
+{
+  margin-left: clamp(12%, 16rem, 20%);
+  transition: margin-left 0.3s ease;
+  padding: 1rem;
+}
+
+.menu-lateral.fechado ~ .conteudo-principal 
+{
+  margin-left: clamp(4%, 4rem, 6%);
+}

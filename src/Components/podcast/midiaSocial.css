@@ -1,0 +1,55 @@
+/* Container principal */
+.midia-social-container {
+    display: flex;
+    justify-content: center; /* Centraliza os blocos horizontalmente */
+    align-items: center; /* Centraliza os blocos verticalmente */
+    gap: 20px; /* Espaçamento entre os blocos */
+    padding: 20px; /* Espaçamento interno */
+    background-color: var(--azulEscuroForte); /* Cor de fundo */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para destaque */
+    flex-wrap: wrap; /* Permite que os blocos quebrem linha em telas menores */
+
+    .social-img{
+        width: 100%; /* Largura total do bloco */
+        height: auto; /* Mantém a proporção da imagem */
+    }
+}
+
+/* Blocos individuais */
+.midia-block {
+    display: flex;
+    flex-direction: column; /* Alinha o texto e o ícone verticalmente */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    background-color: black; /* Cor de fundo dos blocos */
+    padding: 15px; /* Espaçamento interno */
+    border-radius: 8px; /* Bordas arredondadas */
+    flex: 1 1 calc(25% - 20px); /* Responsivo: ocupa 25% do espaço menos o gap */
+    max-width: 180px; /* Largura máxima */
+    min-width: 115px; /* Largura mínima */
+    aspect-ratio: 1; /* Mantém a proporção quadrada */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transição suave */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra leve */
+}
+
+/* Efeito ao passar o mouse */
+.midia-block:hover {
+    transform: scale(1.1); /* Aumenta o tamanho do bloco */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Aumenta a sombra */
+}
+
+/* Texto dentro dos blocos */
+.midia-block p {
+    font-size: 16px; /* Tamanho da fonte */
+    font-weight: bold; /* Texto em negrito */
+    color: var(--branco); /* Cor do texto */
+    margin-bottom: 10px; /* Espaçamento abaixo do texto */
+    text-align: center; /* Centraliza o texto */
+}
+
+/* Ícones */
+.midia-block svg {
+    width: 50%; /* Largura relativa ao bloco */
+    height: auto; /* Mantém a proporção do ícone */
+}
