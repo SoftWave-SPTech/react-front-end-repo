@@ -27,4 +27,12 @@ export const AppRouter = createBrowserRouter([
     path: "/cadastrar-senha",
     element: <CadastrarSenha/>
   },
+  {
+    path: "/perfil-cliente",
+    element: <FormEditPerfilAdvogado/> 
+  },
+  {
+    path: "/perfil-advogado",
+    element: <FormEditPerfilCliente/>
+  },
 ]);
