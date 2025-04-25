@@ -102,7 +102,7 @@ body {
     width: 100%;
 }
 
-.container {
+.container-site {
     background-color: var(--azulEscuroFraco);
     width: 90%;
     display: flex;
