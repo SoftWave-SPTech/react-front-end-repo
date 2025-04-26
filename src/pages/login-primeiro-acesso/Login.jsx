@@ -1,34 +1,43 @@
 import React, { useState } from 'react';
-import './PrimeiroAcesso.css';
+import './Login.css';
+import axios from 'axios';
 
-export default function PrimeiroAcesso() {
+export default function Login() {
     const [email, setEmail] = useState("");
-    const [chave, setChave] = useState("");
+    const [senha, setsenha] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('https://sua-api.com/primeiro-acesso', {
+            const response = await axios.post('https://sua-api.com/login', {
                 email: email,
-                chave: chave,
+                senha: senha,
             });
 
             console.log("Resposta da API:", response.data);
-            alert("Acesso realizado com sucesso!");
+
+            // Exemplo: redirecionar ou exibir mensagem de sucesso
+            if (response.data.success) {
+                alert("Login realizado com sucesso!");
+                // Redirecionar para outra página, se necessário
+                // window.location.href = "/dashboard";
+            } else {
+                alert("Erro no login: " + response.data.message);
+            }
         } catch (error) {
-            console.error("Erro ao realizar o acesso:", error);
-            alert("Erro ao realizar o acesso. Verifique os dados e tente novamente.");
+            console.error("Erro ao fazer login:", error);
+            alert("Ocorreu um erro ao tentar fazer login. Tente novamente.");
         }
     };
 
     return (
-        <div className="container-primeiro-acesso">
+        <div className="container-login">
             <form className="form" onSubmit={handleSubmit}>
                 <div className="icon">
                     <img src="src/images/boneco.png" alt="" className="img" />
                 </div>      
-                <h2 className="title">Primeiro Acesso</h2>
+                <h2 className="title">Login</h2>
 
                 <label className="label">E-MAIL</label>
                 <input
@@ -40,23 +49,26 @@ export default function PrimeiroAcesso() {
                     required
                 />
 
-                <label className="label">CHAVE DE ACESSO</label>
+                <label className="label">SENHA</label>
                 <input
                     type="text"
-                    value={chave}
-                    onChange={(e) => setChave(e.target.value)}
+                    value={senha}
+                    onChange={(e) => setsenha(e.target.value)}
                     className="input"
-                    placeholder="NICN439NWE9F"
+                    placeholder="*********"
                     required
                 />
+                <a href="#" className="linkSenha">
+                    ESQUECI MINHA SENHA
+                </a>
 
                 <button type="submit" className="button">
                     ENTRAR
                 </button>
                 <p className="footerText">
-                    JÁ ACESSOU O SITE ANTES?{" "}
+                    É SEU PRIMEIRO ACESSO?{" "}
                     <a href="#" className="link">
-                        ENTRE AQUI.
+                        CLIQUE AQUI.
                     </a>
                 </p>
             </form>

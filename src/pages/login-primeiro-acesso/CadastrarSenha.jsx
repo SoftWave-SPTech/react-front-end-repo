@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './CadastrarSenha.css';
+import axios from 'axios';
 
 export default function CadastrarSenha() {
     const [senha, setsenha] = useState("");
