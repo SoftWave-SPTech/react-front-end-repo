@@ -2,9 +2,9 @@ import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import SiteInstitucional from "../components/siteInstitucional/siteInstitucional";
 import CadastrarUsuarios from "../pages/CadastrarUsuario/CadastrarUsuarios";
-import Login from "../pages/CadastrarUsuario/Login";
-import PrimeiroAcesso from "../pages/CadastrarUsuario/PrimeiroAcesso";
-import CadastrarSenha from "../pages/CadastrarUsuario/CadastrarSenha";
+import Login from "../pages/login-primeiro-acesso/Login";
+import PrimeiroAcesso from "../pages/login-primeiro-acesso/PrimeiroAcesso";
+import CadastrarSenha from "../pages/login-primeiro-acesso/CadastrarSenha";
 import FormEditPerfilAdvogado from "../Advogado/FormEditPerfilAdvogado";
 import FormEditPerfilCliente from "../Cliente/FormEditPerfilCliente";
 
