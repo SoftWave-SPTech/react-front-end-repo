@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+.btn-form-edit{
+    width: 30%;
+    height: 40px;
+    background-color: #020d22;
+    color: #fff;
+    font-size: 100%;
+    font-weight: 100;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Quicksand';
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+.oposto{
+    color: #020d22;
+    background-color: #fff;
+    border: 1px solid #020d22;
+}

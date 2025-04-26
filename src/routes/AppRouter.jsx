@@ -5,6 +5,8 @@ import CadastrarUsuarios from "../pages/CadastrarUsuario/CadastrarUsuarios";
 import Login from "../components/Login";
 import PrimeiroAcesso from "../components/PrimeiroAcesso";
 import CadastrarSenha from "../components/CadastrarSenha";
+import FormEditPerfilAdvogado from "../Advogado/FormEditPerfilAdvogado";
+import FormEditPerfilCliente from "../Cliente/FormEditPerfilCliente";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -26,5 +28,13 @@ export const AppRouter = createBrowserRouter([
   {
     path: "/cadastrar-senha",
     element: <CadastrarSenha/>
+  },
+  {
+    path: "/perfil-cliente",
+    element: <FormEditPerfilCliente/> 
+  },
+  {
+    path: "/perfil-advogado",
+    element: <FormEditPerfilAdvogado/>
   },
 ]);
