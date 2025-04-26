@@ -31,10 +31,10 @@ export const AppRouter = createBrowserRouter([
   },
   {
     path: "/perfil-cliente",
-    element: <FormEditPerfilAdvogado/> 
+    element: <FormEditPerfilCliente/> 
   },
   {
     path: "/perfil-advogado",
-    element: <FormEditPerfilCliente/>
+    element: <FormEditPerfilAdvogado/>
   },
 ]);

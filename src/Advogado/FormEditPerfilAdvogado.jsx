@@ -3,6 +3,7 @@ import Input from "../Components/Input"
 import '../Estilos/FormEditarPerfil.css'
 import Image from "../Components/Image"
 import { useState } from "react"
+import MenuLateralAdvogado from "../Components/MenuLateralAdvogado/MenuLateralAdvogado"
 
 function FormEditPerfilAdvogado(){
 
@@ -11,9 +12,11 @@ function FormEditPerfilAdvogado(){
     
     return(
         <>
-            <div className="container">
+        <MenuLateralAdvogado/>
+        <div className="container-body-edit">
+            <div className="container-edit-perfil">
                 <div className="formulario-editar-perfil foto" >
-                    <div className="container-titulo-editar-perfil" >
+                    <div className="container-titulo-editar-perfil">
                         <h1 className="titulo-editar-perfil">Foto Perfil</h1>
                     </div>
 
@@ -83,7 +86,7 @@ function FormEditPerfilAdvogado(){
 
                 </div>
             </div>
-            
+        </div>
         </>
     )
 }
