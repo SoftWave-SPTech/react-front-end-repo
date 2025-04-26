@@ -1,18 +1,28 @@
 import React, { useState } from 'react';
-import '../styles/CadastrarSenha.css';
+import './CadastrarSenha.css';
 
 export default function CadastrarSenha() {
-    const [email, setEmail] = useState("");
-    const [chave, setChave] = useState("");
+    const [senha, setsenha] = useState("");
+    const [confirmarSenha, setconfirmarSenha] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("E-mail:", email);
-        console.log("Chave de Acesso:", chave);
-    };
 
+        try {
+            const response = await axios.post('http://localhost:8080/cadastrar-senha', {
+                senha: senha,
+                confirmarSenha: confirmarSenha,
+            });
+
+            console.log("Resposta da API:", response.data);
+            alert("Senha cadastrada com sucesso!");
+        } catch (error) {
+            console.error("Erro ao cadastrar senha:", error);
+            alert("Ocorreu um erro ao cadastrar a senha. Tente novamente.");
+        }
+    };
     return (
-        <div className="container">
+        <div className="container-cadastrarsenha">
             <form className="form" onSubmit={handleSubmit}>
                 <div className="icon">
                     <img src="src/images/boneco.png" alt="" className="img" />
@@ -21,9 +31,9 @@ export default function CadastrarSenha() {
 
                 <label className="label">SENHA</label>
                 <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="senha"
+                    value={senha}
+                    onChange={(e) => setsenha(e.target.value)}
                     className="input"
                     placeholder="*********"
                     required
@@ -32,8 +42,8 @@ export default function CadastrarSenha() {
                 <label className="label">CONFIRMAR SENHA</label>
                 <input
                     type="text"
-                    value={chave}
-                    onChange={(e) => setChave(e.target.value)}
+                    value={confirmarSenha}
+                    onChange={(e) => setconfirmarSenha(e.target.value)}
                     className="input"
                     placeholder="*********"
                     required

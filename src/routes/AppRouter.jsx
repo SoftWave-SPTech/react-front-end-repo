@@ -2,9 +2,9 @@ import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import SiteInstitucional from "../components/siteInstitucional/siteInstitucional";
 import CadastrarUsuarios from "../pages/CadastrarUsuario/CadastrarUsuarios";
-import Login from "../components/Login";
-import PrimeiroAcesso from "../components/PrimeiroAcesso";
-import CadastrarSenha from "../components/CadastrarSenha";
+import Login from "../pages/CadastrarUsuario/Login";
+import PrimeiroAcesso from "../pages/CadastrarUsuario/PrimeiroAcesso";
+import CadastrarSenha from "../pages/CadastrarUsuario/CadastrarSenha";
 
 export const AppRouter = createBrowserRouter([
   {

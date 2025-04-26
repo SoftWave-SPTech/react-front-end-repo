@@ -1,18 +1,29 @@
 import React, { useState } from 'react';
-import '../styles/PrimeiroAcesso.css';
+import './PrimeiroAcesso.css';
 
 export default function PrimeiroAcesso() {
     const [email, setEmail] = useState("");
     const [chave, setChave] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("E-mail:", email);
-        console.log("Chave de Acesso:", chave);
+
+        try {
+            const response = await axios.post('https://sua-api.com/primeiro-acesso', {
+                email: email,
+                chave: chave,
+            });
+
+            console.log("Resposta da API:", response.data);
+            alert("Acesso realizado com sucesso!");
+        } catch (error) {
+            console.error("Erro ao realizar o acesso:", error);
+            alert("Erro ao realizar o acesso. Verifique os dados e tente novamente.");
+        }
     };
 
     return (
-        <div className="container">
+        <div className="container-primeiro-acesso">
             <form className="form" onSubmit={handleSubmit}>
                 <div className="icon">
                     <img src="src/images/boneco.png" alt="" className="img" />
