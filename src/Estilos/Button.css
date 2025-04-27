@@ -11,6 +11,7 @@
     border: none;
     font-family: 'Quicksand';
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
 }
 .oposto{
     color: #020d22;

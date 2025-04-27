@@ -1,4 +1,4 @@
-import minhaImagem from '../assets/luana foto sptech.png'
+import minhaImagem from '../images/boneco.png'
 import '../Estilos/Image.css'
 
 function Image() {
