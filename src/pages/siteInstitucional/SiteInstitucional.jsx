@@ -44,7 +44,7 @@ function SiteInstitucional() {
                         <li><button className='button-gold-style' onClick={() => document.getElementById('sobre').scrollIntoView({ behavior: 'smooth' })}>Sobre Nós</button></li>
                         <li><button className='button-gold-style' onClick={() => document.getElementById('contatos').scrollIntoView({ behavior: 'smooth' })}>Contato</button></li>
                         <li><button className='button-gold-style' onClick={() => document.getElementById('podcast').scrollIntoView({ behavior: 'smooth' })}>PodCast</button></li>
-                        <li><button className='button-gold-style'>login</button></li>
+                        <li><button className='button-gold-style' onClick={() => window.location.href = "/login"}>login</button></li>
                     </ul>
                 </div>
             </header>

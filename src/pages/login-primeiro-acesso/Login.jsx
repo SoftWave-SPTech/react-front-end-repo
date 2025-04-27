@@ -10,18 +10,27 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            const response = await axios.post('https://sua-api.com/login', {
+            const response = await axios.post('http://localhost:8080/auth/login', {
                 email: email,
                 senha: senha,
             });
 
             console.log("Resposta da API:", response.data);
+            console.log(response);
 
             // Exemplo: redirecionar ou exibir mensagem de sucesso
-            if (response.data.success) {
+            if (response.status == 200) {
                 alert("Login realizado com sucesso!");
                 // Redirecionar para outra página, se necessário
-                // window.location.href = "/dashboard";
+                sessionStorage.setItem("token", response.data.token);
+                sessionStorage.setItem("tipoUsuario", response.data.tipoUsuario);
+                sessionStorage.setItem("role", response.data.role);
+                //Logica para redirecionar para o perfil do cliente ou advogado
+                if (response.data.tipoUsuario == 'UsuarioFisico' || response.data.tipoUsuario == 'UsuarioJuridico') {
+                    window.location.href = "/perfil-cliente";
+                } else {
+                    window.location.href = "/perfil-advogado";
+                }
             } else {
                 alert("Erro no login: " + response.data.message);
             }
@@ -36,7 +45,7 @@ export default function Login() {
             <form className="form" onSubmit={handleSubmit}>
                 <div className="icon">
                     <img src="src/images/boneco.png" alt="" className="img" />
-                </div>      
+                </div>
                 <h2 className="title">Login</h2>
 
                 <label className="label">E-MAIL</label>
