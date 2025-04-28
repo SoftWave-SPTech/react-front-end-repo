@@ -9,14 +9,22 @@ export default function PrimeiroAcesso() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+    const teste = ((response) => {
+        console.log(response.data);
+        sessionStorage.setItem("email", response.data.email);
+    });
         try {
-            const response = await axios.post('https://sua-api.com/primeiro-acesso', {
+            const response = await axios.post('http://localhost:8080/auth/primeiro-acesso', {
                 email: email,
-                chave: chave,
+                senha: chave,
             });
 
+            teste(response);
             console.log("Resposta da API:", response.data);
             alert("Acesso realizado com sucesso!");
+
+
+            window.location.href = "/cadastrar-senha";
         } catch (error) {
             console.error("Erro ao realizar o acesso:", error);
             alert("Erro ao realizar o acesso. Verifique os dados e tente novamente.");
@@ -28,7 +36,7 @@ export default function PrimeiroAcesso() {
             <form className="form" onSubmit={handleSubmit}>
                 <div className="icon">
                     <img src="src/images/boneco.png" alt="" className="img" />
-                </div>      
+                </div>
                 <h2 className="title">Primeiro Acesso</h2>
 
                 <label className="label">E-MAIL</label>
@@ -56,7 +64,7 @@ export default function PrimeiroAcesso() {
                 </button>
                 <p className="footerText">
                     JÁ ACESSOU O SITE ANTES?{" "}
-                    <a href="#" className="link">
+                    <a href="/login" className="link">
                         ENTRE AQUI.
                     </a>
                 </p>

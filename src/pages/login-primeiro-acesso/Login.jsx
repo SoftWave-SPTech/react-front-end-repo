@@ -22,6 +22,8 @@ export default function Login() {
             if (response.status == 200) {
                 alert("Login realizado com sucesso!");
                 // Redirecionar para outra página, se necessário
+                sessionStorage.setItem("id" , response.data.id);
+                    sessionStorage.setItem("email", response.data.email);
                 sessionStorage.setItem("token", response.data.token);
                 sessionStorage.setItem("tipoUsuario", response.data.tipoUsuario);
                 sessionStorage.setItem("role", response.data.role);
@@ -76,7 +78,7 @@ export default function Login() {
                 </button>
                 <p className="footerText">
                     É SEU PRIMEIRO ACESSO?{" "}
-                    <a href="#" className="link">
+                    <a href="/primeiro-acesso" className="link">
                         CLIQUE AQUI.
                     </a>
                 </p>
