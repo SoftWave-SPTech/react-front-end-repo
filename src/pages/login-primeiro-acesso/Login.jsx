@@ -82,6 +82,13 @@ export default function Login() {
                         CLIQUE AQUI.
                     </a>
                 </p>
+                <button
+                    type="button"
+                    className="button voltar"
+                    onClick={() => window.history.back()}
+                >
+                VOLTAR
+                </button>
             </form>
         </div>
     );

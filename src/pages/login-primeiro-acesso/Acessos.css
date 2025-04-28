@@ -102,3 +102,23 @@
     text-align: left; /* Alinha o texto à esquerda */
     margin-top: 8px; /* Adicionado para ajustar o espaçamento */
 }
+
+.button.voltar {
+    margin-top: 10px;
+    background-color: #081A40; /* Azul mais claro */
+    color: #fff;
+    border: 2px solid transparent; /* Borda inicial transparente */
+    padding: 5px 15px; /* Botão menor */
+    font-size: 14px; /* Texto menor */
+    cursor: pointer;
+    border-radius: 5px;
+    width: auto; /* Define largura automática */
+    min-width: 100px; /* Define uma largura mínima */
+    transition: color 0.3s ease, border-color 0.3s ease; /* Transição suave */
+}
+
+.button.voltar:hover {
+    background-color: #081A40;
+    color: #c28e00; 
+    border-color: #c28e00;
+}

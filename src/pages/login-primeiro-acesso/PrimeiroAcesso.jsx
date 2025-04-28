@@ -62,12 +62,20 @@ export default function PrimeiroAcesso() {
                 <button type="submit" className="button">
                     ENTRAR
                 </button>
+                
                 <p className="footerText">
                     JÁ ACESSOU O SITE ANTES?{" "}
                     <a href="/login" className="link">
                         ENTRE AQUI.
                     </a>
                 </p>
+                <button
+                    type="button"
+                    className="button voltar"
+                    onClick={() => window.history.back()}
+                >
+                VOLTAR
+                </button>
             </form>
         </div>
     );
