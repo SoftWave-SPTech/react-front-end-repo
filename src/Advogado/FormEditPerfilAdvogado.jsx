@@ -162,10 +162,8 @@ function FormEditPerfilAdvogado(){
 
                     <div className="divisao">
                         <Image></Image>
-                        
-                        <input type="file" className="selecionar-foto" onChange={(e) => atualizarFoto(e.target.files[0])}/>
 
-                        <Button valorBotao={`Subir foto`}/>
+                        <Button valorBotao={`Subir foto`}><input type="file" className="selecionar-foto" onChange={(e) => atualizarFoto(e.target.files[0])}/></Button>
 
                         <Button valorBotao={'Eliminar'} className={'oposto'} />
                     </div>
