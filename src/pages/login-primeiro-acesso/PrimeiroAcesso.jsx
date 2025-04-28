@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './PrimeiroAcesso.css';
+import './Acessos.css';
 import axios from 'axios';
 
 export default function PrimeiroAcesso() {
@@ -32,7 +32,7 @@ export default function PrimeiroAcesso() {
     };
 
     return (
-        <div className="container-primeiro-acesso">
+        <div className="container-acessos">
             <form className="form" onSubmit={handleSubmit}>
                 <div className="icon">
                     <img src="src/images/boneco.png" alt="" className="img" />
