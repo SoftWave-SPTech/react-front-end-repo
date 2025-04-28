@@ -24,7 +24,7 @@ export default function Cadastro()
 
   return (
 
-    <div className='container'>
+    <div className='cadastrar'>
       <div className="cadastro-container">
         <div className="abas-principais">
           <button
