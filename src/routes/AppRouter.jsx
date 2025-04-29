@@ -1,6 +1,6 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import SiteInstitucional from "../pages/siteInstitucional/siteInstitucional";
+import SiteInstitucional from "../pages/siteInstitucional/SiteInstitucional";
 import CadastrarUsuarios from "../pages/CadastrarUsuario/CadastrarUsuarios";
 import Login from "../pages/login-primeiro-acesso/Login";
 import PrimeiroAcesso from "../pages/login-primeiro-acesso/PrimeiroAcesso";
