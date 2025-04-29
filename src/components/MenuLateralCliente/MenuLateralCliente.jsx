@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './MenuLateralCliente.css';
-import { FiMenu, FiLogOut, FiLayers, FiFileText, FiCalendar, FiMic } from 'react-icons/fi';
+import { FiMenu, FiLogOut, FiLayers, FiFileText, FiCalendar, FiMic, FiUser } from 'react-icons/fi';
 import clientePerfilImg from '../../assets/images/clientePerfilImg.jpg';
 
 const MenuLateralCliente = () => 
@@ -14,21 +14,29 @@ const MenuLateralCliente = () =>
 
   const itensMenu = 
   [
+    { rotulo: 'Perfil', 
+      icone: <FiUser />, 
+      rota: '/perfil-cliente'
+    },
     { 
       rotulo: 'Processos', 
-      icone: <FiLayers /> 
+      icone: <FiLayers />,
+      rota: '/processo'
     },
     { 
       rotulo: 'Documentos', 
-      icone: <FiFileText /> 
+      icone: <FiFileText />,
+      rota: '/Documentos'
     },
     { 
       rotulo: 'Calendário', 
-      icone: <FiCalendar /> 
+      icone: <FiCalendar />,
+      rota: '/calendario' 
     },
     { 
       rotulo: 'Podcast', 
-      icone: <FiMic /> 
+      icone: <FiMic />,
+      rota: '/podcast' 
     }
   ];
 
@@ -37,25 +45,6 @@ const MenuLateralCliente = () =>
       <div>
         <div className="barra-superior" onClick={alternarMenu}>
           <FiMenu className="icone-menu"/>
-        </div>
-
-        <div className="cartao-perfil">
-          <img
-            src={clientePerfilImg}
-            alt="Foto do Usuário"
-            className="avatar"
-          />
-
-          {!fechado && (
-            <div className="info-perfil">
-              <div className="nome-perfil">
-                <p>Letícia</p>
-              </div>
-              <div className="email-perfil">
-                leticia@exemplo.com
-              </div>
-            </div>
-          )}
         </div>
 
         <ul className="lista-menu">

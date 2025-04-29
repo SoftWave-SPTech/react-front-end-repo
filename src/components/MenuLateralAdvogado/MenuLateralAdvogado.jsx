@@ -1,94 +1,63 @@
 import React, { useState } from 'react';
 import './MenuLateralAdvogado.css';
-import { FiMenu, FiLogOut, FiFileText, FiCalendar, FiMic, FiBarChart2, FiDollarSign,FiUserPlus } from 'react-icons/fi';
-import advogadoPerfilImg from '../../assets/images/advogadoPerfilImg.png'
+import { Link } from 'react-router-dom';
+import {
+  FiMenu,
+  FiLogOut,
+  FiFileText,
+  FiCalendar,
+  FiMic,
+  FiBarChart2,
+  FiDollarSign,
+  FiUserPlus,
+  FiUser
+} from 'react-icons/fi';
+import advogadoPerfilImg from '../../assets/images/advogadoPerfilImg.png';
 
-const MenuLateral = () => 
-{
+const MenuLateral = () => {
   const [fechado, setFechado] = useState(false);
 
-  const alternarMenu = () => 
-  {
+  const alternarMenu = () => {
     setFechado(!fechado);
   };
 
-  const itensMenu = 
-  [
-    { 
-      rotulo: 'Dashboard', 
-      icone: <FiBarChart2 /> 
-    },
-    { 
-      rotulo: 'Financeiro', 
-      icone: <FiDollarSign /> 
-    },
-    { 
-      rotulo: 'Documentos', 
-      icone: <FiFileText /> 
-    },
-    { 
-      rotulo: 'Calendário', 
-      icone: <FiCalendar /> 
-    },
-    { 
-      rotulo: 'Podcast', 
-      icone: <FiMic /> 
-    },
-    { 
-      rotulo: 'Cadastrar', 
-      icone: <FiUserPlus /> 
-    }
+  const itensMenu = [
+    { rotulo: 'Perfil', icone: <FiUser />, rota: '/perfil-advogado'},
+    { rotulo: 'Dashboard', icone: <FiBarChart2 />, rota: '/dashboard' },
+    { rotulo: 'Financeiro', icone: <FiDollarSign />, rota: '/financeiro' },
+    { rotulo: 'Documentos', icone: <FiFileText />, rota: '/documentos' },
+    { rotulo: 'Calendário', icone: <FiCalendar />, rota: '/calendario' },
+    { rotulo: 'Podcast', icone: <FiMic />, rota: '/podcast' },
+    { rotulo: 'Cadastrar', icone: <FiUserPlus />, rota: '/cadastro' }
   ];
-  
 
   return (
     <div className={`menu-lateral ${fechado ? 'fechado' : ''}`}>
       <div>
         <div className="barra-superior" onClick={alternarMenu}>
-          <FiMenu className="icone-menu"/>
-        </div>
-
-        <div className="cartao-perfil">
-          <img
-            src={advogadoPerfilImg}
-            alt="Foto do Usuário"
-            className="avatar"
-          />
-
-          {!fechado && (
-            <div className="info-perfil">
-              <div className="nome-perfil">
-                <p>Dr. Cristhian</p>
-              </div>
-              <div className="email-perfil">
-                cristhianlauriano@gmail.com
-              </div>
-            </div>
-          )}
+          <FiMenu className="icone-menu" />
         </div>
 
         <ul className="lista-menu">
           {itensMenu.map((item) => (
             <li key={item.rotulo} className="item-menu">
-              {item.icone}
-              {!fechado && (
-                <span>{item.rotulo}</span>
-              )}
+              <Link to={item.rota} className="link-menu">
+                {item.icone}
+                {!fechado && <span>{item.rotulo}</span>}
+              </Link>
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="sair" 
-      onClick={() => {
-        sessionStorage.clear();
-        window.location.href = "/";
+      <div className="sair"
+        onClick={() => {
+          sessionStorage.clear();
+          window.location.href = "/";
         }}
       >
         <FiLogOut />
-        {!fechado && (
-          <span>Sair</span>
-        )}
+        {!fechado && <span>Sair</span>}
       </div>
     </div>
   );

@@ -176,7 +176,7 @@ function FormEditPerfilCliente(){
         <MenuLateral/>
         <div className="container-body-edit">
             <div className="container-edit-perfil">
-                <div className="formulario-editar-perfil foto" >
+                {/* <div className="formulario-editar-perfil foto" >
                     <div className="container-titulo-editar-perfil">
                         <h1 className="titulo-editar-perfil">Foto Perfil</h1>
                     </div>
@@ -191,7 +191,7 @@ function FormEditPerfilCliente(){
                     </div>
                     
 
-                </div>
+                </div> */}
 
                 <div className="formulario-editar-perfil" >
                     <div className="container-titulo-editar-perfil" >
