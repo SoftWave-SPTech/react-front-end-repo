@@ -1,4 +1,4 @@
-import './App.css'
+import './App.css';
 import { RouterProvider } from "react-router-dom";
 import React from 'react';
 import { AppRouter } from './routes/AppRouter';
@@ -10,5 +10,4 @@ function App() {
     </>
   );
 }
-
-export default App;
+export default App

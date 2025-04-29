@@ -79,7 +79,12 @@ const MenuLateral = () =>
         </ul>
       </div>
 
-      <div className="sair">
+      <div className="sair" 
+      onClick={() => {
+        sessionStorage.clear();
+        window.location.href = "/";
+        }}
+      >
         <FiLogOut />
         {!fechado && (
           <span>Sair</span>
