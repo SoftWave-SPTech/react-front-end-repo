@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './CadastrarSenha.css';
+import './Acessos.css';
 import axios from 'axios';
 
 export default function CadastrarSenha() {
@@ -57,7 +57,7 @@ export default function CadastrarSenha() {
         }
     };
     return (
-        <div className="container-cadastrarsenha">
+        <div className="container-acessos">
             <form className="form" onSubmit={handleSubmit}>
                 <div className="icon">
                     <img src="src/images/boneco.png" alt="" className="img" />
