@@ -76,4 +76,8 @@
     height: 100%;
     opacity: 0;
     cursor: pointer;
+    display: none;
+}
+.menu-lateral:not(.fechado) ~ .container-body-edit{
+    padding-left: 5%;
 }

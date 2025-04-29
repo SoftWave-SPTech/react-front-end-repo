@@ -18,3 +18,12 @@
     background-color: #fff;
     border: 1px solid #020d22;
 }
+.btn-form-edit:hover{
+    color: #D9BB62;
+    border: 1px solid #D9BB62;
+}
+.oposto:hover{
+    color: #D9BB62;
+    border: 1px solid #D9BB62;
+    background-color: #020d22;
+}
