@@ -18,16 +18,19 @@
 
 /* Blocos individuais */
 .midia-block {
+    cursor: pointer;
     display: flex;
     flex-direction: column; /* Alinha o texto e o ícone verticalmente */
     align-items: center; /* Centraliza o conteúdo horizontalmente */
     justify-content: center; /* Centraliza o conteúdo verticalmente */
-    background-color: black; /* Cor de fundo dos blocos */
+    background-color: var(--azulEscuroForte); /* Cor de fundo dos blocos */
+    border-color: var(--dourado); /* Cor da borda */
+    border-style: solid; /* Estilo da borda */
     padding: 15px; /* Espaçamento interno */
     border-radius: 8px; /* Bordas arredondadas */
     flex: 1 1 calc(25% - 20px); /* Responsivo: ocupa 25% do espaço menos o gap */
-    max-width: 180px; /* Largura máxima */
-    min-width: 115px; /* Largura mínima */
+    max-width: 160px; /* Largura máxima */
+    min-width: 105px; /* Largura mínima */
     aspect-ratio: 1; /* Mantém a proporção quadrada */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transição suave */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra leve */
@@ -37,6 +40,10 @@
 .midia-block:hover {
     transform: scale(1.1); /* Aumenta o tamanho do bloco */
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Aumenta a sombra */
+    -webkit-text-stroke-width: 0.8px;
+    -webkit-text-stroke-color: var(--dourado) ;
+    border: var(--dourado) 4px solid; /* Aumenta a espessura da borda ao passar o mouse */
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
 }
 
 /* Texto dentro dos blocos */

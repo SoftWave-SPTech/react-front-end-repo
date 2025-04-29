@@ -10,20 +10,20 @@ function CarroselAdvogados() {
             name: "Felipe Lauriano Rocha Marqueze",
             cargo: "CEO e Advogado de Direito Imobiliário",
             image: "../src/assets/felipeAdvogado.png",
-            text1: "Felipe Lauriano Rocha Marqueze é graduado em Direito pela FMU (Faculdades Metropolitanas Unidas) e pós-graduando em Direito do Trabalho e Processo do Trabalho.",
-            text2: "Com ampla experiência no mercado imobiliário, também se destaca como palestrante, participante ativo da Comissão de Direito Processual Civil da OAB Tatuapé e formador de opinião em eventos jurídicos e imobiliários.",
-            text3: "Além de sua atuação profissional, Felipe é coautor do livro Direitos Humanos, Ética e Democracia na Sociedade da Informação, no qual contribui com reflexões sobre temas contemporâneos de grande relevância.",
-            text4: "Ele também é um dos hosts do Lauriano & Leão Cast, um podcast que explora uma ampla gama de temas jurídicos, oferecendo insights e discussões para advogados e profissionais interessados no universo do direito."
+            text1: "Felipe Lauriano Rocha Marqueze é graduado em Direito pela FMU e pós-graduando em Direito do Trabalho e Processo do Trabalho.",
+            text2: "Com experiência no mercado imobiliário, Felipe atua como palestrante e integra a Comissão de Direito Processual Civil da OAB Tatuapé.",
+            text3: "É coautor do livro Direitos Humanos, Ética e Democracia na Sociedade da Informação, abordando temas contemporâneos.",
+            text4: "Também é host do Lauriano & Leão Cast, podcast sobre temas jurídicos e discussões relevantes para advogados."
         },
         {
             id: 2,
             name: "Raissa Leão Marqueze",
             cargo: "CEO e Advogada de Direito Civil",
             image: "../src/assets/raissaAdvogada.png",
-            text1: "Formada em Direito pela Universidade Cruzeiro do Sul e com especialização em andamento em Direito Civil e Processo Civil, Raíssa Leão Marqueze atua com uma abordagem sólida e atualizada na prática jurídica. ",
-            text2: "É membra ativa da Comissão de Direito Processual Civil da OAB Tatuapé, onde se dedica ao aprimoramento de seus conhecimentos e contribui para o desenvolvimento da área.",
-            text3: "Além da advocacia, Raíssa é uma das vozes do Lauriano & Leão Cast, podcast jurídico que traz discussões e insights sobre temas contemporâneos do universo jurídico.",
-            text4: "Com experiência na área, destaca-se pelo compromisso em oferecer um atendimento personalizado e de qualidade, sempre focada em atender às necessidades de seus clientes com dedicação e profissionalismo.",
+            text1: "Raíssa Leão Marqueze é formada em Direito pela Universidade Cruzeiro do Sul e está se especializando em Direito Civil e Processo Civil.",
+            text2: "Atua na Comissão de Direito Processual Civil da OAB Tatuapé, contribuindo para o aprimoramento da área.",
+            text3: "É uma das vozes do Lauriano & Leão Cast, podcast jurídico com discussões sobre temas contemporâneos.",
+            text4: "Destaca-se pelo atendimento personalizado, focado nas necessidades e no profissionalismo com seus clientes."
         },
         {
             id: 3,
@@ -37,10 +37,10 @@ function CarroselAdvogados() {
         },
         {
             id: 4,
-            name: "Ana Beatriz Mendes",
-            cargo: "Especialista em Direito Ambiental",
+            name: "Ana Mendes Nogueira",
+            cargo: "Advogada Ambiental",
             image: "../src/assets/advogada1.png",
-            text1: "Ana Beatriz Mendes é formada pela UFRJ e atua na área de Direito Ambiental, auxiliando empresas a se adequarem às legislações ambientais.",
+            text1: "Ana Mendes é formada pela UFRJ e atua na área de Direito Ambiental, auxiliando empresas a se adequarem às legislações ambientais.",
             text2: "Ela é uma defensora ativa da sustentabilidade e participa de projetos de preservação ambiental.",
             text3: "Ana também escreve regularmente sobre temas ambientais em blogs e revistas especializadas.",
             text4: "Fernanda também é consultora em planejamento tributário e palestrante em eventos corporativos.",
@@ -48,7 +48,7 @@ function CarroselAdvogados() {
         {
             id: 5,
             name: "Ricardo Oliveira Santos",
-            cargo: "Advogado Criminalista",
+            cargo: "Advogado em foco Criminalista",
             image: "../src/assets/advogado1.png",
             text1: "Ricardo Oliveira Santos é formado pela UNESP e possui vasta experiência em casos criminais de alta complexidade.",
             text2: "Ele é conhecido por sua ética e dedicação em garantir um julgamento justo para seus clientes.",
@@ -58,7 +58,7 @@ function CarroselAdvogados() {
         {
             id: 6,
             name: "Fernanda Rocha Lima",
-            cargo: "Advogada de Direito Tributário",
+            cargo: "Advogada Tributária",
             image: "../src/assets/advogada1.png",
             text1: "Fernanda Rocha Lima é especialista em Direito Tributário e ajuda empresas a otimizarem sua carga tributária de forma legal.",
             text2: "Ela é formada pela UFMG e possui pós-graduação em Direito Tributário pela FGV.",

@@ -4,6 +4,7 @@ import CarroselAdvogados from '../../components/Carrosel/CarroselAdvogados.jsx';
 import PlayerVideo from '../../components/podcast/playerVideo.jsx';
 import MidiaSocial from '../../components/podcast/midiaSocial.jsx';
 import CatalogoVideos from '../../components/podcast/catalogoVideos.jsx';
+import { Navigate } from 'react-router-dom';
 
 function SiteInstitucional() {
     const [selectedEspecialidade, setSelectedEspecialidade] = useState({});
@@ -27,9 +28,11 @@ function SiteInstitucional() {
 
     const seletorEspecialidade = (especialidade) => {
         setSelectedEspecialidade(especialidade);
-
     }
 
+    const saibaMais = () => {
+        window.location.href = 
+    "https://api.whatsapp.com/send?phone=5511989833914&text=Ol%C3%A1%20Dr.%20Felipe,%20como%20vai?%20Pode%20me%20ajudar"};
 
     return (
         <div className="site-institucional">
@@ -51,7 +54,7 @@ function SiteInstitucional() {
             <section alt="banner introdutorio" className='container-site banner-intro'>
                 <h2 className='titulos-containers'>Compromisso com a excelência e <br /> soluções personalizadas em advocacia</h2>
                 <p className='textos-containers'>Oferecemos soluções judiciais personalizadas, focados na defesa dos interesses e direitos de nossos clientes. Atuamos em diversas áreas do mundo jurídico com expertise, para garantir um atendimento de excelência e confiança</p>
-                <button className='button-gold-style'>Saiba Mais</button>
+                <button className='button-gold-style' onClick={saibaMais}>Saiba Mais</button>
             </section>
             <section id='sobre' alt="banner duplo" className='container-site banner-duplo'>
                 <div className='sobre-nos'>
@@ -91,14 +94,14 @@ function SiteInstitucional() {
                         <div alt="texto direita" className='especialidade-texto'>
                             <img src={selectedEspecialidade.icon} alt="icone de cada especialidade" className='icon' />
                             <p className='textos-containers'>{selectedEspecialidade.text}</p>
-                            <button className='button-gold-style'>Saiba Mais</button>
+                            <button className='button-gold-style' onClick={saibaMais}>Saiba Mais</button>
                         </div>
                     </div>
                 </div>
             </section>
 
             <section alt="banner advogados" className='container-site'>
-                <h2 className='titulos-containers'>Nosso Advogados</h2>
+                <h2 className='titulos-containers'>Nossos Advogados</h2>
                 <CarroselAdvogados />
             </section>
 
@@ -121,23 +124,23 @@ function SiteInstitucional() {
                 <hr className='hr-style'/>
                 <h2 className='titulos-containers'>Nossos Contatos</h2>
                 <div className='contato-container'>
-                    <img src="/instagram.svg" alt="icone instagram" className="icon-maior" />
-                    <p className='sublinhado'>@laurianoleaoadv</p>
+                    <img src="/instagram.svg" alt="icone instagram" className="icon-site-maior" />
+                    <p className='sublinhado' onClick={() => window.location.href = "https://www.instagram.com/laurianoleaoadv/"}>@laurianoleaoadv</p>
                 </div>
                 <div className='contato-container'>
-                    <img src="/whatsapp.svg" alt="icone whatsapp" className="icon" />
-                    <p className='sublinhado'>+55 11 98983-3914</p>
+                    <img src="/whatsapp.svg" alt="icone whatsapp" className="icon-site" />
+                    <p className='sublinhado' onClick={saibaMais}>+55 11 98983-3914</p>
                 </div>
                 <div className='contato-container'>
-                    <img src="/whatsapp.svg" alt="icone whatsapp" className="icon" />
+                    <img src="/whatsapp.svg" alt="icone whatsapp" className="icon-site" />
                     <p className='sublinhado'>+55 11 93207-4268</p>
                 </div>
                 <div className='contato-container'>
-                    <img src="/email.svg" alt="Icone Email" className="icon" />
+                    <img src="/email.svg" alt="Icone Email" className="icon-site" />
                     <p className='sublinhado'>raissaleao@laurianoleaoadvogados.com.br</p>
                 </div>
                 <div className='contato-container'>
-                    <img src="/email.svg" alt="Icone Email" className="icon" />
+                    <img src="/email.svg" alt="Icone Email" className="icon-site" />
                     <p className='sublinhado'>felipelauriano@laurianoleaoadvogados.comm.br</p>
                 </div>
                 <hr className='hr-style'/>
