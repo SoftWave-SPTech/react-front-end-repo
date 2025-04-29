@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Login.css';
+import './Acessos.css';
 import axios from 'axios';
 
 export default function Login() {
@@ -43,7 +43,7 @@ export default function Login() {
     };
 
     return (
-        <div className="container-login">
+        <div className="container-acessos">
             <form className="form" onSubmit={handleSubmit}>
                 <div className="icon">
                     <img src="src/images/boneco.png" alt="" className="img" />
@@ -82,6 +82,13 @@ export default function Login() {
                         CLIQUE AQUI.
                     </a>
                 </p>
+                <button
+                    type="button"
+                    className="button voltar"
+                    onClick={() => window.history.back()}
+                >
+                VOLTAR
+                </button>
             </form>
         </div>
     );

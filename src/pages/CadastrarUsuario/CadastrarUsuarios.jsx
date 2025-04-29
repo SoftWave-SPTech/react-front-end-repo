@@ -8,7 +8,7 @@ const CadastrarUsuarios = () =>
   return (
     <div className="cadastrar-usuarios">
       <MenuLateralAdvogado />
-      <div className="cadastro-container">
+      <div className="cadastro">
         <Cadastro />
       </div>
     </div>

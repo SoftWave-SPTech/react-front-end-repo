@@ -4,7 +4,7 @@ function Button(props){
 
     return(
         <>
-            <button className={`btn-form-edit ${props.className}`}>{ props.valorBotao }</button>
+            <button className={`btn-form-edit ${props.className}`} onClick={props.onClick}>{ props.valorBotao }</button>
         </>
             
 

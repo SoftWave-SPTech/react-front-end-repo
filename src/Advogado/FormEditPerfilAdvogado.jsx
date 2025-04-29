@@ -2,13 +2,153 @@ import Button from "../Components/Button"
 import Input from "../Components/Input"
 import '../Estilos/FormEditarPerfil.css'
 import Image from "../Components/Image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import MenuLateralAdvogado from "../Components/MenuLateralAdvogado/MenuLateralAdvogado"
+import axios from "axios"
 
 function FormEditPerfilAdvogado(){
 
-    const [tipoUsuario, setTipoUsuario] = useState("juridica")
+    const [usuario, setUsuario] = useState({})
+    const [usarioParaAtualzar, setUsuarioParaAtualizar] = useState({})
 
+    useEffect(() => {
+
+        if(sessionStorage.getItem('tipoUsuario') == "UsuarioFisico"){
+
+            axios.get(`http://localhost:8080/advogados-fisicos/${usuario.id}`, {
+                headers: {
+                    Authorization: sessionStorage.getItem('authToken'),
+                },
+              })
+            .then((resposta) =>{
+                console.log(resposta)
+                setUsuario({
+                    id: resposta.data.id,
+                    nome: resposta.data.nome,
+                    cpf: resposta.data.cpf,
+                    rg: resposta.data.rg,
+                    email: resposta.data.email,
+                    telefone: resposta.data.telefone,
+                    oab: resposta.data.oab,
+                    logradouro: resposta.data.logradouro,
+                    bairro: resposta.data.bairro,
+                    cidade: resposta.data.cidade,
+                    complemento: resposta.data.complemento,
+                    cep: resposta.data.cep,
+                    senha: '.......'
+                  });
+                  setUsuarioParaAtualizar({
+                      nome: usuario.nome,
+                      email: usuario.email,
+                      telefone: usuario.telefone,
+                      logradouro: usuario.logradouro,
+                      bairro: usuario.bairro,
+                      cidade: usuario.cidade,
+                      complemento: usuario.complemento,
+                      cep: usuario.cep,
+                      senha: '.......'
+                  })
+            })
+            .catch((erro) =>{
+                console.log(erro)
+            })
+
+        }else if(sessionStorage.getItem('tipoUsuario') == "UsuarioJuridico"){
+            
+            axios.get(`http://localhost:8080/advogados-juridicos/${usuario.id}`, {
+                headers: {
+                    Authorization: sessionStorage.getItem('authToken'),
+                },
+              })
+            .then((resposta) =>{
+                console.log(resposta)
+
+                setUsuario({
+                    id: resposta.id,
+                    nomeFantasia: resposta.data.nomeFantasia,
+                    razaoSocial: resposta.data.razaoSocial,
+                    cnpj: resposta.data.cnpj,
+                    email: resposta.data.email,
+                    telefone: resposta.data.telefone,
+                    oab: resposta.data.oab,
+                    logradouro: resposta.data.logradouro,
+                    bairro: resposta.data.bairro,
+                    cidade: resposta.data.cidade,
+                    complemento: resposta.data.complemento,
+                    cep: resposta.data.cep,
+                    senha: '.......'
+                  });
+  
+                  setUsuarioParaAtualizar({
+                      nomeFantasia: usuario.nomeFantasia,
+                      razaoSocial: usuario.razaoSocial,
+                      cnpj: usuario.cnpj,
+                      email: usuario.email,
+                      telefone: usuario.telefone,
+                      logradouro: usuario.logradouro,
+                      bairro: usuario.bairro,
+                      cidade: usuario.cidade,
+                      complemento: usuario.complemento,
+                      cep: usuario.cep,
+                      senha: '.......'
+                  })
+
+            })
+            .catch((erro) =>{
+                console.log(erro)
+            })
+        }
+    }, []); 
+
+    function enviarDadosParaAtualizacao(){
+        console.log(usarioParaAtualzar)
+
+        if (sessionStorage.getItem('tipoUsuario') == "UsuarioFisico") {
+
+            axios.put(`http://localhost:8080/advogados-fisicos/${usuario.id}`, usarioParaAtualzar,  {
+                headers: {
+                    Authorization: sessionStorage.getItem('authToken'),
+                },
+              })
+            .then((resposta) =>{
+                console.log(resposta)
+                
+                alert("Dados Atualizados com sucesso!");
+            })
+            .catch((erro) =>{
+                console.log(erro)
+                alert("Ocorreu um erro, tente novamente!");
+            })
+            
+        }else if (sessionStorage.getItem('tipoUsuario') == "UsuarioJuridico") {
+
+            axios.put(`http://localhost:8080/advogados-juridicos/${usuario.id}`, usarioParaAtualzar,  {
+                headers: {
+                    Authorization: sessionStorage.getItem('authToken'),
+                },
+              })
+            .then((resposta) =>{
+                console.log(resposta)
+
+                alert("Dados Atualizados com sucesso!");
+            })
+            .catch((erro) =>{
+                console.log(erro)
+                alert("Ocorreu um erro, tente novamente!");
+            })
+        }
+    }
+
+    function atualizarFoto(fotoAtualizar){
+        console.log(fotoAtualizar);
+
+        if (!fotoAtualizar) { 
+            alert("Escolha uma foto primeiro!");
+            return;
+        }
+
+        
+    }
     
     return(
         <>
@@ -22,8 +162,9 @@ function FormEditPerfilAdvogado(){
 
                     <div className="divisao">
                         <Image></Image>
-                        
-                        <Button valorBotao={'Subir foto'} />
+
+                        <Button valorBotao={`Subir foto`}><input type="file" className="selecionar-foto" onChange={(e) => atualizarFoto(e.target.files[0])}/></Button>
+
                         <Button valorBotao={'Eliminar'} className={'oposto'} />
                     </div>
                     
@@ -37,47 +178,114 @@ function FormEditPerfilAdvogado(){
 
                     <div className="divisao">
                     <div className="divisoria">
-                        {/* <Input 
-                        nome={"Nome:"}
-                        valor={'Luana'} />
-                        <Input 
-                        nome={"CPF:"}
-                        valor={'XXX.XXX.XXX-XX'} />
-                        <Input 
-                        nome={"RG:"}
-                        valor={'XX.XXX.XXX-X'} /> */}
-                        {tipoUsuario === 'fisica' ? (
+                        {sessionStorage.getItem('tipoUsuario') == 'UsuarioFisico' ? (
                             <>
-                                <Input nome={"Nome:"} valor={'Luana'} />
-                                <Input nome={"CPF:"} valor={'XXX.XXX.XXX-XX'} />
-                                <Input nome={"RG:"} valor={'XX.XXX.XXX-X'} />
+                                <Input 
+                                nome={"Nome:"} 
+                                type={"text"}
+                                valor={usuario.nome} 
+                                onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, nome: e.target.value })}
+                                disabled={false} />
+                                <Input 
+                                nome={"CPF:"} 
+                                type={"text"}
+                                valor={usuario.cpf}
+                                disabled={true} />
+                                <Input 
+                                nome={"RG:"} 
+                                type={"text"}
+                                valor={usuario.rg}
+                                disabled={true} />
                             </>
                             ) : (
                             <>
-                                <Input nome={"Nome Fantasia:"} valor={'Luana modas'} />
-                                <Input nome={"Razão Social:"} valor={'Empresa Luana'} />
-                                <Input nome={"CNPJ:"} valor={'XX.XXX.XXX/0001-XX'} />
+                                <Input 
+                                nome={"Nome Fantasia:"} 
+                                type={"text"}
+                                valor={usuario.nomeFantasia}
+                                onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, nomeFantasia: e.target.value })}
+                                disabled={false} />
+                                <Input 
+                                nome={"Razão Social:"} 
+                                type={"text"}
+                                valor={usuario.razaoSocial}
+                                onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, razaoSocial: e.target.value })}
+                                disabled={false} />
+                                <Input 
+                                nome={"CNPJ:"} 
+                                type={"text"}
+                                valor={usuario.cnpj}
+                                onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, cnpj: e.target.value })}
+                                disabled={false} />
                             </>
                         )}
                         <Input 
                         nome={"Email:"}
-                        valor={'luana@gamil.com'} />
+                        type={"text"}
+                        valor={usuario.email}
+                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, email: e.target.value })}
+                        disabled={false} />
+
+                        <Input 
+                        nome={"Telefone:"}
+                        type={"text"}
+                        valor={usuario.telefone}
+                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, telefone: e.target.value })}
+                        disabled={false} />
+
+                        <Input 
+                        nome={"OAB:"}
+                        type={"text"}
+                        valor={usuario.oab}
+                        disabled={true} />
+
+                        <Input 
+                        nome={"Senha:"}
+                        type={"text"}
+                        valor={usuario.senha}
+                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, senha: e.target.value })}
+                        disabled={false} />
                     </div>
 
                     <div className="divisoria">
                         <Input 
-                        nome={"OAB:"}
-                        valor={'UF000000'} />
-                        <Input 
-                        nome={"Telefone:"}
-                        valor={'(11) 90000-0000'} />
-                        <Input 
                         nome={"CEP:"}
-                        valor={'00000-003'} />
+                        type={"text"}
+                        valor={usuario.cep}
+                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, cep: e.target.value })}
+                        disabled={false} />
+                        
+                        <Input 
+                        nome={"Logradouro:"}
+                        type={"text"}
+                        valor={usuario.logradouro}
+                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, logradouro: e.target.value })}
+                        disabled={false} />
+
+                        <Input 
+                        nome={"Bairro:"}
+                        type={"text"}
+                        valor={usuario.bairro}
+                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, bairro: e.target.value })}
+                        disabled={false} />
+
+                        <Input 
+                        nome={"Cidade:"}
+                        type={"text"}
+                        valor={usuario.cidade}
+                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, cidade: e.target.value })}
+                        disabled={false} />
+
+                        <Input 
+                        nome={"Complemento:"}
+                        type={"text"}
+                        valor={usuario.complemento}
+                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, complemento: e.target.value })}
+                        disabled={false} />
 
                         <div className="divisao">
-                        <Button valorBotao={'Cancelar'} className={'oposto'} />
-                        <Button valorBotao={'Salvar'} />
+                        <Button valorBotao={'Cancelar'} className={'oposto'}  />
+                        <Button valorBotao={'Salvar'} onClick={enviarDadosParaAtualizacao}  />
                         </div>  
                     </div>
                     </div>
