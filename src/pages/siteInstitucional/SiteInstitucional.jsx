@@ -92,7 +92,7 @@ function SiteInstitucional() {
                         </div>
 
                         <div alt="texto direita" className='especialidade-texto'>
-                            <img src={selectedEspecialidade.icon} alt="icone de cada especialidade" className='icon' />
+                            <img src={selectedEspecialidade.icon} alt="icone de cada especialidade" className='icon-especialidades' />
                             <p className='textos-containers'>{selectedEspecialidade.text}</p>
                             <button className='button-gold-style' onClick={saibaMais}>Saiba Mais</button>
                         </div>
