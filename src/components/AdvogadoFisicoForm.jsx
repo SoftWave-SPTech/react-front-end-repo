@@ -112,8 +112,8 @@ export default function AdvogadoFisicoForm() {
     // TODO ESCREVER AUTORIZACAO PARA AS OUTRAS REQUESTS
     axios.post('http://localhost:8080/advogados-fisicos', dadosParaEnviar, {
       headers: {
-        Authorization:`Bearer ${sessionStorage.getItem('token')}`,
-    },
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      },
     })
       .then((response) => {
         console.log('Resposta:', response.data);
@@ -121,7 +121,7 @@ export default function AdvogadoFisicoForm() {
       })
       .catch((err) => {
         console.log('Erro:', err.response?.data || err.message);
-        alert('Erro ao cadastrar');
+        alert(err.response.data.message);
       });
   };
 

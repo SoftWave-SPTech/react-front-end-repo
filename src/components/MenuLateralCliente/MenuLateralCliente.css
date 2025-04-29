@@ -1,13 +1,11 @@
-* 
-{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Quicksand', sans-serif;
 }
 
-.menu-lateral 
-{
+.menu-lateral {
   background-color: #050e26;
   color: white;
   height: 100vh;
@@ -23,31 +21,26 @@
   overflow-y: auto;
 }
 
-.menu-lateral.fechado 
-{
+.menu-lateral.fechado {
   width: clamp(4%, 5rem, 6%);
 }
 
-.menu-lateral.fechado .lista-menu 
-{
+.menu-lateral.fechado .lista-menu {
   font-size: 1.2rem;
 }
 
-.menu-lateral.fechado .item-menu 
-{
+.menu-lateral.fechado .item-menu {
   justify-content: center;
   margin-bottom: 1rem;
   padding: 20%;
 }
 
-.menu-lateral.fechado .sair 
-{
+.menu-lateral.fechado .sair {
   justify-content: center;
   padding: 12%;
 }
 
-.menu-lateral.fechado .avatar 
-{
+.menu-lateral.fechado .avatar {
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -58,39 +51,33 @@
   margin-right: auto;
 }
 
-.menu-lateral.fechado .cartao-perfil:hover 
-{
+.menu-lateral.fechado .cartao-perfil:hover {
   background-color: #0F2A5E;
 }
 
-.menu-lateral.fechado .cartao-perfil 
-{
+.menu-lateral.fechado .cartao-perfil {
   border: none;
   justify-content: center;
   border-radius: 0;
   margin-bottom: 2.5rem;
 }
 
-.barra-superior 
-{
+.barra-superior {
   display: flex;
   justify-content: flex-end;
   cursor: pointer;
   margin-bottom: 1.5rem;
 }
 
-.icone-menu 
-{
-    font-size: clamp(1rem, 2vw, 1.3rem); 
+.icone-menu {
+  font-size: clamp(1rem, 2vw, 1.3rem);
 }
 
-.barra-superior:hover 
-{
+.barra-superior:hover {
   color: #D9B166;
 }
 
-.cartao-perfil 
-{
+.cartao-perfil {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -103,29 +90,24 @@
   overflow: hidden;
 }
 
-.cartao-perfil:hover 
-{
+.cartao-perfil:hover {
   border: 1px solid #D9B166;
   cursor: pointer;
 }
 
-.cartao-perfil:hover .nome-perfil 
-{
+.cartao-perfil:hover .nome-perfil {
   color: #D9B166;
 }
 
-.cartao-perfil:hover .icone-editar 
-{
+.cartao-perfil:hover .icone-editar {
   color: #D9B166;
 }
 
-.cartao-perfil:hover .email-perfil 
-{
+.cartao-perfil:hover .email-perfil {
   color: #D9B166;
 }
 
-.avatar 
-{
+.avatar {
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -136,8 +118,7 @@
   margin-right: auto;
 }
 
-.info-perfil 
-{
+.info-perfil {
   display: flex;
   flex-direction: column;
   gap: 0.20rem;
@@ -152,8 +133,7 @@
   text-align: left;
 }
 
-.nome-perfil 
-{
+.nome-perfil {
   display: flex;
   align-items: flex-start;
   font-weight: 600;
@@ -163,24 +143,21 @@
   width: 100%;
 }
 
-.email-perfil 
-{
+.email-perfil {
   font-size: 1rem;
   color: #d1d5db;
   word-break: break-word;
   width: 100%;
 }
 
-.lista-menu 
-{
+.lista-menu {
   list-style: none;
   padding: 0;
   margin: 0;
   background-color: #050e26;
 }
 
-.item-menu 
-{
+.item-menu {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -191,14 +168,12 @@
   padding: 4%;
 }
 
-.item-menu:hover 
-{
+.item-menu:hover {
   color: #D9B166;
   background-color: #0F2A5E;
 }
 
-.sair 
-{
+.sair {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -209,31 +184,26 @@
   padding: 4%;
 }
 
-.sair:hover 
-{
+.sair:hover {
   color: #D9B166;
   background-color: #0F2A5E;
 }
 
 .item-menu i,
-.sair i 
-{
+.sair i {
   font-size: clamp(1rem, 2vw, 1.3rem);
 }
 
-.icone-menu 
-{
+.icone-menu {
   font-size: clamp(1.2rem, 1.5vw, 1.7rem);
 }
 
-.conteudo-principal 
-{
+.conteudo-principal {
   margin-left: clamp(12%, 16rem, 20%);
   transition: margin-left 0.3s ease;
   padding: 1rem;
 }
 
-.menu-lateral.fechado ~ .conteudo-principal 
-{
+.menu-lateral.fechado ~ .conteudo-principal {
   margin-left: clamp(4%, 4rem, 6%);
 }
