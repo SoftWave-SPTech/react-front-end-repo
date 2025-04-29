@@ -93,9 +93,9 @@ export default function AdvogadoFisicoForm() {
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "E-mail inválido.";
     }
-    if (formData.oab && !/^[A-Z]{2}\d{6}$/.test(formData.oab)) {
-      newErrors.oab = "OAB inválida. Ex: SP123456.";
-    }
+    if (formData.oab && !/^\d{6}$/.test(formData.oab)) {
+      newErrors.oab = "OAB inválida. Deve conter exatamente 6 números.";
+    }    
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -157,7 +157,7 @@ export default function AdvogadoFisicoForm() {
         <input 
           type="email" 
           name="email" 
-          placeholder="exemplo@email.com" 
+          placeholder="ana@email.com" 
           value={formData.email} 
           onChange={handleChange} 
         />
@@ -167,7 +167,7 @@ export default function AdvogadoFisicoForm() {
         <input 
           type="text" 
           name="oab" 
-          placeholder="UF000000" 
+          placeholder="000000" 
           value={formData.oab} 
           onChange={handleChange} 
         />
