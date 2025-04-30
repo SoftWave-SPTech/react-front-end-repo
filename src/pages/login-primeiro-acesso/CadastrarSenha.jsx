@@ -66,7 +66,7 @@ export default function CadastrarSenha() {
 
                 <label className="label">SENHA</label>
                 <input
-                    type="senha"
+                    type="password"
                     value={senha}
                     onChange={(e) => setsenha(e.target.value)}
                     className="input"
@@ -76,7 +76,7 @@ export default function CadastrarSenha() {
 
                 <label className="label">CONFIRMAR SENHA</label>
                 <input
-                    type="text"
+                    type="password"
                     value={confirmarSenha}
                     onChange={(e) => setconfirmarSenha(e.target.value)}
                     className="input"

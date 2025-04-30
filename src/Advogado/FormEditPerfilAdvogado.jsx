@@ -14,7 +14,7 @@ function FormEditPerfilAdvogado(){
 
     useEffect(() => {
 
-        if(sessionStorage.getItem('tipoUsuario') == "UsuarioFisico"){
+        if(sessionStorage.getItem('tipoUsuario') == "AdvogadoFisico"){
 
             axios.get(`http://localhost:8080/advogados-fisicos/${sessionStorage.getItem('id')}`, {
                 headers: {
@@ -44,7 +44,7 @@ function FormEditPerfilAdvogado(){
                 console.log(erro)
             })
 
-        }else if(sessionStorage.getItem('tipoUsuario') == "UsuarioJuridico"){
+        }else if(sessionStorage.getItem('tipoUsuario') == "AdvogadoJuridico"){
             
             axios.get(`http://localhost:8080/advogados-juridicos/${sessionStorage.getItem('id')}`, {
                 headers: {
@@ -81,7 +81,7 @@ function FormEditPerfilAdvogado(){
     function enviarDadosParaAtualizacao(){
         console.log(usarioParaAtualzar)
 
-        if (sessionStorage.getItem('tipoUsuario') == "UsuarioFisico") {
+        if (sessionStorage.getItem('tipoUsuario') == "AdvogadoFisico") {
 
             axios.put(`http://localhost:8080/advogados-fisicos/${usuario.id}`, usarioParaAtualzar,  {
                 headers: {
@@ -98,7 +98,7 @@ function FormEditPerfilAdvogado(){
                 alert("Ocorreu um erro, tente novamente!");
             })
             
-        }else if (sessionStorage.getItem('tipoUsuario') == "UsuarioJuridico") {
+        }else if (sessionStorage.getItem('tipoUsuario') == "AdvogadoJuridico") {
 
             axios.put(`http://localhost:8080/advogados-juridicos/${usuario.id}`, usarioParaAtualzar,  {
                 headers: {
@@ -126,6 +126,7 @@ function FormEditPerfilAdvogado(){
               "logradouro": dados.logradouro,
               "bairro": dados.bairro,
               "cidade": dados.cidade,
+              "oab": dados.oab,
               "complemento": dados.complemento,
               "cep": dados.cep
           })
@@ -143,6 +144,7 @@ function FormEditPerfilAdvogado(){
               "logradouro": dados.logradouro,
               "bairro": dados.bairro,
               "cidade": dados.cidade,
+              "oab": dados.oab,
               "complemento": dados.complemento,
               "cep": dados.cep
           })
@@ -198,13 +200,15 @@ function FormEditPerfilAdvogado(){
 
                     <div className="divisao">
                     <div className="divisoria">
-                        {sessionStorage.getItem('tipoUsuario') == 'UsuarioFisico' ? (
+                        {sessionStorage.getItem('tipoUsuario') == 'AdvogadoFisico' ? (
                             <>
                                 <Input 
                                 nome={"Nome:"} 
                                 type={"text"}
                                 valor={usuario.nome} 
-                                onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, "nome": e.target.value }) && setUsuario({ ...usuario, "nome": e.target.value })}
+                                onChange={(e) => {
+                                    setUsuarioParaAtualizar({ ...usarioParaAtualzar, "nome": e.target.value }); setUsuario({ ...usuario, "nome": e.target.value })
+                                }}
                                 disabled={false} />
                                 <Input 
                                 nome={"CPF:"} 
@@ -223,19 +227,19 @@ function FormEditPerfilAdvogado(){
                                 nome={"Nome Fantasia:"} 
                                 type={"text"}
                                 valor={usuario.nomeFantasia}
-                                onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, "nomeFantasia": e.target.value }) && setUsuario({ ...usuario, "nomeFantasia": e.target.value })}
+                                onChange={(e) => {setUsuarioParaAtualizar({ ...usarioParaAtualzar, "nomeFantasia": e.target.value }); setUsuario({ ...usuario, "nomeFantasia": e.target.value })}}
                                 disabled={false} />
                                 <Input 
                                 nome={"Razão Social:"} 
                                 type={"text"}
                                 valor={usuario.razaoSocial}
-                                onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, "razaoSocial": e.target.value }) && setUsuario({ ...usuario, "razaoSocial": e.target.value })}
+                                onChange={(e) => {setUsuarioParaAtualizar({ ...usarioParaAtualzar, "razaoSocial": e.target.value }); setUsuario({ ...usuario, "razaoSocial": e.target.value })}}
                                 disabled={false} />
                                 <Input 
                                 nome={"CNPJ:"} 
                                 type={"text"}
                                 valor={usuario.cnpj}
-                                onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, "cnpj": e.target.value }) && setUsuario({ ...usuario, "cnpj": e.target.value })}
+                                onChange={(e) => {setUsuarioParaAtualizar({ ...usarioParaAtualzar, "cnpj": e.target.value }); setUsuario({ ...usuario, "cnpj": e.target.value })}}
                                 disabled={false} />
                             </>
                         )}
@@ -243,14 +247,14 @@ function FormEditPerfilAdvogado(){
                         nome={"Email:"}
                         type={"text"}
                         valor={usuario.email}
-                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, "email": e.target.value }) && setUsuario({ ...usuario, "email": e.target.value })}
+                        onChange={(e) => {setUsuarioParaAtualizar({ ...usarioParaAtualzar, "email": e.target.value }); setUsuario({ ...usuario, "email": e.target.value })}}
                         disabled={false} />
 
                         <Input 
                         nome={"Telefone:"}
                         type={"text"}
                         valor={usuario.telefone}
-                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, "telefone": e.target.value }) && setUsuario({ ...usuario, "telefone": e.target.value })}
+                        onChange={(e) => {setUsuarioParaAtualizar({ ...usarioParaAtualzar, "telefone": e.target.value }); setUsuario({ ...usuario, "telefone": e.target.value })}}
                         disabled={false} />
 
                         <Input 
@@ -259,12 +263,6 @@ function FormEditPerfilAdvogado(){
                         valor={usuario.oab}
                         disabled={true} />
 
-                        <Input 
-                        nome={"Senha:"}
-                        type={"password"}
-                        valor={usuario.senha}
-                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, "senha": e.target.value }) && setUsuario({ ...usuario, "senha": e.target.value })}
-                        disabled={false} />
                     </div>
 
                     <div className="divisoria">
@@ -272,35 +270,35 @@ function FormEditPerfilAdvogado(){
                         nome={"CEP:"}
                         type={"text"}
                         valor={usuario.cep}
-                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, "cep": e.target.value }) && setUsuario({ ...usuario, "cep": e.target.value })}
+                        onChange={(e) => {setUsuarioParaAtualizar({ ...usarioParaAtualzar, "cep": e.target.value }); setUsuario({ ...usuario, "cep": e.target.value })}}
                         disabled={false} />
                         
                         <Input 
                         nome={"Logradouro:"}
                         type={"text"}
                         valor={usuario.logradouro}
-                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, "logradouro": e.target.value }) && setUsuario({ ...usuario, "logradouro": e.target.value })}
+                        onChange={(e) => {setUsuarioParaAtualizar({ ...usarioParaAtualzar, "logradouro": e.target.value }); setUsuario({ ...usuario, "logradouro": e.target.value })}}
                         disabled={false} />
 
                         <Input 
                         nome={"Bairro:"}
                         type={"text"}
                         valor={usuario.bairro}
-                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, "bairro": e.target.value }) && setUsuario({ ...usuario, "bairro": e.target.value })}
+                        onChange={(e) => {setUsuarioParaAtualizar({ ...usarioParaAtualzar, "bairro": e.target.value }); setUsuario({ ...usuario, "bairro": e.target.value })}}
                         disabled={false} />
 
                         <Input 
                         nome={"Cidade:"}
                         type={"text"}
                         valor={usuario.cidade}
-                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, "cidade": e.target.value }) && setUsuario({ ...usuario, "cidade": e.target.value })}
+                            onChange={(e) => {setUsuarioParaAtualizar({ ...usarioParaAtualzar, "cidade": e.target.value }); setUsuario({ ...usuario, "cidade": e.target.value })}}
                         disabled={false} />
 
                         <Input 
                         nome={"Complemento:"}
                         type={"text"}
                         valor={usuario.complemento}
-                        onChange={(e) => setUsuarioParaAtualizar({ ...usarioParaAtualzar, "complemento": e.target.value }) && setUsuario({ ...usuario, "complemento": e.target.value })}
+                        onChange={(e) => {setUsuarioParaAtualizar({ ...usarioParaAtualzar, "complemento": e.target.value }); setUsuario({ ...usuario, "complemento": e.target.value })}}
                         disabled={false} />
 
                         <div className="divisao">

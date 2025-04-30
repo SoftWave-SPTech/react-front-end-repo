@@ -62,7 +62,7 @@ export default function Login() {
 
                 <label className="label">SENHA</label>
                 <input
-                    type="text"
+                    type="password"
                     value={senha}
                     onChange={(e) => setsenha(e.target.value)}
                     className="input"

@@ -26,12 +26,10 @@ export default function AdvogadoJuridicoForm() {
     const telefoneMask = new Inputmask('(99) 99999-9999', { placeholder: '(__) _____-____' });
     const cepMask = new Inputmask('99999-999', { placeholder: '_____-___' });
     const cnpjMask = new Inputmask('99.999.999/9999-99', { placeholder: '__.___.___/____-__' });
-    const oabMask = new Inputmask('AA999999', { placeholder: '________' });
 
     telefoneMask.mask(document.querySelector('[name=telefone]'));
     cepMask.mask(document.querySelector('[name=cep]'));
     cnpjMask.mask(document.querySelector('[name=cnpj]'));
-    oabMask.mask(document.querySelector('[name=oab]'));
   }, []);
 
   const handleChange = (e) => {
@@ -87,9 +85,9 @@ export default function AdvogadoJuridicoForm() {
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "E-mail inválido.";
     }
-    if (formData.oab && !/^[A-Z]{2}\d{6}$/.test(formData.oab)) {
-      newErrors.oab = "OAB inválida. Deve conter 2 letras seguidas de 6 números.";
-    }
+    // if (formData.oab && !/^[A-Z]{2}\d{6}$/.test(formData.oab)) {
+    //   newErrors.oab = "OAB inválida. Deve conter 2 letras seguidas de 6 números.";
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -104,7 +102,7 @@ export default function AdvogadoJuridicoForm() {
 
     console.log('Dados do formulário:', dadosParaEnviar);
     // TODO ESCREVER AUTORIZACAO PARA AS OUTRAS REQUESTS
-    axios.post('http://localhost:8080/advogados-fisicos', dadosParaEnviar, {
+    axios.post('http://localhost:8080/advogados-juridicos', dadosParaEnviar, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },

@@ -102,7 +102,7 @@ export default function ClienteFisicoForm() {
 
     console.log('Dados do formulário:', dadosParaEnviar);
     // TODO ESCREVER AUTORIZACAO PARA AS OUTRAS REQUESTS
-    axios.post('http://localhost:8080/advogados-fisicos', dadosParaEnviar, {
+    axios.post('http://localhost:8080/usuarios-fisicos', dadosParaEnviar, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },

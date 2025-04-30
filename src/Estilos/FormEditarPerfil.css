@@ -79,5 +79,5 @@
     display: none;
 }
 .menu-lateral:not(.fechado) ~ .container-body-edit{
-    padding-left: 5%;
+    padding-left: 15%;
 }
