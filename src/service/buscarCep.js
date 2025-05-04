@@ -1,6 +1,7 @@
 export async function buscarCep(cep) 
 {
-    try {
+    try 
+    {
       // Remove tudo que não for número
       const cepLimpo = cep.replace(/\D/g, '');
   

@@ -1,12 +1,15 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import SiteInstitucional from "../pages/siteInstitucional/SiteInstitucional";
-import CadastrarUsuarios from "../pages/CadastrarUsuario/CadastrarUsuarios";
-import Login from "../pages/login-primeiro-acesso/Login";
-import PrimeiroAcesso from "../pages/login-primeiro-acesso/PrimeiroAcesso";
-import CadastrarSenha from "../pages/login-primeiro-acesso/CadastrarSenha";
-import FormEditPerfilAdvogado from "../Advogado/FormEditPerfilAdvogado";
-import FormEditPerfilCliente from "../Cliente/FormEditPerfilCliente";
+import SiteInstitucional from "../pages/SiteInstitucional";
+import CadastrarUsuarios from "../pages/CadastrarUsuarios";
+import Login from "../pages/Login";
+import PrimeiroAcesso from "../pages/PrimeiroAcesso";
+import CadastrarSenha from "../pages/CadastrarSenha";
+import FormEditPerfilAdvogado from "../components/EditarUsuarios/FormEditPerfilAdvogado";
+import FormEditPerfilCliente from "../components/EditarUsuarios/FormEditPerfilCliente";
+import VisualizarDocumentosProcesso from "../pages/VisualizarDocumentosProcesso";
+import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais";
+import AnaliseComIa from "../pages/AnaliseComIa";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -37,4 +40,16 @@ export const AppRouter = createBrowserRouter([
     path: "/perfil-advogado",
     element: <FormEditPerfilAdvogado/>
   },
+  {
+    path: "/documentos-processo",
+    element: <VisualizarDocumentosProcesso/>
+  },
+  {
+    path: "/documentos-pessoais",
+    element: <VisualizarDocumentosPessoais/>
+  },
+  {
+    path: "/analie-ia",
+    element: <AnaliseComIa/>
+  }
 ]);
