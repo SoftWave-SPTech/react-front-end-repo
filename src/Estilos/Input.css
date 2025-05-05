@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+.agrupamento {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: space-evenly;
+  height: 100%;
+  align-items: center;
+
+  .label-input-form {
+    width: 70%;
+    height: 100%;
+    font-size: 100%;
+    align-items: center;
+
+
+    .input-form {
+      width: 100%;
+      height: 45px;
+      font-size: 150%;
+      text-align: center;
+      border-radius: 8px;
+      border: 2px solid #ccc;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .input-form:focus {
+      border-color: #D9BB62;
+      border-width: 1px;
+      outline: none;
+    }
+  }
+}
