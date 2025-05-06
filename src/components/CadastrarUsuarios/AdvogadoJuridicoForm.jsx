@@ -4,6 +4,8 @@ import { buscarCep } from '../../service/buscarCep';
 import { v4 as uuidv4 } from 'uuid';
 import Inputmask from 'inputmask';
 
+// Commit temporário para criar a branch release-sprint-3
+
 export default function AdvogadoJuridicoForm() {
   const [formData, setFormData] = useState({
     nomeFantasia: '',
