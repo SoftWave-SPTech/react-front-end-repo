@@ -10,6 +10,7 @@ import FormEditPerfilCliente from "../components/EditarUsuarios/FormEditPerfilCl
 import VisualizarDocumentosProcesso from "../pages/VisualizarDocumentosProcesso";
 import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais";
 import AnaliseComIa from "../pages/AnaliseComIa";
+import CarroselAdvogados from "../components/SiteInstitucional/CarroselAdvogados";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -51,5 +52,9 @@ export const AppRouter = createBrowserRouter([
   {
     path: "/analie-ia",
     element: <AnaliseComIa/>
+  },
+  {
+    path: "/carrosel",
+    element: <CarroselAdvogados/>
   }
 ]);

@@ -100,8 +100,8 @@ function SiteInstitucional() {
                 </div>
             </section>
 
-            <section alt="banner advogados" className='container-site'>
-                <h2 className='titulos-containers'>Nossos Advogados</h2>
+            <section alt="banner advogados" className='w-screen bg-white h-screen flex items-center justify-center'>
+                {/* <h2 className='titulos-containers'>Nossos Advogados</h2> */}
                 <CarroselAdvogados />
             </section>
 
