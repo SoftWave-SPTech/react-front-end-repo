@@ -1,5 +1,5 @@
 import Button from "../Ui/Button"
-import Input from "../Ui/Input"
+//import Input from "../Ui/Input"
 import '../../estilos/FormEditarPerfil.css'
 import Image from "./Image"
 import { useEffect, useState, useRef } from "react"
