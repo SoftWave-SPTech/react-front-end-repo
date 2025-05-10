@@ -10,6 +10,7 @@ import FormEditPerfilCliente from "../components/EditarUsuarios/FormEditPerfilCl
 import VisualizarDocumentosProcesso from "../pages/VisualizarDocumentosProcesso";
 import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais";
 import AnaliseComIa from "../pages/AnaliseComIa";
+import CadastrarProcesso from "../pages/CadastrarProcesso";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -49,7 +50,11 @@ export const AppRouter = createBrowserRouter([
     element: <VisualizarDocumentosPessoais/>
   },
   {
-    path: "/analie-ia",
+    path: "/analise-ia",
     element: <AnaliseComIa/>
+  },
+  {
+    path: "/cadastrar-processo",
+    element: <CadastrarProcesso/>
   }
 ]);
