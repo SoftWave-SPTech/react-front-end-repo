@@ -29,6 +29,36 @@ const cores =
   claro: 'bg-[#0A307E] text-branco',
 };
 
+/**
+ * Componente BarraTitulo
+ *
+ * Faixa estilizada para exibir títulos ou seções destacadas no layout.
+ * Permite configurar largura, cor e tamanho de forma flexível.
+ *
+ * Props disponíveis:
+ * - `children`: Conteúdo a ser exibido dentro da barra (normalmente um título ou ícone).
+ * - `largura`: Define a largura do componente. Opções:
+ *   - "grande" (100%)
+ *   - "medio" (85%)
+ *   - "pequeno" (60%)
+ *   - "auto" (largura automática)
+ * - `cor`: Estilo da barra. Opções:
+ *   - "escuro" (azul escuro padrão)
+ *   - "claro" (tom de azul claro)
+ * - `tamanho`: Define o tamanho do texto e o espaçamento. Opções:
+ *   - "pequeno", "medio", "grande", "responsivo" (padrão)
+ * - `className`: Permite adicionar classes Tailwind extras para customização.
+ *
+ * Exemplo de uso:
+ *
+ * <BarraTitulo>Cadastro de Usuários</BarraTitulo>
+ *
+ * <BarraTitulo cor="claro" tamanho="medio" largura="pequeno">
+ *   <span className="font-bold">Dashboard</span>
+ * </BarraTitulo>
+ */
+
+
 export default function BarraTitulo(
 {
   children,
