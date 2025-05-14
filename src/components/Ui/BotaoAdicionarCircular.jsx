@@ -11,7 +11,7 @@ const tamanhos =
 
 export default function BotaoAdicionar(
 {
-  tamanho = 'medio',
+  tamanho = 'grande',
   onClick = () => {},
   className = '',
 }) 

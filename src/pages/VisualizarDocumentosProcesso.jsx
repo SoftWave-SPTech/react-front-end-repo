@@ -34,7 +34,6 @@ export default function VisualizarDocumentosProcesso() {
     setModalExcluir({ aberto: false, index: null });
   };
 
-  // Filtrar documentos com base no estado `filtro`
   const documentosFiltrados = documentos.filter((doc) =>
     doc.nome.toLowerCase().includes(filtro.toLowerCase())
   );
@@ -78,7 +77,7 @@ export default function VisualizarDocumentosProcesso() {
           ) : (
             documentosFiltrados.map((doc, idx) => (
               <CardDocumento
-                key={doc.id || idx} // Use `doc.id` se disponível, caso contrário, use o índice
+                key={doc.id || idx}
                 doc={doc}
                 onExcluir={() => confirmarExclusao(idx)}
               />
