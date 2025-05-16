@@ -16,7 +16,7 @@ export default function CardDocumento({ doc, onExcluir }) {
         className="absolute top-2 right-2 text-red-500 hover:text-red-700"
         onClick={onExcluir}
       >
-        <FiTrash2 className="text-2xl" /> {/* Aumenta o tamanho do ícone */}
+        <FiTrash2 className="text-2xl" />
       </button>
       <div className="flex flex-col items-center justify-center flex-1 w-full">
         <FiFileText className="text-azulEscuroForte text-4xl mb-6" />
