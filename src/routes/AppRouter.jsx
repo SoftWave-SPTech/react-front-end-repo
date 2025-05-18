@@ -11,6 +11,8 @@ import VisualizarDocumentosProcesso from "../pages/VisualizarDocumentosProcesso"
 import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais";
 import AnaliseComIa from "../pages/AnaliseComIa";
 import CadastrarProcesso from "../pages/CadastrarProcesso";
+import RecuperarSenha from "../pages/RecuperarSenha";
+import PesquisarProcessos from "../pages/PesquisarProcessos";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -32,6 +34,10 @@ export const AppRouter = createBrowserRouter([
   {
     path: "/cadastrar-senha",
     element: <CadastrarSenha/>
+  },
+  {
+    path: "/recuperar-senha",
+    element: <RecuperarSenha/>
   },
   {
     path: "/perfil-cliente",
@@ -56,5 +62,9 @@ export const AppRouter = createBrowserRouter([
   {
     path: "/cadastrar-processo",
     element: <CadastrarProcesso/>
+  },
+  {
+    path: "/pesquisar-processos",
+    element: <PesquisarProcessos/>
   }
 ]);

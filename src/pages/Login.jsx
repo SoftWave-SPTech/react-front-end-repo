@@ -69,7 +69,7 @@ export default function Login() {
                     placeholder="*********"
                     required
                 />
-                <a href="#" className="linkSenha">
+                <a href="/recuperar-senha" className="linkSenha">
                     ESQUECI MINHA SENHA
                 </a>
 
