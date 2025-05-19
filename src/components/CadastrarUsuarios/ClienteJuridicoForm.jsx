@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
+import { api } from '../../service/api.js';
+import { nanoid } from 'nanoid';
 
 import Botao from '../../components/Ui/Botao';
 import { Input } from '../Ui/Input';
 
 import { mascaraCNPJ, mascaraTelefone, mascaraCEP } from '../../Utils/mascaras';
 import { buscarCep } from '../../service/buscarCep';
-import { validarCamposObrigatorios } from '../../utils/validacoes';
+import { validarClienteJuridico } from '../../Utils/validacoes';
 
 export default function ClienteJuridicoForm() 
 {
@@ -66,8 +66,9 @@ export default function ClienteJuridicoForm()
   const handleSubmit = (e) => 
   {
     e.preventDefault();
+     console.log("SUBMIT DISPARADO");
 
-    const errosEncontrados = validarCamposObrigatorios(formData);
+    const errosEncontrados = validarClienteJuridico(formData);
 
     if (Object.keys(errosEncontrados).length > 0) 
     {
@@ -76,10 +77,14 @@ export default function ClienteJuridicoForm()
     }
 
     setErrors({});
-    const novaSenha = uuidv4();
+
+    const novaSenha = nanoid(8);
     const dadosParaEnviar = { ...formData, senha: novaSenha };
 
-    axios.post('http://localhost:8080/usuarios-juridicos', dadosParaEnviar, 
+    console.log("Erros encontrados:", errosEncontrados);
+
+
+    api.post('/usuarios-juridicos', dadosParaEnviar, 
     {
       headers: 
       {
