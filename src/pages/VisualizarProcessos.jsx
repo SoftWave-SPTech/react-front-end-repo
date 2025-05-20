@@ -30,6 +30,126 @@ const processosFake = [
     foro: 'TRT 2ª Região',
     movimentacao: 'Sentença proferida em 10/05/2023',
   },
+    {
+    id: 2,
+    numero: '2023.0003',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+    {
+    id: 2,
+    numero: '2023.0004',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+    {
+    id: 2,
+    numero: '2023.0005',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+    {
+    id: 2,
+    numero: '2023.0006',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+    {
+    id: 2,
+    numero: '2023.0007',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+    {
+    id: 2,
+    numero: '2023.0008',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+    {
+    id: 2,
+    numero: '2023.0009',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+    {
+    id: 2,
+    numero: '2023.00010',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+    {
+    id: 2,
+    numero: '2023.00011',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+    {
+    id: 2,
+    numero: '2023.00',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  }
 ];
 
 export default function VisualizarProcessos() {
@@ -37,6 +157,7 @@ export default function VisualizarProcessos() {
   const [busca, setBusca] = useState('');
   const [modalConfirma, setModalConfirma] = useState(false);
   const [processoSelecionado, setProcessoSelecionado] = useState(null);
+  const [expandido, setExpandido] = useState(null); // novo estado
 
   const abrirExclusao = (processo) => {
     setProcessoSelecionado(processo);
@@ -52,9 +173,12 @@ export default function VisualizarProcessos() {
     p.numero.includes(busca) || p.cliente.toLowerCase().includes(busca.toLowerCase())
   );
 
+  const toggleExpandido = (id) => {
+    setExpandido(expandido === id ? null : id);
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* menu com largura fixa */}
       <div className="w-64 flex-shrink-0">
         <MenuLateralAdvogado />
       </div>
@@ -62,13 +186,13 @@ export default function VisualizarProcessos() {
       <div className="flex-1 p-6 sm:p-8 overflow-auto">
         <div className="flex justify-between items-center mb-6">
           <BarraTitulo>
-            <span className="font-semibold">Olá cliente</span> - Visualizar Processos
+            Visualizar Processos
           </BarraTitulo>
         </div>
 
         <div className="mb-6 max-w-xl">
           <Input
-            nome="Buscar por número ou cliente"
+            nome="Buscar por número do processo"
             type="text"
             valor={busca}
             onChange={(e) => setBusca(e.target.value)}
@@ -77,49 +201,42 @@ export default function VisualizarProcessos() {
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm bg-white rounded shadow-md">
-            <thead className="bg-azulEscuroForte text-white">
-              <tr>
-                <th className="px-4 py-2">Nº Processo</th>
-                <th className="px-4 py-2">Cliente</th>
-                <th className="px-4 py-2">Advogado</th>
-                <th className="px-4 py-2">Classe</th>
-                <th className="px-4 py-2">Assunto</th>
-                <th className="px-4 py-2">Foro</th>
-                <th className="px-4 py-2">Movimentação</th>
-                <th className="px-4 py-2">Status</th>
-                <th className="px-4 py-2">Início</th>
-                <th className="px-4 py-2">Ações</th>
-              </tr>
-            </thead>
             <tbody>
               {processosFiltrados.map((p) => (
-                <tr key={p.id} className="border-b hover:bg-gray-50">
-                  <td className="px-4 py-2">{p.numero}</td>
-                  <td className="px-4 py-2">{p.cliente}</td>
-                  <td className="px-4 py-2">{p.advogado}</td>
-                  <td className="px-4 py-2">{p.classe}</td>
-                  <td className="px-4 py-2">{p.assunto}</td>
-                  <td className="px-4 py-2">{p.foro}</td>
-                  <td className="px-4 py-2">{p.movimentacao}</td>
-                  <td className="px-4 py-2">{p.status}</td>
-                  <td className="px-4 py-2">{p.inicio}</td>
-                  <td className="px-4 py-2 flex flex-col gap-1 sm:flex-row">
-                    <Botao
-                      tamanho="pequeno"
-                      cor="padrao"
-                      onClick={() => alert(`Visualizar ${p.numero}`)}
-                    >
-                      Ver
-                    </Botao>
-                    <Botao
-                      tamanho="pequeno"
-                      cor="contornoAzul"
-                      onClick={() => abrirExclusao(p)}
-                    >
-                      Excluir
-                    </Botao>
-                  </td>
-                </tr>
+                <React.Fragment key={p.id}>
+                  <tr
+                    className="border-b hover:bg-gray-50 cursor-pointer"
+                    onClick={() => toggleExpandido(p.id)}
+                  >
+                    <td className="px-4 py-2 font-semibold" colSpan={10}>
+                      Processo nº {p.numero}
+                      <span className="float-right text-gray-400">
+                        {expandido === p.id ? '▲' : '▼'}
+                      </span>
+                    </td>
+                  </tr>
+                  {expandido === p.id && (
+                    <tr className="bg-gray-50 mb-4">
+                      <td colSpan={10} className="px-4 py-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+                          <div><b>Cliente:</b> {p.cliente}</div>
+                          <div><b>Advogado:</b> {p.advogado}</div>
+                          <div><b>Classe:</b> {p.classe}</div>
+                          <div><b>Assunto:</b> {p.assunto}</div>
+                          <div><b>Foro:</b> {p.foro}</div>
+                          <div><b>Movimentação:</b> {p.movimentacao}</div>
+                          <div><b>Status:</b> {p.status}</div>
+                          <div><b>Início:</b> {p.inicio}</div>
+                        </div>
+                        <div className="flex justify-end">
+                          <Botao onClick={() => alert(`Visualizar processo ${p.numero}`)}>
+                            Visualizar Processo
+                          </Botao>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
               ))}
               {processosFiltrados.length === 0 && (
                 <tr>
