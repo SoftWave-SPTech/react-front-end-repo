@@ -18,7 +18,7 @@ export const AppRouter = createBrowserRouter([
     element: <SiteInstitucional/>,
   },
   {
-    path: "/cadastro",
+    path: "/cadastrar-usuario",
     element: <CadastrarUsuarios/>,
   },
   {
@@ -54,7 +54,7 @@ export const AppRouter = createBrowserRouter([
     element: <AnaliseComIa/>
   },
   {
-    path: "/cadastrar-processo",
+    path: "/cadastrar-processos",
     element: <CadastrarProcesso/>
   }
 ]);

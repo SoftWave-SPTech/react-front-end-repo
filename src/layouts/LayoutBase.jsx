@@ -1,16 +1,22 @@
 import React from 'react';
-import MenuAdvogado from '../components/Menu/MenuLateralAdvogado';
-import MenuCliente from '../components/Menu/MenuLateralCliente';
+import MenuLateral from '../components/Menu/MenuLateral';
 
-const LayoutBase = ({ tipoMenu, children }) => {
-  const MenuLateral = tipoMenu === "advogado" ? MenuAdvogado : MenuCliente;
-
+const LayoutBase = ({ children }) => {
   return (
-    <div className="flex h-screen w-screen">
+    <div className="w-screen h-screen bg-blue-100 overflow-hidden">
       <MenuLateral />
-      <main className="flex-1 overflow-y-auto p-6 pl-[500px] transition-all duration-300">
-        {children}
-      </main>
+
+      <div
+        className={`
+          h-full overflow-y-auto
+          transition-all duration-300 ease-in-out
+          pl-[clamp(4.375rem,20rem,22%)]
+        `}
+      >
+        <main className="max-w-7xl w-full mx-auto p-4">
+          {children}
+        </main>
+      </div>
     </div>
   );
 };

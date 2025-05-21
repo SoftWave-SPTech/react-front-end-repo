@@ -5,7 +5,7 @@ import FormPerfilCliente from '../components/EditarUsuarios/FormPerfilCliente';
 const EditarPerfilCliente = () => 
 {
   return (
-    <LayoutBase tipoMenu="cliente">
+    <LayoutBase>
       <FormPerfilCliente />
     </LayoutBase>
   );
