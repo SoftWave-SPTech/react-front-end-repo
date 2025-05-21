@@ -30,8 +30,8 @@ const processosFake = [
     foro: 'TRT 2ª Região',
     movimentacao: 'Sentença proferida em 10/05/2023',
   },
-    {
-    id: 2,
+  {
+    id: 3,
     numero: '2023.0003',
     cliente: 'Maria Oliveira',
     advogado: 'Dra. Paula',
@@ -42,8 +42,8 @@ const processosFake = [
     foro: 'TRT 2ª Região',
     movimentacao: 'Sentença proferida em 10/05/2023',
   },
-    {
-    id: 2,
+  {
+    id: 4,
     numero: '2023.0004',
     cliente: 'Maria Oliveira',
     advogado: 'Dra. Paula',
@@ -54,8 +54,8 @@ const processosFake = [
     foro: 'TRT 2ª Região',
     movimentacao: 'Sentença proferida em 10/05/2023',
   },
-    {
-    id: 2,
+  {
+    id: 5,
     numero: '2023.0005',
     cliente: 'Maria Oliveira',
     advogado: 'Dra. Paula',
@@ -66,8 +66,8 @@ const processosFake = [
     foro: 'TRT 2ª Região',
     movimentacao: 'Sentença proferida em 10/05/2023',
   },
-    {
-    id: 2,
+  {
+    id: 6,
     numero: '2023.0006',
     cliente: 'Maria Oliveira',
     advogado: 'Dra. Paula',
@@ -78,8 +78,8 @@ const processosFake = [
     foro: 'TRT 2ª Região',
     movimentacao: 'Sentença proferida em 10/05/2023',
   },
-    {
-    id: 2,
+  {
+    id: 7,
     numero: '2023.0007',
     cliente: 'Maria Oliveira',
     advogado: 'Dra. Paula',
@@ -90,8 +90,8 @@ const processosFake = [
     foro: 'TRT 2ª Região',
     movimentacao: 'Sentença proferida em 10/05/2023',
   },
-    {
-    id: 2,
+  {
+    id: 8,
     numero: '2023.0008',
     cliente: 'Maria Oliveira',
     advogado: 'Dra. Paula',
@@ -102,8 +102,8 @@ const processosFake = [
     foro: 'TRT 2ª Região',
     movimentacao: 'Sentença proferida em 10/05/2023',
   },
-    {
-    id: 2,
+  {
+    id: 9,
     numero: '2023.0009',
     cliente: 'Maria Oliveira',
     advogado: 'Dra. Paula',
@@ -114,8 +114,8 @@ const processosFake = [
     foro: 'TRT 2ª Região',
     movimentacao: 'Sentença proferida em 10/05/2023',
   },
-    {
-    id: 2,
+  {
+    id: 10,
     numero: '2023.00010',
     cliente: 'Maria Oliveira',
     advogado: 'Dra. Paula',
@@ -126,8 +126,8 @@ const processosFake = [
     foro: 'TRT 2ª Região',
     movimentacao: 'Sentença proferida em 10/05/2023',
   },
-    {
-    id: 2,
+  {
+    id: 11,
     numero: '2023.00011',
     cliente: 'Maria Oliveira',
     advogado: 'Dra. Paula',
@@ -138,8 +138,8 @@ const processosFake = [
     foro: 'TRT 2ª Região',
     movimentacao: 'Sentença proferida em 10/05/2023',
   },
-    {
-    id: 2,
+  {
+    id: 12,
     numero: '2023.00',
     cliente: 'Maria Oliveira',
     advogado: 'Dra. Paula',
@@ -208,7 +208,7 @@ export default function VisualizarProcessos() {
                     className="border-b hover:bg-gray-50 cursor-pointer"
                     onClick={() => toggleExpandido(p.id)}
                   >
-                    <td className="px-4 py-2 font-semibold" colSpan={10}>
+                    <td className="px-4 py-2 font-semibold mb-4" style={{ paddingBottom: '1rem' }} colSpan={10}>
                       Processo nº {p.numero}
                       <span className="float-right text-gray-400">
                         {expandido === p.id ? '▲' : '▼'}
