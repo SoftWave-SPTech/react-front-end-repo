@@ -4,8 +4,9 @@ import 'tailwindcss/tailwind.css';
 const tamanhos = 
 {
     pequeno: "text-sm px-2 py-1",
-    medio: "text-base px-4 py-2",
+    medio: "text-base px-40 py-4",
     grande: "text-lg px-6 py-3",
+    pequeno: "text-[0.875rem] py-[0.625rem] px-[1.25rem]",
     responsivo: `
     text-xs px-2 py-1
     sm:text-sm sm:px-3 sm:py-2a
@@ -20,7 +21,8 @@ const larguras =
     cheia: "w-full",
     grande: "w-[65%]",
     normal: "w-[80%] sm:w-[70%] md:w-[60%] lg:w-[50%] xl:w-[40%]",
-    medio: "w-[50%]",
+    medio: "w-[30%]",
+    pequeno: "w-[20%] sm:w-[18%] md:w-[16%]",
     auto: "w-auto"
 };
 

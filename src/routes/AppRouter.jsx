@@ -5,8 +5,8 @@ import CadastrarUsuarios from "../pages/CadastrarUsuarios";
 import Login from "../pages/Login";
 import PrimeiroAcesso from "../pages/PrimeiroAcesso";
 import CadastrarSenha from "../pages/CadastrarSenha";
-import FormEditPerfilAdvogado from "../components/EditarUsuarios/FormEditPerfilAdvogado";
-import FormEditPerfilCliente from "../components/EditarUsuarios/FormEditPerfilCliente";
+import FormEditPerfilAdvogado from "../pages/EditarPerfilAdvogado";
+import FormEditPerfilCliente from "../pages/EditarPerfilCliente";
 import VisualizarDocumentosProcesso from "../pages/VisualizarDocumentosProcesso";
 import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais";
 import AnaliseComIa from "../pages/AnaliseComIa";
@@ -20,7 +20,7 @@ export const AppRouter = createBrowserRouter([
     element: <SiteInstitucional/>,
   },
   {
-    path: "/cadastro",
+    path: "/cadastrar-usuario",
     element: <CadastrarUsuarios/>,
   },
   {
@@ -60,7 +60,7 @@ export const AppRouter = createBrowserRouter([
     element: <AnaliseComIa/>
   },
   {
-    path: "/cadastrar-processo",
+    path: "/cadastrar-processos",
     element: <CadastrarProcesso/>
   },
   {
