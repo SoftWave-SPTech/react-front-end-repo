@@ -5,21 +5,22 @@ export default function ModalComentario({
   isOpen,
   onClose,
   onSalvar,
+  onExcluir,
   comentario,
   modoEdicao,
   setModoEdicao
 }) {
   const [texto, setTexto] = useState("");
 
-useEffect(() => {
-  if (comentario && modoEdicao === false) {
-    // Abrindo para visualizar um comentário já salvo
-    setTexto(comentario.texto || "");
-  } else if (!comentario && modoEdicao === true) {
-    // Criando um novo comentário
-    setTexto("");
-  }
-}, [comentario, modoEdicao]);
+  useEffect(() => {
+    if (comentario && modoEdicao === false) {
+      // Abrindo para visualizar um comentário já salvo
+      setTexto(comentario.texto || "");
+    } else if (!comentario && modoEdicao === true) {
+      // Criando um novo comentário
+      setTexto("");
+    }
+  }, [comentario, modoEdicao]);
 
 
   if (!isOpen) return null;
@@ -27,7 +28,7 @@ useEffect(() => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-[#0A1A33] text-white rounded-xl w-full max-w-2xl p-6 relative max-h-[60vh] overflow-y-auto">
-        
+
         {/* Cabeçalho */}
         <div className="bg-[#2454D3] rounded-t-xl px-4 py-4 flex items-center justify-between">
           <h3 className="text-lg font-semibold text-white w-full text-center">
@@ -71,14 +72,26 @@ useEffect(() => {
               Salvar
             </Botao>
           ) : (
-            <Botao
-              largura="auto"
-              cor="padrao"
-              tamanho="medio"
-              onClick={() => setModoEdicao(true)}
-            >
-              Editar
-            </Botao>
+            <>
+              <div className="flex gap-1">
+                <Botao
+                  largura="auto"
+                  cor="padrao"
+                  tamanho="medio"
+                  onClick={() => setModoEdicao(true)}
+                >
+                  Editar
+                </Botao>
+                <Botao
+                  largura="auto"
+                  cor="padrao"
+                  tamanho="medio"
+                  onClick={() => onExcluir(comentario?.index)}
+                >
+                  Excluir
+                </Botao>
+              </div>
+            </>
           )}
         </div>
 

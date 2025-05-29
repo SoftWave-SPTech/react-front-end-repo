@@ -51,7 +51,16 @@ Por fim, recomenda-se reavaliação dos valores rescisórios e proposição de a
     setComentarioSelecionado(null);
     setModoEdicao(false);
   };
-
+  const handleExcluir = (index) => {
+  if (index !== null) {
+    const novaLista = [...comentarios];
+    novaLista.splice(index, 1);
+    setComentarios(novaLista);
+    setModalAberto(false);
+    setComentarioSelecionado(null);
+    setModoEdicao(false);
+  }
+};
   return (
     <div className="w-full min-h-screen bg-[#E5EDFA] px-5 py-7">
       <div className="max-w-7xl mx-auto space-y-10">
@@ -132,6 +141,7 @@ Por fim, recomenda-se reavaliação dos valores rescisórios e proposição de a
           isOpen={modalAberto}
           onClose={() => setModalAberto(false)}
           onSalvar={handleSalvar}
+          onExcluir={handleExcluir}
           comentario={comentarioSelecionado}
           modoEdicao={modoEdicao}
           setModoEdicao={setModoEdicao}
