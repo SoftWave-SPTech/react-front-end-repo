@@ -20,11 +20,11 @@ export default function CardDocumento({ doc, onExcluir }) {
       </button>
       <div className="flex flex-col items-center justify-center flex-1 w-full">
         <FiFileText className="text-azulEscuroForte text-4xl mb-6" />
-        <p className="text-sm font-medium text-gray-800 truncate w-full">{doc.nome}</p>
+        <p className="text-sm font-medium text-gray-800 truncate w-full">{doc.nomeArquivo}</p>
       </div>
       <div className="flex gap-3 mt-4 justify-center w-full">
         <a
-          href={doc.url}
+          href={`http://localhost:8080/${doc.urlArquivo}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-sm text-blue-950 hover:underline flex items-center gap-1 justify-center"
@@ -32,7 +32,7 @@ export default function CardDocumento({ doc, onExcluir }) {
           Visualizar
         </a>
         <a
-          href={doc.url}
+          href={`http://localhost:8080/${doc.urlArquivo}`}
           download
           className="text-sm text-blue-950 hover:underline flex items-center gap-1 justify-center"
           title="Baixar documento"

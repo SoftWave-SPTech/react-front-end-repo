@@ -1,7 +1,6 @@
 import React from 'react';
-import MenuLateralAdvogado from '../components/Menu/MenuLateralAdvogado';
+import MenuLateralAdvogado from '../components/Menu/MenuLateral';
 import Cadastro from '../components/CadastrarUsuarios/Cadastro';
-import '../estilos/CadastrarUsuarios.css'; 
 
 const CadastrarUsuarios = () => 
 {

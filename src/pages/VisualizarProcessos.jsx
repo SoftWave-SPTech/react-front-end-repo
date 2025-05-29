@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import MenuLateralAdvogado from '../components/Menu/MenuLateralAdvogado';
+import MenuLateralAdvogado from '../components/Menu/MenuLateral';
 import BarraTitulo from '../components/Ui/BarraTitulo';
-import Input from '../components/Ui/Input';
+import {Input} from '../components/Ui/Input';
 import Botao from '../components/Ui/Botao';
 import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
 

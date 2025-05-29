@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import 'tailwindcss/tailwind.css';
 import Botao from "./Botao";
+import { Input } from './Input';
 
 export default function ModalUpload({ onClose, onUpload }) {
   const [arquivo, setArquivo] = useState(null);
+  const [descArquivo, setDescArquivo] = useState("");
 
   const handleUpload = () => {
     if (!arquivo) return;
     const novoDoc = {
-      nome: arquivo.name,
+      nome: descArquivo,
       url: URL.createObjectURL(arquivo),
+      file: arquivo,
     };
     onUpload(novoDoc);
   };
@@ -23,6 +26,12 @@ export default function ModalUpload({ onClose, onUpload }) {
           className="mb-4 w-full"
           onChange={(e) => setArquivo(e.target.files[0])}
         />
+
+        <Input
+        type={"text"}
+        label={"Descrição Documento"}
+        onChange={(e) => setDescArquivo(e.target.value)} />
+
         <div className="flex justify-end gap-2 mt-auto">
           <Botao
             className="text-xs px-2 py-0.5 rounded"
