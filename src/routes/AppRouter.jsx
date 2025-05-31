@@ -11,6 +11,7 @@ import VisualizarDocumentosProcesso from "../pages/VisualizarDocumentosProcesso"
 import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais";
 import AnaliseComIa from "../pages/AnaliseComIa";
 import CadastrarProcesso from "../pages/CadastrarProcesso";
+import VisualizarProcessosAdvogado from "../pages/VisualizarProcessosAdvogado";
 import Podcast from "../pages/Podcast";
 
 export const AppRouter = createBrowserRouter([
@@ -57,6 +58,10 @@ export const AppRouter = createBrowserRouter([
   {
     path: "/cadastrar-processos",
     element: <CadastrarProcesso/>
+  },
+  {
+    path: "/visualizar-processos-advogado",
+    element: <VisualizarProcessosAdvogado/>
   },
   {
     path: "/podcast",
