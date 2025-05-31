@@ -1,17 +1,13 @@
 import React from 'react';
-import MenuLateralAdvogado from '../components/Menu/MenuLateralAdvogado';
-import Cadastro from '../components/CadastrarUsuarios/Cadastro';
-import '../estilos/CadastrarUsuarios.css'; 
+import LayoutBase from '../layouts/LayoutBase';
+import FormCadastrar from '../components/CadastrarUsuarios/Cadastro';
 
 const CadastrarUsuarios = () => 
 {
   return (
-    <div className="cadastrar-usuarios">
-      <MenuLateralAdvogado />
-      <div className="cadastro">
-        <Cadastro />
-      </div>
-    </div>
+    <LayoutBase backgroundClass="bg-cinzaAzulado">
+      <FormCadastrar />
+    </LayoutBase>
   );
 };
 
