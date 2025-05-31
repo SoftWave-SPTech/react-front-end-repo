@@ -5,8 +5,8 @@ import FormPerfilAdvogado from '../components/EditarUsuarios/FormPerfilAdvogado'
 const EditarPerfilAdvogado = () => 
 {
   return (
-    <LayoutBase tipoMenu="advogado">
-      <FormPerfilAdvogado />
+    <LayoutBase>
+      <FormPerfilAdvogado backgroundClass="bg-cinzaAzulado" />
     </LayoutBase>
   );
 };

@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import '../../estilos/CarroselAdvogados.css';
 import Carousel from 'react-bootstrap/Carousel';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation , Pagination} from 'swiper/modules';
