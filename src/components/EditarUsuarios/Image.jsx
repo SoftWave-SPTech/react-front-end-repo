@@ -1,5 +1,5 @@
 import minhaImagem from '../../assets/images/boneco.png'
-import '../../estilos/Image.css'
+//import '../../estilos/Image.css'
 
 function Image() {
     return (
