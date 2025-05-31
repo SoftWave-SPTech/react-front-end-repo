@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import ComentarioAdvogado from "../Ui/ComentarioAdvogado";
 import BlocoInformativo from "../Ui/BlocoInformativo";
-import Botao from "../Ui/Botao";
-import BarraTitulo from "../Ui/BarraTitulo";
+import Botao from "../../components/Ui/Botao";
+import BarraTitulo from "../../components/Ui/BarraTitulo";
 import ModalComentario from "../Ui/ModalComentario";
 
 export default function AnaliseMovimentacao() {
