@@ -209,7 +209,7 @@ function FormPerfilCliente() {
 
   return (
     <>
-      <div className="w-full max-w-[65%] mx-auto py-6 mb-6 flex flex-col gap-6 shadow-md rounded-lg bg-transparent">
+      <div className="w-full max-w-[75%] mx-auto py-6 mb-6 flex flex-col gap-6 shadow-md rounded-lg bg-white">
         <BarraTitulo tamanho="responsivo" largura="grande" cor="escuro" className="rounded-lg">
           Foto do usuário
         </BarraTitulo>
@@ -231,13 +231,13 @@ function FormPerfilCliente() {
               onChange={(e) => atualizarFoto(e.target.files[0])}
             />
             <Botao cor="padrao" largura="auto" onClick={excluirFotoPerfil}>
-              Eliminar <FiTrash className="ml-1 inline-block"/>
+              Remover <FiTrash className="ml-1 inline-block"/>
             </Botao>
           </div>
         </div>
       </div>
 
-      <div className="w-full max-w-[65%] mx-auto py-4 mb-10 flex flex-col gap-6 shadow-md rounded-lg bg-transparent">
+      <div className="w-full max-w-[75%] mx-auto py-4 mb-10 flex flex-col gap-6 shadow-md rounded-lg bg-white">
         <BarraTitulo tamanho="responsivo" largura="grande" cor="escuro" className="rounded-lg">
           Informações pessoais
         </BarraTitulo>
