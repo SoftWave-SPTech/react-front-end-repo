@@ -9,6 +9,7 @@ import FormEditPerfilAdvogado from "../pages/EditarPerfilAdvogado";
 import FormEditPerfilCliente from "../pages/EditarPerfilCliente";
 import VisualizarDocumentosProcesso from "../pages/VisualizarDocumentosProcesso";
 import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais";
+import VisualizarProcessos from "../pages/VisualizarProcessos";
 import AnaliseComIa from "../pages/AnaliseComIa";
 import CadastrarProcesso from "../pages/CadastrarProcesso";
 import VisualizarProcessosAdvogado from "../pages/VisualizarProcessosAdvogado";
@@ -54,6 +55,14 @@ export const AppRouter = createBrowserRouter([
   {
     path: "/analise-ia",
     element: <AnaliseComIa/>
+  },
+  {
+    path: "/cadastrar-usuarios",
+    element: <CadastrarUsuarios/>
+  },
+   {
+    path: "/visualizar-processos",
+    element: <VisualizarProcessos/>
   },
   {
     path: "/cadastrar-processos",

@@ -1,7 +1,7 @@
 import { Input } from "../Ui/Input.jsx";
 import Botao from "../Ui/Botao.jsx";
 import BarraTitulo from "../Ui/BarraTitulo.jsx";
-import Image from "./Image.jsx";
+import minhaImagem from '../../assets/images/boneco.png'
 import { useEffect, useState, useRef } from "react";
 import { FiUpload, FiTrash } from 'react-icons/fi';
 import { api } from '../../service/api.js';
@@ -12,6 +12,10 @@ function FormPerfilAdvogado()
     const fileInputRef = useRef(null);
     const [usuario, setUsuario] = useState({})
     const [usarioParaAtualzar, setUsuarioParaAtualizar] = useState({})
+    const URL = sessionStorage.getItem('tipoUsuario') == 'UsuarioFisico' ? "/usuarios-fisicos/" :"/usuarios-juridicos/"
+    const URLFOTO = "/usuarios/foto-perfil"
+
+            
 
     useEffect(() => 
     {
@@ -172,8 +176,39 @@ function FormPerfilAdvogado()
             // Arquivos (.png, .jpg, .pdf, etc).
 
             const arquivoFormatado = new FormData();
-            arquivoFormatado.append("file", file);
+            arquivoFormatado.append("fotoPerfil", file);
+
+            api.put(`${URLFOTO}/${sessionStorage.getItem('id')}`, arquivoFormatado, {
+            headers: {
+                "Authorization":  TOKEN
+            }
+            })
+            .then(response => {
+            console.log("Upload realizado com sucesso:", response.data);
+              sessionStorage.setItem('fotoPerfil', response.data);
+              window.location.reload()
+            })
+            .catch(error => {
+            console.error("Erro ao enviar o arquivo:", error);
+            });
         }
+    }
+
+    function excluirFotoPerfil(){
+      api.delete(`${URLFOTO}/${sessionStorage.getItem('id')}`, {
+            headers: {
+                "Authorization":  TOKEN,
+            }
+            })
+            .then(response => {
+            console.log("Foto Deletada com sucesso");
+            sessionStorage.setItem('fotoPerfil', null);
+            window.location.reload()
+
+            })
+            .catch(error => {
+            console.error("Erro ao enviar o arquivo:", error);
+            });
     }
 
     return (
@@ -184,7 +219,7 @@ function FormPerfilAdvogado()
                 </BarraTitulo>
                 <div className="px-6 py-6 flex flex-col sm:flex-row items-center justify-center gap-6">
                     <img
-                        src={Image}
+                        src={sessionStorage.getItem('fotoPerfil') != null || sessionStorage.getItem('fotoPerfil') != undefined ? sessionStorage.getItem('fotoPerfil') : minhaImagem}
                         alt="Foto de perfil"
                         className="w-32 h-32 rounded-full border-[3px] border-white shadow-md object-cover"
                     />
@@ -198,7 +233,7 @@ function FormPerfilAdvogado()
                             className="hidden"
                             onChange={(e) => atualizarFoto(e.target.files[0])}
                         />
-                        <Botao cor="padrao" largura="auto">
+                        <Botao cor="padrao" largura="auto" onClick={excluirFotoPerfil}>
                             Remover <FiTrash className="ml-1 inline-block" />
                         </Botao>
                     </div>

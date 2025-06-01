@@ -1,12 +1,14 @@
-import minhaImagem from '../../assets/images/boneco.png'
-//import '../../estilos/Image.css'
+// import minhaImagem from '../../assets/images/boneco.png'
+// import '../../estilos/Image.css'
 
-function Image() {
-    return (
-        <>
-        <img className="img-redonda" src={minhaImagem} alt="Foto Luana" />
-        </>
+// function Image() {
+//     return (
+//         <>
+//         <img className="img-redonda" 
+//         src={sessionStorage.getItem('foto') != null || sessionStorage.getItem('foto') != undefined ? sessionStorage.getItem('foto') : minhaImagem} 
+//         alt="Foto não encontrada" />
+//         </>
         
-    )
-}
-export default Image
+//     )
+// }
+// export default Image
