@@ -21,8 +21,10 @@ export const validarTelefone = (telefone) => {
 };
 
 
-export const validarClienteFisico = (dados) => {
+export const validarClienteFisico = (dados) => 
+{
   const erros = {};
+
   if (!dados.nome) erros.nome = "Campo obrigatório";
   if (!dados.cpf || !validarCPF(dados.cpf)) erros.cpf = "CPF inválido";
   if (!dados.rg || !validarRG(dados.rg)) erros.rg = "RG inválido";
@@ -30,20 +32,26 @@ export const validarClienteFisico = (dados) => {
   if (!dados.telefone || !validarTelefone(dados.telefone)) erros.telefone = "Telefone inválido";
   if (!dados.cep) erros.cep = "Campo obrigatório";
   if (!dados.logradouro) erros.logradouro = "Campo obrigatório";
+  if (!dados.numero) erros.numero = "Campo obrigatório"; 
   if (!dados.bairro) erros.bairro = "Campo obrigatório";
   if (!dados.cidade) erros.cidade = "Campo obrigatório";
+  if (!dados.numero) erros.numero = "Campo obrigatório";
+
   return erros;
 };
+
 
 export const validarClienteJuridico = (dados) => {
   const erros = {};
   if (!dados.nomeFantasia) erros.nomeFantasia = "Campo obrigatório";
+  if (!dados.nomeRepresentante) erros.nomeRepresentante = "Campo obrigatório"; 
   if (!dados.razaoSocial) erros.razaoSocial = "Campo obrigatório";
   if (!dados.cnpj || !validarCNPJ(dados.cnpj)) erros.cnpj = "CNPJ inválido";
   if (!dados.email || !validarEmail(dados.email)) erros.email = "Email inválido";
   if (!dados.telefone || !validarTelefone(dados.telefone)) erros.telefone = "Telefone inválido";
   if (!dados.cep) erros.cep = "Campo obrigatório";
   if (!dados.logradouro) erros.logradouro = "Campo obrigatório";
+  if (!dados.numero) erros.numero = "Campo obrigatório";  
   if (!dados.bairro) erros.bairro = "Campo obrigatório";
   if (!dados.cidade) erros.cidade = "Campo obrigatório";
   return erros;
@@ -67,6 +75,7 @@ export const validarAdvogadoFisico = (dados) => {
 export const validarAdvogadoJuridico = (dados) => {
   const erros = {};
   if (!dados.nomeFantasia) erros.nomeFantasia = "Campo obrigatório";
+  if (!dados.nomeRepresentante) erros.nomeRepresentante = "Campo obrigatório"; 
   if (!dados.razaoSocial) erros.razaoSocial = "Campo obrigatório";
   if (!dados.cnpj || !validarCNPJ(dados.cnpj)) erros.cnpj = "CNPJ inválido";
   if (!dados.email || !validarEmail(dados.email)) erros.email = "Email inválido";
@@ -74,7 +83,9 @@ export const validarAdvogadoJuridico = (dados) => {
   if (!dados.telefone || !validarTelefone(dados.telefone)) erros.telefone = "Telefone inválido";
   if (!dados.cep) erros.cep = "Campo obrigatório";
   if (!dados.logradouro) erros.logradouro = "Campo obrigatório";
+  if (!dados.numero) erros.numero = "Campo obrigatório"; 
   if (!dados.bairro) erros.bairro = "Campo obrigatório";
   if (!dados.cidade) erros.cidade = "Campo obrigatório";
   return erros;
 };
+

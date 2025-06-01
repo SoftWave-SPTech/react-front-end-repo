@@ -9,18 +9,18 @@ import { mascaraCNPJ, mascaraTelefone, mascaraCEP } from '../../Utils/mascaras';
 import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoJuridico } from '../../Utils/validacoes';
 
-export default function AdvogadoJuridicoForm() 
-{
-  const [formData, setFormData] = useState(
-  {
+export default function AdvogadoJuridicoForm() {
+  const [formData, setFormData] = useState({
     nomeFantasia: '',
     razaoSocial: '',
+    nomeRepresentante: '', 
     cnpj: '',
     email: '',
     oab: '',
     telefone: '',
     cep: '',
     logradouro: '',
+    numero: '', 
     bairro: '',
     cidade: '',
     complemento: '',
@@ -28,50 +28,40 @@ export default function AdvogadoJuridicoForm()
 
   const [errors, setErrors] = useState({});
 
-  const handleChange = async (e) => 
-  {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
 
-    setFormData((prevData) => 
-    ({
+    setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
 
-    if (name === 'cep') 
-    {
+    if (name === 'cep') {
       const cepLimpo = value.replace(/\D/g, '');
 
-      if (cepLimpo.length === 8) 
-      {
-        try 
-        {
+      if (cepLimpo.length === 8) {
+        try {
           const endereco = await buscarCep(cepLimpo);
 
-          setFormData((prevData) => 
-          ({
+          setFormData((prevData) => ({
             ...prevData,
             logradouro: endereco.logradouro || '',
             bairro: endereco.bairro || '',
             cidade: endereco.localidade || '',
           }));
-        } 
-        catch (error) 
-        {
+        } catch (error) {
           alert('CEP inválido ou não encontrado.');
         }
       }
     }
   };
 
-  const handleSubmit = (e) => 
-  {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     const errosEncontrados = validarAdvogadoJuridico(formData);
 
-    if (Object.keys(errosEncontrados).length > 0) 
-    {
+    if (Object.keys(errosEncontrados).length > 0) {
       setErrors(errosEncontrados);
       return;
     }
@@ -82,27 +72,46 @@ export default function AdvogadoJuridicoForm()
 
     console.log("Dados enviados para o backend:", dadosParaEnviar);
 
-    api.post('/advogados-juridicos', dadosParaEnviar, 
-    {
-      headers: 
-      {
+    api.post('/advogados-juridicos', dadosParaEnviar, {
+      headers: {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
-    .then((response) => 
-    {
+    .then((response) => {
       alert('Cadastro realizado com sucesso!');
+      setFormData({
+        nomeFantasia: '',
+        razaoSocial: '',
+        nomeRepresentante: '', 
+        cnpj: '',
+        email: '',
+        oab: '',
+        telefone: '',
+        cep: '',
+        logradouro: '',
+        numero: '', 
+        bairro: '',
+        cidade: '',
+        complemento: '',
+      });
     })
-    .catch((err) => 
-    {
+    .catch((err) => {
       alert(err.response?.data?.message || 'Erro ao cadastrar');
     });
   };
 
   return (
-    <form className="bg-cinzaAzulado p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
+    <form className="bg-white p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
+          <Input
+            label="Nome do Representante:"
+            name="nomeRepresentante"
+            placeholder="Ex: João Silva"
+            value={formData.nomeRepresentante}
+            onChange={handleChange}
+            errorMessage={errors.nomeRepresentante}
+          />
           <Input
             label="Nome Fantasia:"
             name="nomeFantasia"
@@ -140,7 +149,7 @@ export default function AdvogadoJuridicoForm()
           <Input
             label="OAB:"
             name="oab"
-            placeholder="UF000000"
+            placeholder="000000"
             value={formData.oab}
             onChange={handleChange}
             errorMessage={errors.oab}
@@ -166,14 +175,30 @@ export default function AdvogadoJuridicoForm()
             mask={mascaraCEP}
             errorMessage={errors.cep}
           />
-          <Input
-            label="Logradouro:"
-            name="logradouro"
-            placeholder="Ex: Rua Doutor Silva"
-            value={formData.logradouro}
-            onChange={handleChange}
-            errorMessage={errors.logradouro}
-          />
+
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="md:w-3/4 w-full">
+              <Input
+                label="Logradouro:"
+                name="logradouro"
+                placeholder="Ex: Rua das Flores"
+                value={formData.logradouro}
+                onChange={handleChange}
+                errorMessage={errors.logradouro}
+              />
+            </div>
+            <div className="md:w-1/4 w-full">
+              <Input
+                label="Número:"
+                name="numero"
+                placeholder="Ex: 123"
+                value={formData.numero}
+                onChange={handleChange}
+                errorMessage={errors.numero}
+              />
+            </div>
+          </div>
+
           <Input
             label="Bairro:"
             name="bairro"

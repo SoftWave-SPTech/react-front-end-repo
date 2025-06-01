@@ -17,6 +17,7 @@ export default {
         azulEscuroFraco: '#020E29',
         AzulEscuro: '#010D26',
         azulClaro: '#0F2A5E',
+        AzulPodcast: '#081A40',
         cinzaAzulado: '#F4F4F4'
       },
     },

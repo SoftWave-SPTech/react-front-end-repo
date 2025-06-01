@@ -1,22 +1,25 @@
-import React from 'react';
-import MenuLateral from '../components/Menu/MenuLateral';
+import React, { useState, useEffect } from "react";
+import MenuLateral from "../components/Menu/MenuLateral";
 
-const LayoutBase = ({ children }) => {
+const LayoutBase = ({ children, backgroundClass }) => {
+  const [fechado, setFechado] = useState(() => {
+    const larguraSalva = sessionStorage.getItem("larguraMenu");
+    return larguraSalva === "70"; 
+  });
+
+  useEffect(() => {
+    const largura = parseInt(sessionStorage.getItem("larguraMenu"), 10);
+    if (!isNaN(largura)) {
+      setFechado(largura === 70);
+    }
+  }, []);
+
   return (
-    <div className="w-screen h-screen bg-blue-100 overflow-hidden">
+    <div className={`flex min-h-screen ${backgroundClass}`}>
       <MenuLateral />
-
-      <div
-        className={`
-          h-full overflow-y-auto
-          transition-all duration-300 ease-in-out
-          pl-[clamp(4.375rem,20rem,22%)]
-        `}
-      >
-        <main className="max-w-7xl w-full mx-auto p-4">
-          {children}
-        </main>
-      </div>
+      <main className="flex-1 transition-all duration-300 ease-in-out overflow-y-auto p-6">
+        {children}
+      </main>
     </div>
   );
 };
