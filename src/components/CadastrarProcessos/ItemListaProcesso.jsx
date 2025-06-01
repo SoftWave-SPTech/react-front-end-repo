@@ -1,8 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { FiEdit2, FiTrash } from "react-icons/fi";
+import { FiFileText, FiTrash } from "react-icons/fi";
 import 'tailwindcss/tailwind.css';
 
 const processosFakes = [
+    { numero: "12345", descricao: "Casos sobre os direitos infantis" },
+    { numero: "54321", descricao: "Casos sobre os direitos trabalhistas" },
+    { numero: "67890", descricao: "Defesa de matrimônio" },
+    { numero: "58525252", descricao: "Homicídio" },
+    { numero: "09876", descricao: "Defesa da familia" },
+    { numero: "12345", descricao: "Casos sobre os direitos infantis" },
+    { numero: "54321", descricao: "Casos sobre os direitos trabalhistas" },
+    { numero: "67890", descricao: "Defesa de matrimônio" },
+    { numero: "58525252", descricao: "Homicídio" },
+    { numero: "09876", descricao: "Defesa da familia" },
+    { numero: "12345", descricao: "Casos sobre os direitos infantis" },
+    { numero: "54321", descricao: "Casos sobre os direitos trabalhistas" },
+    { numero: "67890", descricao: "Defesa de matrimônio" },
+    { numero: "58525252", descricao: "Homicídio" },
+    { numero: "09876", descricao: "Defesa da familia" },
     { numero: "12345", descricao: "Casos sobre os direitos infantis" },
     { numero: "54321", descricao: "Casos sobre os direitos trabalhistas" },
     { numero: "67890", descricao: "Defesa de matrimônio" },
@@ -26,19 +41,19 @@ export default function ItemListaProcesso() {
     );
 
     return (
-        <div className="bg-AzulEscuro rounded-lg p-4 sm:p-6 md:p-8 font-sans w-full max-w-[900px] mx-auto min-h-[400px]">
-            <div className="flex items-center mb-4 md:mb-6 pb-4">
-                <h2 className="text-2xl md:text-3xl font-normal text-dourado flex-1">Processos</h2>
-                <div className="relative w-56 md:w-60">
+        <div className="bg-AzulEscuro rounded-lg p-[2.5rem] font-sans w-full max-w-[56.25rem] mx-auto min-h-[40rem] flex flex-col" style={{ height: "70vh" }}>
+            <div className="flex items-center mb-6 pb-4">
+                <h2 className="text-3xl font-normal text-dourado flex-1">Processos</h2>
+                <div className="relative w-[16rem] max-w-full">
                     <input
                         type="text"
                         placeholder="Número ou descrição"
                         value={busca}
                         onChange={e => setBusca(e.target.value)}
-                        className="w-full rounded-md py-1.5 md:py-2 pl-3 pr-8 text-base bg-branco text-preto focus:outline-none"
+                        className="w-full rounded-md py-[0.5rem] pl-3 pr-8 text-lg bg-branco text-preto focus:outline-none"
                     />
                     <span className="absolute right-2 top-2 text-preto opacity-60 pointer-events-none">
-                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
+                        <svg width="1.125rem" height="1.125rem" fill="none" viewBox="0 0 24 24">
                             <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/>
                             <path d="M20 20L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                         </svg>
@@ -46,8 +61,11 @@ export default function ItemListaProcesso() {
                 </div>
             </div>
             <div
-
-                className="overflow-y-auto h-[300px] sm:h-[350px] md:h-[400px] pr-2 md:pr-4 custom-scrollbar"
+                className="overflow-y-auto custom-scrollbar flex-1 pr-6"
+                style={{
+                    minHeight: 0,
+                    maxHeight: "100rem", 
+                }}
             >
                 <style>
                     {`
@@ -55,14 +73,14 @@ export default function ItemListaProcesso() {
                         scrollbar-color: #0F2A5E ;
                     }
                     .custom-scrollbar::-webkit-scrollbar {
-                        width: 20px;
+                        width: 1.25rem;
                         background: #F4F4F4;
-                        border-radius: 12px;
+                        border-radius: 0.75rem;
                     }
                     .custom-scrollbar::-webkit-scrollbar-thumb {
                         background: #0F2A5E;
-                        border-radius: 20px;
-                        border: 4px solid #F4F4F4;
+                        border-radius: 1.25rem;
+                        border: 0.25rem solid #F4F4F4;
                     }
                     .custom-scrollbar::-webkit-scrollbar-button {
                         display: none;
@@ -71,22 +89,28 @@ export default function ItemListaProcesso() {
                     }
                     `}
                 </style>
-                <div className="flex flex-col gap-4 md:gap-4 h-full">
+                <div className="flex flex-col gap-4 h-full">
                     {processosFiltrados.map((processo) => (
                         <div
                             key={processo.numero + processo.descricao}
-                            className="bg-azulClaro rounded-lg px-4 md:px-6 py-3 md:py-4 flex justify-between items-center"
+                            className="bg-azulClaro rounded-lg flex justify-between items-center"
+                            style={{
+                                paddingLeft: "1.5rem",
+                                paddingRight: "1.5rem",
+                                paddingTop: "1rem",
+                                paddingBottom: "1rem"
+                            }}
                         >
                             <div className="flex flex-col min-w-0">
-                                <p className="font-sans text-branco text-base md:text-lg truncate">#{processo.numero}</p>
-                                <p className="text-branco text-sm md:text-base truncate">{processo.descricao}</p>
+                                <p className="font-sans text-branco text-lg truncate">#{processo.numero}</p>
+                                <p className="text-branco text-base truncate">{processo.descricao}</p>
                             </div>
-                            <div className="flex space-x-4 md:space-x-6">
-                                <button className="text-branco hover:text-dourado transition-colors" title="Editar">
-                                    <FiEdit2 size={20} className="md:w-6 md:h-6" />
+                            <div className="flex space-x-6">
+                                <button className="text-branco hover:text-dourado transition-colors" title="Visualizar Documento">
+                                    <FiFileText size={24} className="md:w-6 md:h-6" />
                                 </button>
                                 <button className="text-branco hover:text-dourado transition-colors" title="Excluir">
-                                    <FiTrash size={20} className="md:w-6 md:h-6" />
+                                    <FiTrash size={24} className="md:w-6 md:h-6" />
                                 </button>
                             </div>
                         </div>
