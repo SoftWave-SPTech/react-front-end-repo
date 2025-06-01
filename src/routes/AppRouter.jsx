@@ -12,6 +12,8 @@ import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais"
 import VisualizarProcessos from "../pages/VisualizarProcessos";
 import AnaliseComIa from "../pages/AnaliseComIa";
 import CadastrarProcesso from "../pages/CadastrarProcesso";
+import RecuperarSenha from "../pages/RecuperarSenha";
+import PesquisarProcessos from "../pages/PesquisarProcessos";
 import VisualizarProcessosAdvogado from "../pages/VisualizarProcessosAdvogado";
 import Podcast from "../pages/Podcast";
 
@@ -35,6 +37,10 @@ export const AppRouter = createBrowserRouter([
   {
     path: "/cadastrar-senha",
     element: <CadastrarSenha/>
+  },
+  {
+    path: "/recuperar-senha",
+    element: <RecuperarSenha/>
   },
   {
     path: "/perfil-cliente",
@@ -69,6 +75,8 @@ export const AppRouter = createBrowserRouter([
     element: <CadastrarProcesso/>
   },
   {
+    path: "/pesquisar-processos",
+    element: <PesquisarProcessos/>
     path: "/visualizar-processos-advogado",
     element: <VisualizarProcessosAdvogado/>
   },
