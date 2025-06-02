@@ -10,8 +10,7 @@ import { buscarCep } from '../../service/buscarCep';
 import { validarClienteFisico } from '../../Utils/validacoes';
 import EnviarChaveAcesso from './EnvioEmail.jsx';
 
-export default function ClienteFisicoForm() 
-{
+export default function ClienteFisicoForm() {
   const [formData, setFormData] = useState({
     nome: '',
     cpf: '',
@@ -20,6 +19,7 @@ export default function ClienteFisicoForm()
     telefone: '',
     cep: '',
     logradouro: '',
+    numero: '',
     bairro: '',
     cidade: '',
     complemento: '',
@@ -56,11 +56,7 @@ export default function ClienteFisicoForm()
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const camposObrigatorios = [
-      'nome', 'cpf', 'rg', 'email', 'telefone',
-      'cep', 'logradouro', 'bairro', 'cidade'
-    ];
-    const errosEncontrados = validarClienteFisico(formData, camposObrigatorios);
+    const errosEncontrados = validarClienteFisico(formData);
 
     if (Object.keys(errosEncontrados).length > 0) {
       setErrors(errosEncontrados);
@@ -71,10 +67,7 @@ export default function ClienteFisicoForm()
     const novaSenha = nanoid(8);
     const dadosParaEnviar = { ...formData, senha: novaSenha };
 
-    console.log("Dados enviados para o backend:", dadosParaEnviar);
-
-    api.post('/usuarios-fisicos', dadosParaEnviar, 
-    {
+    api.post('/usuarios-fisicos', dadosParaEnviar, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
@@ -84,14 +77,28 @@ export default function ClienteFisicoForm()
         EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
 
         alert('Cadastro realizado com sucesso!');
+        setFormData({
+          nome: '',
+          cpf: '',
+          rg: '',
+          email: '',
+          telefone: '',
+          cep: '',
+          logradouro: '',
+          numero: '',
+          bairro: '',
+          cidade: '',
+          complemento: '',
+        });
     })
     .catch((err) => {
+        console.error(err);
         alert(err.response?.data?.message || 'Erro ao cadastrar');
     });
   };
 
   return (
-    <form className="bg-cinzaAzulado p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
+    <form className="bg-white p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <Input
@@ -150,14 +157,28 @@ export default function ClienteFisicoForm()
             mask={mascaraCEP}
             errorMessage={errors.cep}
           />
-          <Input
-            label="Logradouro:"
-            name="logradouro"
-            placeholder="Ex: Rua das Flores"
-            value={formData.logradouro}
-            onChange={handleChange}
-            errorMessage={errors.logradouro}
-          />
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="md:w-3/4 w-full">
+              <Input
+                label="Logradouro:"
+                name="logradouro"
+                placeholder="Ex: Rua das Flores"
+                value={formData.logradouro}
+                onChange={handleChange}
+                errorMessage={errors.logradouro}
+              />
+            </div>
+            <div className="md:w-1/4 w-full">
+              <Input
+                label="Número:"
+                name="numero"
+                placeholder="Ex: 123"
+                value={formData.numero}
+                onChange={handleChange}
+                errorMessage={errors.numero}
+              />
+            </div>
+          </div>
           <Input
             label="Bairro:"
             name="bairro"

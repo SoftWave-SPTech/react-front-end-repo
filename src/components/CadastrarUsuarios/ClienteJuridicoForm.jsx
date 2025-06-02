@@ -10,17 +10,17 @@ import { buscarCep } from '../../service/buscarCep';
 import { validarClienteJuridico } from '../../Utils/validacoes';
 import EnviarChaveAcesso from './EnvioEmail.jsx';
 
-export default function ClienteJuridicoForm() 
-{
-  const [formData, setFormData] = useState(
-  {
+export default function ClienteJuridicoForm() {
+  const [formData, setFormData] = useState({
     nomeFantasia: '',
     razaoSocial: '',
+    nomeRepresentante: '',
     cnpj: '',
     email: '',
     telefone: '',
     cep: '',
     logradouro: '',
+    numero: '',
     bairro: '',
     cidade: '',
     complemento: '',
@@ -28,51 +28,41 @@ export default function ClienteJuridicoForm()
 
   const [errors, setErrors] = useState({});
 
-  const handleChange = async (e) => 
-  {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
 
-    setFormData((prevData) => 
-    ({
+    setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
 
-    if (name === 'cep') 
-    {
+    if (name === 'cep') {
       const cepLimpo = value.replace(/\D/g, '');
 
-      if (cepLimpo.length === 8) 
-      {
-        try 
-        {
+      if (cepLimpo.length === 8) {
+        try {
           const endereco = await buscarCep(cepLimpo);
 
-          setFormData((prevData) => 
-          ({
+          setFormData((prevData) => ({
             ...prevData,
             logradouro: endereco.logradouro || '',
             bairro: endereco.bairro || '',
             cidade: endereco.localidade || '',
           }));
-        } 
-        catch (error) 
-        {
+        } catch (error) {
           alert('CEP inválido ou não encontrado.');
         }
       }
     }
   };
 
-  const handleSubmit = (e) => 
-  {
+  const handleSubmit = (e) => {
     e.preventDefault();
-     console.log("SUBMIT DISPARADO");
+    console.log("SUBMIT DISPARADO");
 
     const errosEncontrados = validarClienteJuridico(formData);
 
-    if (Object.keys(errosEncontrados).length > 0) 
-    {
+    if (Object.keys(errosEncontrados).length > 0) {
       setErrors(errosEncontrados);
       return;
     }
@@ -84,30 +74,49 @@ export default function ClienteJuridicoForm()
 
     console.log("Erros encontrados:", errosEncontrados);
 
+      api.post('/usuarios-juridicos', dadosParaEnviar, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+        },
+      })
+      .then((response) => {
+        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
 
-    api.post('/usuarios-juridicos', dadosParaEnviar, 
-    {
-      headers: 
-      {
-        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-      },
-    })
-    .then((response) => 
-    {
-      EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+        alert('Cadastro realizado com sucesso!');
+        setFormData({
+          nomeFantasia: '',
+          razaoSocial: '',
+          nomeRepresentante: '',
+          cnpj: '',
+          email: '',
+          telefone: '',
+          cep: '',
+          logradouro: '',
+          numero: '',
+          bairro: '',
+          cidade: '',
+          complemento: '',
+        });
+      })
+      .catch((err) => {
+        alert(err.response?.data?.message || 'Erro ao cadastrar');
+      });
 
-      alert('Cadastro realizado com sucesso!');
-    })
-    .catch((err) => 
-    {
-      alert(err.response?.data?.message || 'Erro ao cadastrar');
-    });
   };
 
   return (
-    <form className="bg-cinzaAzulado p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
+    <form className="bg-white p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
+          <Input
+            label="Nome do Representante:"
+            name="nomeRepresentante"
+            placeholder="Ex: João Silva"
+            value={formData.nomeRepresentante}
+            onChange={handleChange}
+            errorMessage={errors.nomeRepresentante}
+          />
+
           <Input
             label="Nome Fantasia:"
             name="nomeFantasia"
@@ -116,6 +125,7 @@ export default function ClienteJuridicoForm()
             onChange={handleChange}
             errorMessage={errors.nomeFantasia}
           />
+
           <Input
             label="Razão Social:"
             name="razaoSocial"
@@ -124,6 +134,7 @@ export default function ClienteJuridicoForm()
             onChange={handleChange}
             errorMessage={errors.razaoSocial}
           />
+
           <Input
             label="CNPJ:"
             name="cnpj"
@@ -133,6 +144,7 @@ export default function ClienteJuridicoForm()
             mask={mascaraCNPJ}
             errorMessage={errors.cnpj}
           />
+
           <Input
             label="Email:"
             name="email"
@@ -142,6 +154,7 @@ export default function ClienteJuridicoForm()
             onChange={handleChange}
             errorMessage={errors.email}
           />
+
           <Input
             label="Telefone:"
             name="telefone"
@@ -163,14 +176,30 @@ export default function ClienteJuridicoForm()
             mask={mascaraCEP}
             errorMessage={errors.cep}
           />
-          <Input
-            label="Logradouro:"
-            name="logradouro"
-            placeholder="Ex: Avenida Paulista"
-            value={formData.logradouro}
-            onChange={handleChange}
-            errorMessage={errors.logradouro}
-          />
+
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="md:w-3/4 w-full">
+              <Input
+                label="Logradouro:"
+                name="logradouro"
+                placeholder="Ex: Rua das Flores"
+                value={formData.logradouro}
+                onChange={handleChange}
+                errorMessage={errors.logradouro}
+              />
+            </div>
+            <div className="md:w-1/4 w-full">
+              <Input
+                label="Número:"
+                name="numero"
+                placeholder="Ex: 123"
+                value={formData.numero}
+                onChange={handleChange}
+                errorMessage={errors.numero}
+              />
+            </div>
+          </div>
+
           <Input
             label="Bairro:"
             name="bairro"
@@ -179,6 +208,7 @@ export default function ClienteJuridicoForm()
             onChange={handleChange}
             errorMessage={errors.bairro}
           />
+
           <Input
             label="Cidade:"
             name="cidade"
@@ -187,6 +217,7 @@ export default function ClienteJuridicoForm()
             onChange={handleChange}
             errorMessage={errors.cidade}
           />
+
           <Input
             label="Complemento:"
             name="complemento"

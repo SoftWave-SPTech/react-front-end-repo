@@ -20,6 +20,7 @@ export default function AdvogadoFisicoForm() {
     telefone: '',
     cep: '',
     logradouro: '',
+    numero: '',
     bairro: '',
     cidade: '',
     complemento: '',
@@ -80,6 +81,20 @@ export default function AdvogadoFisicoForm() {
         EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
 
         alert('Cadastro realizado com sucesso!');
+        setFormData({
+          nome: '',
+          cpf: '',
+          rg: '',
+          email: '',
+          oab: '',
+          telefone: '',
+          cep: '',
+          logradouro: '',
+          numero: '',
+          bairro: '',
+          cidade: '',
+          complemento: '',
+        });
       })
       .catch((err) => {
         alert(err.response?.data?.message || 'Erro ao cadastrar');
@@ -87,7 +102,7 @@ export default function AdvogadoFisicoForm() {
   };
 
   return (
-    <form className="bg-cinzaAzulado p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
+    <form className="bg-white p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <Input
@@ -154,14 +169,30 @@ export default function AdvogadoFisicoForm() {
             mask={mascaraCEP}
             errorMessage={errors.cep}
           />
-          <Input
-            label="Logradouro:"
-            name="logradouro"
-            placeholder="Ex: Rua das Flores"
-            value={formData.logradouro}
-            onChange={handleChange}
-            errorMessage={errors.logradouro}
-          />
+
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="md:w-3/4 w-full">
+              <Input
+                label="Logradouro:"
+                name="logradouro"
+                placeholder="Ex: Rua das Flores"
+                value={formData.logradouro}
+                onChange={handleChange}
+                errorMessage={errors.logradouro}
+              />
+            </div>
+            <div className="md:w-1/4 w-full">
+              <Input
+                label="Número:"
+                name="numero"
+                placeholder="Ex: 123"
+                value={formData.numero}
+                onChange={handleChange}
+                errorMessage={errors.numero}
+              />
+            </div>
+          </div>
+
           <Input
             label="Bairro:"
             name="bairro"

@@ -16,10 +16,13 @@ export default {
         azulEscuroForte: 'rgb(1, 13, 38)',
         azulEscuroFraco: '#020E29',
         AzulEscuro: '#010D26',
-        azulClaro: '#0A307E',
+        azulClaro: '#0F2A5E',
+        AzulPodcast: '#081A40',
         cinzaAzulado: '#F4F4F4'
       },
     },
   },
-  plugins: [],
+plugins: [
+
+  ],
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   FiMenu,
@@ -13,8 +13,17 @@ import {
 } from "react-icons/fi";
 
 const MenuLateral = () => {
-  const [fechado, setFechado] = useState(false);
-  const alternarMenu = () => setFechado(!fechado);
+  const [fechado, setFechado] = useState(() => {
+    const larguraSalva = sessionStorage.getItem("larguraMenu");
+    return larguraSalva === "70"; // Se a largura for 70, o menu está fechado
+  });
+
+  const alternarMenu = () => {
+    const novoEstado = !fechado;
+    setFechado(novoEstado);
+    const largura = novoEstado ? 70 : window.innerWidth * 0.22;
+    sessionStorage.setItem("larguraMenu", largura.toString()); // Armazena o estado
+  };
 
   const usuario = {
     id: sessionStorage.getItem("id"),
@@ -28,36 +37,31 @@ const MenuLateral = () => {
   const email = usuario?.email || "sem-email@example.com";
   const nome = usuario?.email?.split("@")[0] || "Usuário";
 
-  const rotaPerfil = role === "ROLE_USUARIO" ? "/perfil-cliente" : "/perfil-advogado";
+  const rotaPerfil =
+    role === "ROLE_USUARIO" ? "/perfil-cliente" : "/perfil-advogado";
 
   const itensMenu = [
     { rotulo: "Perfil", icone: <FiUser />, rota: rotaPerfil, esconderSeAberto: true, roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Dashboard", icone: <FiBarChart2 />, rota: "/dashboard", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Processos", icone: <FiCalendar />, rota: "/calendario", roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
+    { rotulo: "Processos", icone: <FiCalendar />, rota: "/processos-cliente", roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Cadastrar Processos", icone: <FiFileText />, rota: "/cadastrar-processos", roles: ["ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Usuários", icone: <FiUser />, rota: "/usuarios", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Cadastrar Usuário", icone: <FiUserPlus />, rota: "/cadastrar-usuario", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Podcast", icone: <FiMic />, rota: "/podcast", roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Documentos", icone: <FiFileText />, rota: "/documentos", roles: ["ROLE_USUARIO"] },
+    { rotulo: "Documentos", icone: <FiFileText />, rota: "/documentos-pessoais", roles: ["ROLE_USUARIO"] },
     { rotulo: "Área financeira", icone: <FiDollarSign />, rota: "/area-financeira", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
+     { rotulo: "Podcast", icone: <FiMic />, rota: "/podcast", roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
   ];
 
   return (
     <div
-      className={`fixed inset-y-0 left-0 z-30 flex flex-col justify-between
-        bg-[#050e26] text-white overflow-y-auto transition-all duration-300
-        ${fechado ? "w-[4.375rem]" : "w-[clamp(15%,20rem,22%)]"}`}
+      className={`menu-lateral sticky top-0 h-screen flex-shrink-0 flex flex-col justify-between
+      bg-[#050e26] text-white overflow-y-auto transition-all duration-300
+      ${fechado ? "w-[70px]" : "w-[clamp(240px,20%,320px)]"}`}
     >
       <div>
         <div
           className={`flex items-center justify-end cursor-pointer 
-            ${
-              fechado
-                ? "mb-[2.5rem]"
-                : role === "ROLE_ADMIN" || role === "ROLE_DONO"
-                ? "mb-[0.8rem]"
-                : "mb-[1.8rem]"
-            } px-[1rem] pt-[1.2rem] hover:text-[#D9B166]`}
+            ${fechado ? "mb-[2.5rem]" : "mb-[1.8rem]"} px-[1rem] pt-[1.2rem] hover:text-[#D9B166]`}
           onClick={alternarMenu}
         >
           <FiMenu className="text-[1.6rem]" />

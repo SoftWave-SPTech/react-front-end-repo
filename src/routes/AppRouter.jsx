@@ -9,8 +9,11 @@ import FormEditPerfilAdvogado from "../pages/EditarPerfilAdvogado";
 import FormEditPerfilCliente from "../pages/EditarPerfilCliente";
 import VisualizarDocumentosProcesso from "../pages/VisualizarDocumentosProcesso";
 import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais";
+import VisualizarProcessos from "../pages/VisualizarProcessos";
 import AnaliseComIa from "../pages/AnaliseComIa";
 import CadastrarProcesso from "../pages/CadastrarProcesso";
+import VisualizarProcessosAdvogado from "../pages/VisualizarProcessosAdvogado";
+import Podcast from "../pages/Podcast";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -54,7 +57,19 @@ export const AppRouter = createBrowserRouter([
     element: <AnaliseComIa/>
   },
   {
+    path: "/processos-cliente",
+    element: <VisualizarProcessos/>
+  },
+  {
     path: "/cadastrar-processos",
     element: <CadastrarProcesso/>
+  },
+  {
+    path: "/processos-advogado",
+    element: <VisualizarProcessosAdvogado/>
+  },
+  {
+    path: "/podcast",
+    element: <Podcast/>
   }
 ]);
