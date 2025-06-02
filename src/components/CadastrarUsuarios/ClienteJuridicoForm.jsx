@@ -8,6 +8,7 @@ import { Input } from '../Ui/Input';
 import { mascaraCNPJ, mascaraTelefone, mascaraCEP } from '../../Utils/mascaras';
 import { buscarCep } from '../../service/buscarCep';
 import { validarClienteJuridico } from '../../Utils/validacoes';
+import EnviarChaveAcesso from './EnvioEmail.jsx';
 
 export default function ClienteJuridicoForm() 
 {
@@ -93,6 +94,8 @@ export default function ClienteJuridicoForm()
     })
     .then((response) => 
     {
+      EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+
       alert('Cadastro realizado com sucesso!');
     })
     .catch((err) => 

@@ -8,6 +8,7 @@ import Botao from '../../components/Ui/Botao';
 import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG } from '../../Utils/mascaras';
 import { buscarCep } from '../../service/buscarCep';
 import { validarClienteFisico } from '../../Utils/validacoes';
+import EnviarChaveAcesso from './EnvioEmail.jsx';
 
 export default function ClienteFisicoForm() 
 {
@@ -78,12 +79,15 @@ export default function ClienteFisicoForm()
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
-      .then(() => {
+    .then(() => {
+
+        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+
         alert('Cadastro realizado com sucesso!');
-      })
-      .catch((err) => {
+    })
+    .catch((err) => {
         alert(err.response?.data?.message || 'Erro ao cadastrar');
-      });
+    });
   };
 
   return (
