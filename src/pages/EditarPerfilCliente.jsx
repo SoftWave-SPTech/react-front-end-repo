@@ -6,7 +6,7 @@ const EditarPerfilCliente = () =>
 {
   return (
     <LayoutBase>
-      <FormPerfilCliente />
+      <FormPerfilCliente backgroundClass="bg-cinzaAzulado" />
     </LayoutBase>
   );
 };

@@ -9,9 +9,16 @@ import FormEditPerfilAdvogado from "../pages/EditarPerfilAdvogado";
 import FormEditPerfilCliente from "../pages/EditarPerfilCliente";
 import VisualizarDocumentosProcesso from "../pages/VisualizarDocumentosProcesso";
 import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais";
+import VisualizarProcessos from "../pages/VisualizarProcessos";
 import AnaliseComIa from "../pages/AnaliseComIa";
 import CadastrarProcesso from "../pages/CadastrarProcesso";
+<<<<<<< HEAD
 import AreaCliente from "../pages/AreaCliente";
+=======
+import VisualizarProcessosAdvogado from "../pages/VisualizarProcessosAdvogado";
+import Podcast from "../pages/Podcast";
+import PesquisarProcessos from "../pages/PesquisarProcessos";
+>>>>>>> 56456e7d85763a380567abb25ce30c44d55196fb
 
 export const AppRouter = createBrowserRouter([
   {
@@ -55,11 +62,28 @@ export const AppRouter = createBrowserRouter([
     element: <AnaliseComIa/>
   },
   {
+    path: "/processos-cliente",
+    element: <VisualizarProcessos/>
+  },
+  {
     path: "/cadastrar-processos",
     element: <CadastrarProcesso/>
   },
   {
+<<<<<<< HEAD
     path: "/area-cliente",
     element: <AreaCliente/>
+=======
+    path: "/pesquisar-processos",
+    element: <PesquisarProcessos/>
+  },
+  {
+    path: "/processos-advogado",
+    element: <VisualizarProcessosAdvogado/>
+  },
+  {
+    path: "/podcast",
+    element: <Podcast/>
+>>>>>>> 56456e7d85763a380567abb25ce30c44d55196fb
   }
 ]);
