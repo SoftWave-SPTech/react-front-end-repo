@@ -12,13 +12,12 @@ import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais"
 import VisualizarProcessos from "../pages/VisualizarProcessos";
 import AnaliseComIa from "../pages/AnaliseComIa";
 import CadastrarProcesso from "../pages/CadastrarProcesso";
-<<<<<<< HEAD
 import AreaCliente from "../pages/AreaCliente";
-=======
 import VisualizarProcessosAdvogado from "../pages/VisualizarProcessosAdvogado";
 import Podcast from "../pages/Podcast";
 import PesquisarProcessos from "../pages/PesquisarProcessos";
->>>>>>> 56456e7d85763a380567abb25ce30c44d55196fb
+import RedefinirSenha from "../pages/RedefinirSenha";
+import EsqueciSenha from "../pages/EsqueciSenha";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -40,6 +39,14 @@ export const AppRouter = createBrowserRouter([
   {
     path: "/cadastrar-senha",
     element: <CadastrarSenha/>
+  },
+  {
+    path: "/redefinir-senha",
+    element: <RedefinirSenha/>
+  },
+  {
+    path: "esqueci-senha",
+    element: <EsqueciSenha/>
   },
   {
     path: "/perfil-cliente",
@@ -70,10 +77,10 @@ export const AppRouter = createBrowserRouter([
     element: <CadastrarProcesso/>
   },
   {
-<<<<<<< HEAD
     path: "/area-cliente",
     element: <AreaCliente/>
-=======
+  },
+  {
     path: "/pesquisar-processos",
     element: <PesquisarProcessos/>
   },
@@ -84,6 +91,5 @@ export const AppRouter = createBrowserRouter([
   {
     path: "/podcast",
     element: <Podcast/>
->>>>>>> 56456e7d85763a380567abb25ce30c44d55196fb
   }
 ]);
