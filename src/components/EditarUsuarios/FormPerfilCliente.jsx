@@ -1,158 +1,146 @@
 import { Input } from "../Ui/Input.jsx";
 import Botao from "../Ui/Botao.jsx";
 import BarraTitulo from "../Ui/BarraTitulo.jsx";
-import minhaImagem from '../../assets/images/boneco.png'
+import minhaImagem from '../../assets/images/boneco.png';
 import { useEffect, useState, useRef } from "react";
 import { FiUpload, FiTrash } from 'react-icons/fi';
 import { api } from '../../service/api.js';
+import { buscarCep } from '../../service/buscarCep'; 
+import { validarPerfilCliente } from '../../Utils/validacoes'; 
+import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG, mascaraCNPJ } from '../../Utils/mascaras';
 
 function FormPerfilCliente() {
   const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
   const fileInputRef = useRef(null);
-  const [usuario, setUsuario] = useState({});
+  const [usuario, setUsuario] = useState({
+    nome: '',
+    cpf: '',
+    rg: '',
+    email: '',
+    telefone: '',
+    logradouro: '',
+    numero: '', // Novo campo para número
+    bairro: '',
+    cidade: '',
+    complemento: '',
+    cep: '',
+    tipoUsuario: sessionStorage.getItem('tipoUsuario'),
+  });
   const [usarioParaAtualzar, setUsuarioParaAtualizar] = useState({});
-  const URL = sessionStorage.getItem('tipoUsuario') == 'UsuarioFisico' ? "/usuarios-fisicos/" :"/usuarios-juridicos/"
-  const URLFOTO = "/usuarios/foto-perfil"
-
-            
+  const [errors, setErrors] = useState({});
+  const URLFOTO = "/usuarios/foto-perfil";
 
   useEffect(() => {
-
-    if (sessionStorage.getItem('tipoUsuario') == "UsuarioFisico") {
-
+    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+    if (tipoUsuario === "UsuarioFisico") {
       api.get(`/usuarios-fisicos/${sessionStorage.getItem('id')}`, {
-        headers: {
-          Authorization: TOKEN,
-        },
+        headers: { Authorization: TOKEN },
       })
-        .then((resposta) => {
-          console.log(resposta)
-          const dados = {
-            "id": resposta.data.id,
-            "nome": resposta.data.nome,
-            "cpf": resposta.data.cpf,
-            "rg": resposta.data.rg,
-            "email": resposta.data.email,
-            "telefone": resposta.data.telefone,
-            "logradouro": resposta.data.logradouro,
-            "bairro": resposta.data.bairro,
-            "cidade": resposta.data.cidade,
-            "complemento": resposta.data.complemento,
-            "cep": resposta.data.cep
-          }
-
-          criarAtualizarFisicos(dados)
-
-        })
-        .catch((erro) => {
-          console.log(erro)
-        })
-
-    } else if (sessionStorage.getItem('tipoUsuario') == "UsuarioJuridico") {
-
+      .then((resposta) => {
+        const dados = resposta.data;
+        criarAtualizarFisicos(dados);
+      })
+      .catch(console.log);
+    } else if (tipoUsuario === "UsuarioJuridico") {
       api.get(`/usuarios-juridicos/${sessionStorage.getItem('id')}`, {
-        headers: {
-          Authorization: TOKEN,
-        },
+        headers: { Authorization: TOKEN },
       })
-        .then((resposta) => {
-          console.log(resposta)
-
-          const dados = {
-            "id": resposta.data.id,
-            "nomeFantasia": resposta.data.nomeFantasia,
-            "razaoSocial": resposta.data.razaoSocial,
-            "cnpj": resposta.data.cnpj,
-            "email": resposta.data.email,
-            "telefone": resposta.data.telefone,
-            "logradouro": resposta.data.logradouro,
-            "bairro": resposta.data.bairro,
-            "cidade": resposta.data.cidade,
-            "complemento": resposta.data.complemento,
-            "cep": resposta.data.cep
-          }
-
-          criarAtualizarJuridicos(dados)
-
-        })
-        .catch((erro) => {
-          console.log(erro)
-        })
+      .then((resposta) => {
+        const dados = resposta.data;
+        criarAtualizarJuridicos(dados);
+      })
+      .catch(console.log);
     }
   }, []);
 
-  function criarAtualizarFisicos(dados) 
-  {
-    setUsuario(dados);
-    setUsuarioParaAtualizar({
-      "nome": dados.nome,
-      "email": dados.email,
-      "telefone": dados.telefone,
-      "logradouro": dados.logradouro,
-      "bairro": dados.bairro,
-      "cidade": dados.cidade,
-      "complemento": dados.complemento,
-      "cep": dados.cep
-    })
-  }
+  const handleInputChange = async (e) => {
+    const { name, value } = e.target;
+    setUsuarioParaAtualizar(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+    setUsuario(prev => ({
+      ...prev,
+      [name]: value,
+    }));
 
-  function criarAtualizarJuridicos(dados) 
-  {
-    setUsuario(dados);
+    if (name === 'cep') {
+      const cepLimpo = value.replace(/\D/g, '');
+      if (cepLimpo.length === 8) {
+        try {
+          const endereco = await buscarCep(cepLimpo);
+          setUsuarioParaAtualizar(prev => ({
+            ...prev,
+            logradouro: endereco.logradouro || '',
+            bairro: endereco.bairro || '',
+            cidade: endereco.localidade || '',
+          }));
+          setUsuario(prev => ({
+            ...prev,
+            logradouro: endereco.logradouro || '',
+            bairro: endereco.bairro || '',
+            cidade: endereco.localidade || '',
+          }));
+        } catch (error) {
+          alert('CEP inválido ou não encontrado.');
+        }
+      }
+    }
+  };
 
-    setUsuarioParaAtualizar({
-      "nomeFantasia": dados.nomeFantasia,
-      "razaoSocial": dados.razaoSocial,
-      "cnpj": dados.cnpj,
-      "email": dados.email,
-      "telefone": dados.telefone,
-      "logradouro": dados.logradouro,
-      "bairro": dados.bairro,
-      "cidade": dados.cidade,
-      "complemento": dados.complemento,
-      "cep": dados.cep
-    })
-  }
+  const validarDados = () => {
+    const erros = validarPerfilCliente(usuario);
+    setErrors(erros);
+    return Object.keys(erros).length === 0; 
+  };
 
   function enviarDadosParaAtualizacao() {
-    console.log(usarioParaAtualzar)
+    if (!validarDados()) return;
 
-    if (sessionStorage.getItem('tipoUsuario') == "UsuarioFisico") {
+    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+    const url = tipoUsuario === "UsuarioFisico" ? `/usuarios-fisicos/${usuario.id}` : `/usuarios-juridicos/${usuario.id}`;
+    
+    api.put(url, usarioParaAtualzar, {
+      headers: { Authorization: TOKEN },
+    })
+    .then(() => {
+      alert("Dados Atualizados com sucesso!");
+    })
+    .catch(() => {
+      alert("Ocorreu um erro, tente novamente!");
+    });
+  }
 
-      api.put(`/usuarios-fisicos/${usuario.id}`, usarioParaAtualzar, {
-        headers: {
-          Authorization: TOKEN,
-        },
-      })
-        .then((resposta) => {
-          console.log(resposta)
+  function criarAtualizarFisicos(dados) {
+    setUsuario(dados);
+    setUsuarioParaAtualizar({
+      nome: dados.nome,
+      email: dados.email,
+      telefone: dados.telefone,
+      logradouro: dados.logradouro,
+      numero: dados.numero, // Adicionando o número
+      bairro: dados.bairro,
+      cidade: dados.cidade,
+      complemento: dados.complemento,
+      cep: dados.cep,
+    });
+  }
 
-          alert("Dados Atualizados com sucesso!");
-        })
-        .catch((erro) => {
-          console.log(erro)
-
-          alert("Ocorreu um erro, tente novamente!");
-        })
-
-    } else if (sessionStorage.getItem('tipoUsuario') == "UsuarioJuridico") {
-
-      api.put(`/usuarios-juridicos/${usuario.id}`, usarioParaAtualzar, {
-        headers: {
-          Authorization: TOKEN,
-        },
-      })
-        .then((resposta) => {
-          console.log(resposta)
-
-          alert("Dados Atualizados com sucesso!");
-        })
-        .catch((erro) => {
-          console.log(erro)
-
-          alert("Ocorreu um erro, tente novamente!");
-        })
-    }
+  function criarAtualizarJuridicos(dados) {
+    setUsuario(dados);
+    setUsuarioParaAtualizar({
+      nomeFantasia: dados.nomeFantasia,
+      razaoSocial: dados.razaoSocial,
+      cnpj: dados.cnpj,
+      email: dados.email,
+      telefone: dados.telefone,
+      logradouro: dados.logradouro,
+      numero: dados.numero, // Adicionando o número
+      bairro: dados.bairro,
+      cidade: dados.cidade,
+      complemento: dados.complemento,
+      cep: dados.cep,
+    });
   }
 
   function cliqueBotaoFoto() {
@@ -160,52 +148,39 @@ function FormPerfilCliente() {
   }
 
   function atualizarFoto(file) {
-        console.log(file)
-        if (!file) {
-            alert("Escolha uma foto primeiro!");
-        } else {
+    if (!file) {
+      alert("Escolha uma foto primeiro!");
+    } else {
+      const arquivoFormatado = new FormData();
+      arquivoFormatado.append("fotoPerfil", file);
 
-            // FormData é um objeto nativo do JavaScript (existe mesmo sem React).
-            // Ele foi criado para simular um formulário HTML em JavaScript, para que a gente possa enviar arquivos e outros dados para o servidor via código.
-            // Ele embala o arquivo certinho no formato multipart/form-data, que é um formato especial para enviar:
-
-            // Arquivos (.png, .jpg, .pdf, etc).
-
-            const arquivoFormatado = new FormData();
-            arquivoFormatado.append("fotoPerfil", file);
-
-            api.put(`${URLFOTO}/${sessionStorage.getItem('id')}`, arquivoFormatado, {
-            headers: {
-                "Authorization":  TOKEN
-            }
-            })
-            .then(response => {
-            console.log("Upload realizado com sucesso:", response.data);
-              sessionStorage.setItem('fotoPerfil', response.data);
-              window.location.reload()
-            })
-            .catch(error => {
-            console.error("Erro ao enviar o arquivo:", error);
-            });
-        }
+      api.put(`${URLFOTO}/${sessionStorage.getItem('id')}`, arquivoFormatado, {
+        headers: { "Authorization": TOKEN }
+      })
+      .then(response => {
+        alert("Upload realizado com sucesso!");
+        sessionStorage.setItem('fotoPerfil', response.data);
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error("Erro ao enviar o arquivo:", error);
+      });
     }
+  }
 
-    function excluirFotoPerfil(){
-      api.delete(`${URLFOTO}/${sessionStorage.getItem('id')}`, {
-            headers: {
-                "Authorization":  TOKEN,
-            }
-            })
-            .then(response => {
-            console.log("Foto Deletada com sucesso");
-            sessionStorage.setItem('fotoPerfil', null);
-            window.location.reload()
-
-            })
-            .catch(error => {
-            console.error("Erro ao enviar o arquivo:", error);
-            });
-    }
+  function excluirFotoPerfil() {
+    api.delete(`${URLFOTO}/${sessionStorage.getItem('id')}`, {
+      headers: { "Authorization": TOKEN },
+    })
+    .then(() => {
+      alert("Foto Deletada com sucesso");
+      sessionStorage.setItem('fotoPerfil', null);
+      window.location.reload();
+    })
+    .catch(error => {
+      console.error("Erro ao excluir a foto:", error);
+    });
+  }
 
   return (
     <>
@@ -215,7 +190,7 @@ function FormPerfilCliente() {
         </BarraTitulo>
         <div className="px-6 py-6 flex flex-col sm:flex-row items-center justify-center gap-6">
           <img
-            src={sessionStorage.getItem('fotoPerfil') != null || sessionStorage.getItem('fotoPerfil') != undefined ? sessionStorage.getItem('fotoPerfil') : minhaImagem}
+            src={sessionStorage.getItem('fotoPerfil') || minhaImagem}
             alt="Foto de perfil"
             className="w-32 h-32 rounded-full border-[3px] border-white shadow-md object-cover"
           />
@@ -244,80 +219,29 @@ function FormPerfilCliente() {
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
           {sessionStorage.getItem('tipoUsuario') === 'UsuarioFisico' ? (
             <>
-              <Input label="Nome:" name="nome" value={usuario.nome}
-                onChange={(e) => {
-                  setUsuarioParaAtualizar({ ...usuarioParaAtualizar, nome: e.target.value });
-                  setUsuario({ ...usuario, nome: e.target.value });
-                }}
-              />
-              <Input label="CPF:" name="cpf" value={usuario.cpf} disabled />
-              <Input label="RG:" name="rg" value={usuario.rg} disabled />
+              <Input label="Nome:" name="nome" value={usuario.nome} onChange={handleInputChange} errorMessage={errors.nome} />
+              <Input label="CPF:" name="cpf" value={usuario.cpf} onChange={handleInputChange} mask={mascaraCPF} errorMessage={errors.cpf} />
+              <Input label="RG:" name="rg" value={usuario.rg} onChange={handleInputChange} mask={mascaraRG} errorMessage={errors.rg} />
             </>
           ) : (
             <>
-              <Input label="Nome Fantasia:" name="nomeFantasia" value={usuario.nomeFantasia}
-                onChange={(e) => {
-                  setUsuarioParaAtualizar({ ...usuarioParaAtualizar, nomeFantasia: e.target.value });
-                  setUsuario({ ...usuario, nomeFantasia: e.target.value });
-                }}
-              />
-              <Input label="Razão Social:" name="razaoSocial" value={usuario.razaoSocial}
-                onChange={(e) => {
-                  setUsuarioParaAtualizar({ ...usuarioParaAtualizar, razaoSocial: e.target.value });
-                  setUsuario({ ...usuario, razaoSocial: e.target.value });
-                }}
-              />
-              <Input label="CNPJ:" name="cnpj" value={usuario.cnpj}
-                onChange={(e) => {
-                  setUsuarioParaAtualizar({ ...usuarioParaAtualizar, cnpj: e.target.value });
-                  setUsuario({ ...usuario, cnpj: e.target.value });
-                }}
-              />
+              <Input label="Nome Fantasia:" name="nomeFantasia" value={usuario.nomeFantasia} onChange={handleInputChange} errorMessage={errors.nomeFantasia}/>
+              <Input label="Razão Social:" name="razaoSocial" value={usuario.razaoSocial} onChange={handleInputChange} errorMessage={errors.razaoSocial}/>
+              <Input label="CNPJ:" name="cnpj" value={usuario.cnpj} onChange={handleInputChange} mask={mascaraCNPJ} errorMessage={errors.cnpj}/>
             </>
           )}
+          <Input label="Email:" name="email" value={usuario.email} onChange={handleInputChange} errorMessage={errors.email}/>
+          <Input label="Telefone:" name="telefone" value={usuario.telefone} onChange={handleInputChange} mask={mascaraTelefone} errorMessage={errors.telefone}/>
+          <Input label="CEP:" name="cep" value={usuario.cep} onChange={handleInputChange} mask={mascaraCEP} errorMessage={errors.cep}/>
 
-          <Input label="Email:" name="email" value={usuario.email}
-            onChange={(e) => {
-              setUsuarioParaAtualizar({ ...usuarioParaAtualizar, email: e.target.value });
-              setUsuario({ ...usuario, email: e.target.value });
-            }}
-          />
-          <Input label="Telefone:" name="telefone" value={usuario.telefone}
-            onChange={(e) => {
-              setUsuarioParaAtualizar({ ...usuarioParaAtualizar, telefone: e.target.value });
-              setUsuario({ ...usuario, telefone: e.target.value });
-            }}
-          />
-          <Input label="CEP:" name="cep" value={usuario.cep}
-            onChange={(e) => {
-              setUsuarioParaAtualizar({ ...usuarioParaAtualizar, cep: e.target.value });
-              setUsuario({ ...usuario, cep: e.target.value });
-            }}
-          />
-          <Input label="Logradouro:" name="logradouro" value={usuario.logradouro}
-            onChange={(e) => {
-              setUsuarioParaAtualizar({ ...usuarioParaAtualizar, logradouro: e.target.value });
-              setUsuario({ ...usuario, logradouro: e.target.value });
-            }}
-          />
-          <Input label="Bairro:" name="bairro" value={usuario.bairro}
-            onChange={(e) => {
-              setUsuarioParaAtualizar({ ...usuarioParaAtualizar, bairro: e.target.value });
-              setUsuario({ ...usuario, bairro: e.target.value });
-            }}
-          />
-          <Input label="Cidade:" name="cidade" value={usuario.cidade}
-            onChange={(e) => {
-              setUsuarioParaAtualizar({ ...usuarioParaAtualizar, cidade: e.target.value });
-              setUsuario({ ...usuario, cidade: e.target.value });
-            }}
-          />
-          <Input label="Complemento:" name="complemento" value={usuario.complemento}
-            onChange={(e) => {
-              setUsuarioParaAtualizar({ ...usuarioParaAtualizar, complemento: e.target.value });
-              setUsuario({ ...usuario, complemento: e.target.value });
-            }}
-          />
+          <div className="flex flex-col md:flex-row gap-4">
+            <Input label="Logradouro:" name="logradouro" value={usuario.logradouro} onChange={handleInputChange} errorMessage={errors.logradouro} className="w-full" />
+            <Input label="Número:" name="numero" value={usuario.numero} onChange={handleInputChange} errorMessage={errors.numero} className="w-1/6" /> {/* Novo campo número com largura menor */}
+          </div>
+
+          <Input label="Bairro:" name="bairro" value={usuario.bairro} onChange={handleInputChange} errorMessage={errors.bairro}/>
+          <Input label="Cidade:" name="cidade" value={usuario.cidade} onChange={handleInputChange} errorMessage={errors.cidade}/>
+          <Input label="Complemento:" name="complemento" value={usuario.complemento} onChange={handleInputChange} />
         </div>
 
         <div className="w-full flex justify-center items-center px-4 pb-6">
@@ -326,7 +250,6 @@ function FormPerfilCliente() {
       </div>
     </>
   );
-
 }
 
 export default FormPerfilCliente;
