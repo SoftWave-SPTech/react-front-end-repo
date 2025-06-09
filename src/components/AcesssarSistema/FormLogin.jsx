@@ -33,7 +33,7 @@ export default function FormLogin()
                 sessionStorage.setItem("nome", response.data.nome);
                 sessionStorage.setItem("foto", response.data.foto);
                 //Logica para redirecionar para o perfil do cliente ou advogado
-                if (response.data.tipoUsuario == 'UsuarioFisico' || response.data.tipoUsuario == 'UsuarioJuridico') {
+                if (response.data.role == '"ROLE_USUARIO"') {
                     window.location.href = "/perfil-cliente";
                 } else {
                     window.location.href = "/perfil-advogado";
