@@ -19,7 +19,7 @@ const FormRedefinirSenha = () => {
             navigate("/esqueci-senha");
         } catch (error) {
             console.error("Erro ao cadastrar senha:", error);
-            alert("Ocorreu um erro ao cadastrar a senha. Tente novamente.");
+            alert("Ocorreu um erro ao enviar o e-mail. Verifique se o email está correto ou Tente novamente mais tarde.");
         }
     };
 
