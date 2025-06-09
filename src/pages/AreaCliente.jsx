@@ -23,7 +23,6 @@ const VisualizarDocumentosProcesso = () => {
                     minHeight: '60vh',
                 }}
             >
-                {/* Documentos */}
                 <div
                     style={{
                         flex: '1 1 320px',
@@ -85,7 +84,7 @@ const VisualizarDocumentosProcesso = () => {
                         }}>Andamento</h2>
                         <ProcessoAndamento />
                     </div>
-                    {/* Comentários */}
+
                     <div
                         style={{
                             background: '#020E29',
