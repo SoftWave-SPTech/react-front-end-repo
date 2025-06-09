@@ -14,38 +14,38 @@ const VisualizarDocumentosProcesso = () => {
                     display: 'flex',
                     flexDirection: 'row',
                     flexWrap: 'wrap',
-                    gap: '64px', // aumentado
-                    padding: '64px', // aumentado
+                    gap: '32px',
+                    padding: '32px',
                     justifyContent: 'center',
                     alignItems: 'flex-start',
                     background: '#e7ecfa',
-                    borderRadius: '32px', // aumentado
-                    minHeight: '80vh', // aumentado
+                    borderRadius: '16px',
+                    minHeight: '70vh',
                 }}
             >
                 <div
                     style={{
-                        flex: '1 1 640px', // aumentado
-                        minWidth: '640px', // aumentado
-                        maxWidth: '700px', // aumentado
+                        flex: '1 1 350px',
+                        minWidth: '320px',
+                        maxWidth: '420px',
                         background: '#020E29',
-                        borderRadius: '32px', // aumentado
-                        boxShadow: '0 4px 16px rgba(0,0,0,0.08)', // aumentado
-                        padding: '32px', // aumentado
+                        borderRadius: '16px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                        padding: '16px',
                         display: 'flex',
                         flexDirection: 'column',
                         height: '100%',
                         order: 1,
-                        maxHeight: '900px', // aumentado
+                        maxHeight: '600px',
                         overflowY: 'auto'
                     }}
                 >
                     <h2 style={{
-                        fontSize: '2.4rem', // aumentado
+                        fontSize: '1.5rem',
                         fontWeight: 'bold',
-                        marginBottom: '24px', // aumentado
+                        marginBottom: '16px',
                         color: 'white',
-                        letterSpacing: '2px' // aumentado
+                        letterSpacing: '1px'
                     }}>Documentos</h2>
                     <DocumentosList />
                 </div>
@@ -54,10 +54,10 @@ const VisualizarDocumentosProcesso = () => {
                     style={{
                         display: 'flex',
                         flexDirection: 'column',
-                        flex: '1 1 800px', // aumentado
-                        minWidth: '640px', // aumentado
-                        maxWidth: '900px', // aumentado
-                        gap: '64px', // aumentado
+                        flex: '1 1 400px',
+                        minWidth: '320px',
+                        maxWidth: '520px',
+                        gap: '32px',
                         height: '100%',
                         order: 2
                     }}
@@ -66,9 +66,9 @@ const VisualizarDocumentosProcesso = () => {
                     <div
                         style={{
                             background: '#020E29',
-                            borderRadius: '32px', // aumentado
-                            boxShadow: '0 4px 16px rgba(0,0,0,0.08)', // aumentado
-                            padding: '32px', // aumentado
+                            borderRadius: '16px',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                            padding: '16px',
                             display: 'flex',
                             flexDirection: 'column',
                             height: '100%',
@@ -76,11 +76,11 @@ const VisualizarDocumentosProcesso = () => {
                         }}
                     >
                         <h2 style={{
-                            fontSize: '2.4rem', // aumentado
+                            fontSize: '1.5rem',
                             fontWeight: 'bold',
-                            marginBottom: '24px', // aumentado
+                            marginBottom: '16px',
                             color: 'white',
-                            letterSpacing: '2px' // aumentado
+                            letterSpacing: '1px'
                         }}>Andamento</h2>
                         <ProcessoAndamento />
                     </div>
@@ -88,37 +88,37 @@ const VisualizarDocumentosProcesso = () => {
                     <div
                         style={{
                             background: '#020E29',
-                            borderRadius: '32px', // aumentado
-                            boxShadow: '0 4px 16px rgba(0,0,0,0.08)', // aumentado
-                            padding: '32px', // aumentado
+                            borderRadius: '16px',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                            padding: '16px',
                             color: 'white',
                             display: 'flex',
                             flexDirection: 'column',
                         }}
                     >
                         <h2 style={{
-                            fontSize: '2.4rem', // aumentado
+                            fontSize: '1.5rem',
                             fontWeight: 'bold',
-                            marginBottom: '24px', // aumentado
+                            marginBottom: '16px',
                             color: 'white',
-                            letterSpacing: '2px' // aumentado
+                            letterSpacing: '1px'
                         }}>Comentários</h2>
                         <ComentariosList />
                     </div>
                 </div>
             </div>
-            <div style={{ textAlign: 'center', marginTop: '64px' }}> {/* aumentado */}
+            <div style={{ textAlign: 'center', marginTop: '32px' }}>
                 <button
                     style={{
-                        padding: '24px 80px', // aumentado
+                        padding: '12px 32px',
                         backgroundColor: '#001e3c',
                         color: 'white',
                         border: 'none',
-                        borderRadius: '16px', // aumentado
-                        fontSize: '2.2rem', // aumentado
+                        borderRadius: '8px',
+                        fontSize: '1.2rem',
                         fontWeight: 'bold',
                         cursor: 'pointer',
-                        boxShadow: '0 4px 16px rgba(0,0,0,0.08)', // aumentado
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                         transition: 'background 0.2s',
                     }}
                     onMouseOver={e => (e.target.style.backgroundColor = '#003366')}
