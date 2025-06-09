@@ -36,7 +36,7 @@ const FormRedefinirSenha = () => {
                         className="w-32 h-32 mx-auto mb-2"
                     />
                     <h2 className="text-2xl">REDEFINIR SENHA</h2>
-                    <p className='text-2x1'> Informe seu email para receber o token de troca de senha em seu email.</p>
+                    <p className='text-2xl'> Informe seu email para receber o token de troca de senha em seu email.</p>
                 </div>
                 <Input
                     type="email"
