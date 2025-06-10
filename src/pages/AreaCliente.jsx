@@ -1,18 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { api } from '../service/api';
 import LayoutBase from '../layouts/LayoutBase';
 import DocumentosList from '../components/Ui/DocumentosList';
 import ProcessoAndamento from '../components/Ui/ProcessoAndamento';
 import ComentariosList from '../components/Ui/ComentariosList';
 import BarraTitulo from '../components/Ui/BarraTitulo';
 
-const VisualizarDocumentosProcesso = () => {
+const AreaCliente = () => {
+    const { processoId } = useParams();
+    const [documentos, setDocumentos] = useState([]);
+    const [andamentos, setAndamentos] = useState([]);
+    const [comentarios, setComentarios] = useState([]);
+
+    useEffect(() => {
+        api.get(`/documentos-processos/processo/${processoId}`)
+            .then(res => setDocumentos(Array.isArray(res.data) ? res.data : []))
+            .catch(() => setDocumentos([]));
+
+        api.get(`/ultimas-movimentacoes/processo/${processoId}`)
+            .then(res => setAndamentos(Array.isArray(res.data) ? res.data : []))
+            .catch(() => setAndamentos([]));
+
+        api.get(`/comentarios-processos/buscar-por-proceso/${processoId}`)
+            .then(res => setComentarios(Array.isArray(res.data) ? res.data : []))
+            .catch(() => setComentarios([]));
+    }, [processoId]);
+
     return (
         <LayoutBase tipoMenu="cliente">
             <BarraTitulo>Contratos e petições</BarraTitulo>
             <div
                 style={{
                     display: 'flex',
-                    flexDirection: 'row', // Garante lin
+                    flexDirection: 'row',
                     flexWrap: 'wrap',
                     gap: '32px',
                     padding: '32px',
@@ -37,7 +58,7 @@ const VisualizarDocumentosProcesso = () => {
                         flexDirection: 'column',
                         height: '100%',
                         order: 1,
-                        maxHeight: '500px', // Limite de altura
+                        maxHeight: '500px',
                         overflowY: 'auto'
                     }}
                 >
@@ -48,7 +69,7 @@ const VisualizarDocumentosProcesso = () => {
                         color: 'white',
                         letterSpacing: '1px'
                     }}>Documentos</h2>
-                    <DocumentosList />
+                    <DocumentosList documentos={documentos} />
                 </div>
                 {/* Andamento + Comentários em coluna */}
                 <div
@@ -83,7 +104,7 @@ const VisualizarDocumentosProcesso = () => {
                             color: 'white',
                             letterSpacing: '1px'
                         }}>Andamento</h2>
-                        <ProcessoAndamento />
+                        <ProcessoAndamento andamentos={andamentos} processoId={processoId} />
                     </div>
                     {/* Comentários */}
                     <div
@@ -104,7 +125,7 @@ const VisualizarDocumentosProcesso = () => {
                             color: 'white',
                             letterSpacing: '1px'
                         }}>Comentários</h2>
-                        <ComentariosList />
+                        <ComentariosList comentarios={comentarios} />
                     </div>
                 </div>
             </div>
@@ -132,4 +153,4 @@ const VisualizarDocumentosProcesso = () => {
     );
 };
 
-export default VisualizarDocumentosProcesso;
+export default AreaCliente;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MenuLateralAdvogado from '../components/Menu/MenuLateral';
 import BarraTitulo from '../components/Ui/BarraTitulo';
 import {Input} from '../components/Ui/Input';
@@ -159,6 +160,8 @@ export default function VisualizarProcessos() {
   const [processoSelecionado, setProcessoSelecionado] = useState(null);
   const [expandido, setExpandido] = useState(null); // novo estado
 
+  const navigate = useNavigate();
+
   const abrirExclusao = (processo) => {
     setProcessoSelecionado(processo);
     setModalConfirma(true);
@@ -229,7 +232,7 @@ export default function VisualizarProcessos() {
                           <div><b>Início:</b> {p.inicio}</div>
                         </div>
                         <div className="flex justify-end">
-                          <Botao onClick={() => alert(`Visualizar processo ${p.numero}`)}>
+                          <Botao onClick={() => navigate(`/area-cliente/processo/${p.id}`)}>
                             Visualizar Processo
                           </Botao>
                         </div>

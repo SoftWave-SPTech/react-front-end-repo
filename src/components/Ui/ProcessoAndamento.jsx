@@ -1,18 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const andamento = [
-  { data: '09-04-2025', status: 'Ver análise' },
-  { data: '02-04-2025', status: 'Ver análise' },
-  { data: '01-04-2025', status: 'Ver análise' },
-  { data: '10-03-2025', status: 'Ver análise' }
-];
-
-const ProcessoAndamento = () => {
+const ProcessoAndamento = ({ andamentos = [], processoId }) => {
+  const navigate = useNavigate();
   return (
     <div className="timeline-horizontal-container">
       <ul className="timeline-horizontal">
-        {andamento.map((item, idx) => (
-          <li key={idx} className="timeline-horizontal-item">
+        {andamentos.map((item, idx) => (
+          <li key={item.id || idx} className="timeline-horizontal-item">
             <div className="timeline-horizontal-date">{item.data}</div>
             <div className="timeline-horizontal-icon">
               <span
@@ -27,9 +22,11 @@ const ProcessoAndamento = () => {
               />
             </div>
             <div className="timeline-horizontal-status">
-              <button className="timeline-horizontal-btn">{item.status}</button>
+              <button className="timeline-horizontal-btn" onClick={() => navigate(`/analise-ia/${processoId}/${item.id}`)}>
+                Ver análise
+              </button>
             </div>
-            {idx < andamento.length - 1 && (
+            {idx < andamentos.length - 1 && (
               <div className="timeline-horizontal-line" />
             )}
           </li>

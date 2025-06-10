@@ -1,12 +1,6 @@
 import React from 'react';
 
-const documentos = [
-  { id: 1, nome: 'Certidão de nascimento', data: '29-03-2025' },
-  { id: 2, nome: 'Certidão de nascimento', data: '29-03-2025' },
-  { id: 3, nome: 'Certidão de nascimento', data: '29-03-2025' }
-];
-
-const DocumentosList = () => {
+const DocumentosList = ({ documentos = [] }) => {
   return (
     <div style={{ flex: 1, padding: '10px' }}>
       {documentos.map(doc => (
