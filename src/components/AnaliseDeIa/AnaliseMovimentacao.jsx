@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ComentarioAdvogado from "../Ui/ComentarioAdvogado";
 import BlocoInformativo from "../Ui/BlocoInformativo";
 import Botao from "../../components/Ui/Botao";
 import BarraTitulo from "../../components/Ui/BarraTitulo";
 import ModalComentario from "../Ui/ModalComentario";
+import { api } from "../../service/api";
 
 export default function AnaliseMovimentacao() {
   const descricao = `O sistema processou os autos e identificou que a parte autora pleiteia reintegração ao cargo, pagamento de verbas rescisórias, adicional de insalubridade e indenização por dano moral. 
@@ -23,9 +24,35 @@ Por fim, recomenda-se reavaliação dos valores rescisórios e proposição de a
     },
   ]);
 
+  const idMovimentacao = "1"; // Exemplo de ID da movimentação, pode ser dinâmico
+  const TOKEN = sessionStorage.getItem("token");
   const [modalAberto, setModalAberto] = useState(false);
   const [comentarioSelecionado, setComentarioSelecionado] = useState(null);
   const [modoEdicao, setModoEdicao] = useState(false);
+
+  const [analise, setAnalise] = useState("");
+  const [movimentacao, setMovimentacao] = useState("");
+
+  useEffect(() => {
+      api.get(`/analise-processo/por-movimentacao/${idMovimentacao}`, {
+        headers: { Authorization: TOKEN }
+      }).then((response)=> {
+        console.log(response.data);
+        const analiseIA = response.data.resumoIA || "Análise não disponível no momento.";
+        const movimentacaoAtual = response.data.movimentacoes.movimento || "Movimentação não disponível no momento.";
+        setAnalise(analiseIA);
+        setMovimentacao(movimentacaoAtual);
+      }).catch((error) => {
+        console.error("Erro ao buscar análise e movimentação:", error);
+        setAnalise("Análise não disponível no momento.");
+        setMovimentacao("Movimentação não disponível no momento.");
+      });
+
+
+      api.get(`/comentarios`)
+    
+  }, []);
+
 
   const handleSalvar = (texto, index = null) => {
     const novoComentario = {
@@ -112,13 +139,13 @@ Por fim, recomenda-se reavaliação dos valores rescisórios e proposição de a
             <div className="max-h-[490px] overflow-y-auto flex flex-col space-y-6">
               <BlocoInformativo
                 titulo="Análise com IA"
-                descricao={descricao}
+                descricao={analise}
                 icone="/icons/ai-icon.svg"
                 altura="h-[230px]"
               />
               <BlocoInformativo
                 titulo="Movimentação"
-                descricao={descricao}
+                descricao={movimentacao}
                 icone="/icons/movimentacao-icon.svg"
                 altura="h-[230px]"
               />
