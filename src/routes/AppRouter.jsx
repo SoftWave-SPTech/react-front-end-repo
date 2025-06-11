@@ -66,7 +66,7 @@ export const AppRouter = createBrowserRouter([
     element: <VisualizarDocumentosPessoais/>
   },
   {
-    path: "//analise-ia/:processoId/:movimentacaoId",
+    path: "/analise-ia/:processoId/:movimentacaoId",
     element: <AnaliseComIa/>
   },
   {
