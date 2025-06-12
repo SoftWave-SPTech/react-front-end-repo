@@ -18,7 +18,7 @@ const AreaCliente = () => {
             .then(res => setDocumentos(Array.isArray(res.data) ? res.data : []))
             .catch(() => setDocumentos([]));
 
-        api.get(`/ultimas-movimentacoes/processo/${processoId}`)
+        api.get(`/ultimas-movimentacoes/processo/${processoId}/ordenadas`)
             .then(res => setAndamentos(Array.isArray(res.data) ? res.data : []))
             .catch(() => setAndamentos([]));
 

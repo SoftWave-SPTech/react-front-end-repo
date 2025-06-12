@@ -56,3 +56,19 @@ export const mascaraCEP = (value) =>
     .replace(/^(\d{5})(\d)/, '$1-$2')
     .slice(0, 9);
 };
+
+
+export function formatarData(dataISO) {
+    if (!dataISO) return "";
+    const data = new Date(dataISO);
+    const dia = data.getDate().toString().padStart(2, "0");
+    const meses = [
+      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+    const mes = meses[data.getMonth()];
+    const ano = data.getFullYear();
+    const horas = data.getHours().toString().padStart(2, "0");
+    const minutos = data.getMinutes().toString().padStart(2, "0");
+    return `${dia} ${mes} ${ano}, ${horas}:${minutos}`;
+  }

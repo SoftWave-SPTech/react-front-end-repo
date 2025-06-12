@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ComentarioAdvogado from "../Ui/ComentarioAdvogado";
 import BlocoInformativo from "../Ui/BlocoInformativo";
-import Botao from "../../components/Ui/Botao";
 import BarraTitulo from "../../components/Ui/BarraTitulo";
 import ModalComentario from "../Ui/ModalComentario";
 import { api } from "../../service/api";
 import { useParams } from "react-router-dom";
+import { formatarData } from "../../Utils/mascaras";
+import Botao from "../Ui/Botao";
 
 export default function AnaliseMovimentacao() {
 
@@ -13,7 +14,6 @@ export default function AnaliseMovimentacao() {
   ]);
 
   const { movimentacaoId } = useParams();
-  const { processoId } = useParams();
   const TOKEN = sessionStorage.getItem("token");
   const tipoUsuario = sessionStorage.getItem("tipoUsuario");
   const [modalAberto, setModalAberto] = useState(false);
@@ -22,92 +22,112 @@ export default function AnaliseMovimentacao() {
 
   const [analise, setAnalise] = useState("");
   const [movimentacao, setMovimentacao] = useState("");
+  const [movimentacaoData, setMovimentacaoData] = useState("");
 
   useEffect(() => {
-      api.get(`/analise-processo/por-movimentacao/${movimentacaoId}`, {
-        headers: { Authorization: TOKEN }
-      }).then((response)=> {
-        console.log(response.data);
-        const analiseIA = response.data.resumoIA || "Análise não disponível no momento.";
-        const movimentacaoAtual = response.data.movimentacoes.movimento || "Movimentação não disponível no momento.";
-        setAnalise(analiseIA);
-        setMovimentacao(movimentacaoAtual);
-      }).catch((error) => {
-        console.error("Erro ao buscar análise e movimentação:", error);
-        setAnalise("Análise não disponível no momento.");
-        setMovimentacao("Movimentação não disponível no momento.");
-      });
+    api.get(`/analise-processo/por-movimentacao/${movimentacaoId}`, {
+      headers: { Authorization: TOKEN }
+    }).then((response) => {
+      const analiseIA = response.data.resumoIA || "Análise não disponível no momento.";
+      const movimentacaoAtual = response.data.movimentacoes.movimento || "Movimentação não disponível no momento.";
+      const movimentacaoData = response.data.movimentacoes.data || "Data não disponível.";
+      setAnalise(analiseIA);
+      setMovimentacao(movimentacaoAtual);
+      setMovimentacaoData(movimentacaoData)
+
+    }).catch((error) => {
+      console.error("Erro ao buscar análise e movimentação:", error);
+      setAnalise("Análise não disponível no momento.");
+      setMovimentacao("Movimentação não disponível no momento.");
+    });
 
 
-      api.get(`/comentarios-processos/buscar-por-ultima-movimentacao/${movimentacaoId}`,{
-        headers: { Authorization: TOKEN }
-      }).then((response) => {
-        console.log("Comentários recebidos:", response.data);
-        if (Array.isArray(response.data)) {
-          setComentarios(response.data);
-        } else {
-          setComentarios([]);
-        }
-      }).catch((error) => {
-        console.error("Erro ao buscar comentários:", error);
+    api.get(`/comentarios-processos/buscar-por-ultima-movimentacao/${movimentacaoId}`, {
+      headers: { Authorization: TOKEN }
+    }).then((response) => {
+      if (Array.isArray(response.data)) {
+        setComentarios(response.data);
+      } else {
         setComentarios([]);
-      });
-    
+      }
+    }).catch((error) => {
+      console.error("Erro ao buscar comentários:", error);
+      setComentarios([]);
+    });
+
   }, []);
 
 
-  function formatarData(dataISO) {
-    if (!dataISO) return "";
-    const data = new Date(dataISO);
-    const dia = data.getDate().toString().padStart(2, "0");
-    const meses = [
-      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-    ];
-    const mes = meses[data.getMonth()];
-    const ano = data.getFullYear();
-    const horas = data.getHours().toString().padStart(2, "0");
-    const minutos = data.getMinutes().toString().padStart(2, "0");
-    return `${dia} ${mes} ${ano}, ${horas}:${minutos}`;
-  }
-
-  const handleSalvar = (texto, index = null) => {
+  const handleSalvar = (texto) => {
     const novoComentario = {
-      nomeUsuario: "Cristhian Lauriano",
+      id : comentarioSelecionado?.id || null,
+      nomeUsuario: sessionStorage.getItem("nome"),
       dataComentario: new Date().toISOString(),
       comentario: texto,
-      fotoUsuario: "/icons/avatar1.jpg",
+      fotoUsuario: sessionStorage.getItem("fotoPerfil"),
+      idUsuario: sessionStorage.getItem("id"),
     };
 
-    if (index !== null) {
-      const atualizados = [...comentarios];
-      atualizados[index] = novoComentario;
-      setComentarios(atualizados);
-    } else {
-      setComentarios([...comentarios, novoComentario]);
-    }
+    const salvarComentario = {
+      comentario: novoComentario.comentario,
+      dataCriacao: novoComentario.dataComentario,
+      usuarioID: sessionStorage.getItem("id"),
+      ultimaMovimentacaoID: movimentacaoId,
+      processoID: null
+    };
+if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para edição
+    api.post(`/comentarios-processos/movimentacao`,  salvarComentario, {
+      headers: { Authorization: TOKEN }
+    }).then((response) => {
+      setComentarios([...comentarios, { ...novoComentario, id: response.data.id }]);
+    }).catch((error) => {
+      console.error("Erro ao salvar comentário:", error);
+    });
+  }else{
 
+    api.put(`/comentarios-processos/${comentarioSelecionado.id}`,  salvarComentario, {
+      headers: { Authorization: TOKEN }
+    }).then((response) => {
+      console.info("Comentário atualizado com sucesso:", response.data);
+    }).catch((error) => {
+      console.error("Erro ao atualizar comentário:", error);
+    });
+    const atualizados = [...comentarios];
+      atualizados[comentarioSelecionado.index] = { ...novoComentario, id: comentarioSelecionado.id };
+      setComentarios(atualizados);
+  }
     setModalAberto(false);
     setComentarioSelecionado(null);
     setModoEdicao(false);
   };
 
-  const handleExcluir = (index) => {
-  if (index !== null) {
-    const novaLista = [...comentarios];
-    novaLista.splice(index, 1);
-    setComentarios(novaLista);
-    setModalAberto(false);
-    setComentarioSelecionado(null);
-    setModoEdicao(false);
-  }
-};
+  const handleExcluir = (id , index) => {
+    if (id !== null) {
+
+      api.delete(`/comentarios-processos/${id}`, {
+        headers: { Authorization: TOKEN }
+      }).then((response) => {     
+        console.info("Comentário excluído com sucesso:", response.data);
+      }).catch((error) => {
+        console.error("Erro ao excluir comentário:", error);
+      });
+
+      const novaLista = [...comentarios];
+      novaLista.splice(index, 1);
+
+
+      setComentarios(novaLista);
+      setModalAberto(false);
+      setComentarioSelecionado(null);
+      setModoEdicao(false);
+    }
+  };
   return (
     <div className="w-full min-h-screen bg-[#E5EDFA] px-5 py-7">
       <div className="max-w-7xl mx-auto space-y-10">
         <div className="flex justify-center">
           <BarraTitulo className="justify-center">
-            Atualizações 01-04-2025
+            Atualizações {movimentacaoData}
           </BarraTitulo>
         </div>
 
@@ -123,34 +143,47 @@ export default function AnaliseMovimentacao() {
                   data={formatarData(coment.dataComentario)}
                   texto={coment.comentario}
                   // Precisa mudar para uma constante que armazena o prefixo no caminho da foto do perfil do comentario
-                  imagem={"http://localhost:8080/" + coment.fotoUsuario}
+                  imagem={coment.fotoUsuario.includes("http") ? coment.fotoUsuario : `http://localhost:8080/${coment.fotoUsuario}`}
                   onClick={() => {
-                    setComentarioSelecionado({ ...coment, index });
+                    setComentarioSelecionado({
+                      id: coment.id,
+                      nomeUsuario: coment.nomeUsuario,
+                      dataComentario: coment.dataComentario,
+                      comentario: coment.comentario,
+                      fotoUsuario: coment.fotoUsuario,
+                      idUsuario: coment.idUsuario,
+                      index
+                    });
                     setModoEdicao(false);
                     setModalAberto(true);
                   }}
                 />
               ))}
             </div>
-          { (tipoUsuario == "AdvogadoJuridico" || tipoUsuario == "AdvogadoFisico" ) && (
-            <div className="flex justify-center mt-4">
-              
-              <Botao
-                
-                largura="grande"
-                cor="padrao"
-                onClick={() => {
-                  setComentarioSelecionado(null);
-                  setModoEdicao(true);
-                  setModalAberto(true);
-                }}
-              >
-                <span className="flex items-center gap-2">
-                  Novo Comentário <span className="text-xl">+</span>
-                </span>
-              </Botao>
-            </div>
-          )}
+            {(tipoUsuario == "AdvogadoJuridico" || tipoUsuario == "AdvogadoFisico") && (
+              <div className="flex justify-center mt-4">
+                <Botao
+                  largura="grande"
+                  cor="padrao"
+                  onClick={() => {
+                    setComentarioSelecionado({
+                      nomeUsuario: sessionStorage.getItem("nome"),
+                      dataComentario: new Date().toISOString(),
+                      comentario: "",
+                      fotoUsuario: sessionStorage.getItem("fotoPerfil"),
+                      idUsuario: sessionStorage.getItem("id"),
+                      index: null
+                    });
+                    setModoEdicao(true);
+                    setModalAberto(true);
+                  }}
+                >
+                  <span className="flex items-center gap-2">
+                    Novo Comentário <span className="text-xl">+</span>
+                  </span>
+                </Botao>
+              </div>
+            )}
           </div>
 
           {/* Informações + Botão Voltar */}

@@ -1,10 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../../service/api';
+import ModalAguardando from './ModalAguardando';
 
 const ProcessoAndamento = ({ andamentos = [], processoId }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  function gerarAnaliseIA(item) {
+    setLoading(true);
+    api.post(`/analise-processo/${item.id}`)
+      .then((res) =>{ 
+        console.log("Análise IA gerada com sucesso:", res.data);
+        setLoading(false);
+        navigate(`/analise-ia/${processoId}/${item.id}`)
+      })
+      .catch(() => {
+        console.error("Erro ao gerar análise IA");
+        setLoading(false);
+        navigate(`/analise-ia/${processoId}/${item.id}`)
+      });
+  }
+
   return (
     <div className="timeline-horizontal-container">
+      <ModalAguardando loadingEnd={!loading} />
       <ul className="timeline-horizontal">
         {andamentos.map((item, idx) => (
           <li key={item.id || idx} className="timeline-horizontal-item">
@@ -22,7 +42,9 @@ const ProcessoAndamento = ({ andamentos = [], processoId }) => {
               />
             </div>
             <div className="timeline-horizontal-status">
-              <button className="timeline-horizontal-btn" onClick={() => navigate(`/analise-ia/${processoId}/${item.id}`)}>
+              <button className="timeline-horizontal-btn" onClick={() => 
+                gerarAnaliseIA(item)
+                }>
                 Ver análise
               </button>
             </div>
