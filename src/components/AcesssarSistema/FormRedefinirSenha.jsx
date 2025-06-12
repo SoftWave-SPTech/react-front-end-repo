@@ -18,7 +18,8 @@ const FormRedefinirSenha = () => {
             alert("E-mail com Token Enviado com sucesso!");
             navigate("/esqueci-senha");
         } catch (error) {
-            console.error("Erro ao cadastrar senha:", error);
+            console.error("Erro ao cadastrar senha:", error, error.response?.data?.message);
+            alert(error.response?.data?.message || "Erro ao enviar o e-mail. Por favor, tente novamente.");
             alert("Ocorreu um erro ao enviar o e-mail. Verifique se o email está correto ou Tente novamente mais tarde.");
         }
     };

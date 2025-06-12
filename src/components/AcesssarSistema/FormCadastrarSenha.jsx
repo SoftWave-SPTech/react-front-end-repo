@@ -48,14 +48,14 @@ export default function FormCadastrarSenha()
                     alert("Erro no login: " + response.data.message);
                 }
             } catch (error) {
-                console.error("Erro ao fazer login:", error);
-                alert("Ocorreu um erro ao tentar fazer login. Tente novamente.");
+                console.error("Erro ao fazer login:", error, error.response?.data?.message);
+                alert(error.response?.data?.message);
             }            
 
 
         } catch (error) {
-            console.error("Erro ao cadastrar senha:", error);
-            alert("Ocorreu um erro ao cadastrar a senha. Tente novamente.");
+            console.error("Erro ao cadastrar senha:", error, error.response?.data?.message);
+            alert(error.response?.data?.message);
         }
     };
    return (

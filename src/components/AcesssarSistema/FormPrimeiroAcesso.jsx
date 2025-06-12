@@ -28,8 +28,8 @@ export default function FormPrimeiroAcesso() {
 
             window.location.href = "/cadastrar-senha";
         } catch (error) {
-            console.error("Erro ao realizar o acesso:", error);
-            alert("Erro ao realizar o acesso. Verifique os dados e tente novamente.");
+            console.error("Erro ao realizar o acesso:", error, error.response?.data?.message);
+            alert(error.response?.data?.message || "Erro ao realizar o acesso. Por favor, tente novamente.");
         }
     };
 

@@ -43,8 +43,8 @@ export default function FormLogin()
                 alert("Erro no login: " + response.data.message);
             }
         } catch (error) {
-            console.error("Erro ao fazer login:", error);
-            alert("Ocorreu um erro ao tentar fazer login. Tente novamente.");
+            console.error("Erro ao fazer login:", error, error.response?.data?.message);
+            alert(error.response?.data?.message || "Erro ao fazer login. Por favor, tente novamente.");
         }
     };
 

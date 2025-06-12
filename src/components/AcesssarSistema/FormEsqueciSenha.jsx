@@ -31,7 +31,9 @@ const FormRedefinirSenha = () => {
 
         } catch (error) {
             console.error("Erro ao cadastrar senha:", error);
-            alert("Ocorreu um erro ao cadastrar a senha. Tente novamente.");
+            alert(error.response.data.novaSenha);
+            alert(error.response.data.novaSenhaConfirma || "Erro ao redefinir a senha. Por favor, tente novamente.");
+            alert(error.response.data.token || "erro");
         }
     };
 

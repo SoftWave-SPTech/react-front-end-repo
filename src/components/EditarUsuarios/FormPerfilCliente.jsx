@@ -82,34 +82,45 @@ function FormPerfilCliente() {
             cidade: endereco.localidade || '',
           }));
         } catch (error) {
+          console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
           alert('CEP inválido ou não encontrado.');
         }
       }
     }
   };
 
-  const validarDados = () => {
-    const erros = validarPerfilCliente(usuario);
-    setErrors(erros);
-    return Object.keys(erros).length === 0; 
-  };
-
-  function enviarDadosParaAtualizacao() {
-    if (!validarDados()) return;
-
-    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
-    const url = tipoUsuario === "UsuarioFisico" ? `/usuarios-fisicos/${usuario.id}` : `/usuarios-juridicos/${usuario.id}`;
+  const handleSubmit = (e) => {
+    e.preventDefault();
     
-    api.put(url, usarioParaAtualzar, {
-      headers: { Authorization: TOKEN },
+    const errosEncontrados = validarPerfilCliente(usuario);
+    
+    if (Object.keys(errosEncontrados).length > 0) {
+      setErrors(errosEncontrados);
+      return;
+    }
+
+    setErrors({});
+
+    api.put(`/usuarios-${sessionStorage.getItem('tipoUsuario') === 'UsuarioFisico' ? 'fisicos' : 'juridicos'}/${usuario.id}`, usuario, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      },
     })
     .then(() => {
-      alert("Dados Atualizados com sucesso!");
+      alert('Dados atualizados com sucesso!');
     })
-    .catch(() => {
-      alert("Ocorreu um erro, tente novamente!");
+    .catch((err) => {
+      console.error(err);
+      if (err.response?.data) {
+        const erros = err.response.data;
+        Object.keys(erros).forEach(campo => {
+          alert(`${campo}: ${erros[campo]}`);
+        });
+      } else {
+        alert('Erro ao atualizar dados. Por favor, tente novamente.');
+      }
     });
-  }
+  };
 
   function criarAtualizarFisicos(dados) {
     setUsuario(dados);
@@ -164,6 +175,7 @@ function FormPerfilCliente() {
       })
       .catch(error => {
         console.error("Erro ao enviar o arquivo:", error);
+        console.error("Erro ao enviar o arquivo:", error.response?.data?.message || error.message);
       });
     }
   }
@@ -179,6 +191,7 @@ function FormPerfilCliente() {
     })
     .catch(error => {
       console.error("Erro ao excluir a foto:", error);
+      alert("Erro ao excluir a foto: " + (error.response?.data?.message || error.message));
     });
   }
 
@@ -245,7 +258,7 @@ function FormPerfilCliente() {
         </div>
 
         <div className="w-full flex justify-center items-center px-4 pb-6">
-          <Botao onClick={enviarDadosParaAtualizacao} largura="medio">Salvar</Botao>
+          <Botao onClick={handleSubmit} largura="medio">Salvar</Botao>
         </div>
       </div>
     </>
