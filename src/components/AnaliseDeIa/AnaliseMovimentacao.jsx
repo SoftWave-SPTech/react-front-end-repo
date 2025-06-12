@@ -33,13 +33,12 @@ export default function AnaliseMovimentacao() {
       const movimentacaoData = response.data.movimentacoes.data || "Data não disponível.";
       setAnalise(analiseIA);
       setMovimentacao(movimentacaoAtual);
-      setMovimentacaoData(movimentacaoData)
-
-    }).catch((error) => {
-      console.error("Erro ao buscar análise e movimentação:", error);
-      setAnalise("Análise não disponível no momento.");
-      setMovimentacao("Movimentação não disponível no momento.");
-    });
+        setMovimentacaoData(movimentacaoData);
+              }).catch((error) => {
+        console.error("Erro ao buscar análise e movimentação:", error);
+        setAnalise("Análise não disponível no momento.");
+        setMovimentacao("Movimentação não disponível no momento.");
+      });
 
 
     api.get(`/comentarios-processos/buscar-por-ultima-movimentacao/${movimentacaoId}`, {
@@ -163,6 +162,7 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
             {(tipoUsuario == "AdvogadoJuridico" || tipoUsuario == "AdvogadoFisico") && (
               <div className="flex justify-center mt-4">
                 <Botao
+                
                   largura="grande"
                   cor="padrao"
                   onClick={() => {
