@@ -57,7 +57,7 @@ export default function ModalComentario({
             <div>
               <p className="font-bold">{comentario?.nomeUsuario}</p>
               <p className="text-sm text-gray-300">
-                {formatarData(comentario?.dataComentario || new Date().toISOString) }
+                {formatarData(comentario?.dataComentario || new Date().toISOString()) }
               </p>
             </div>
           </div>
