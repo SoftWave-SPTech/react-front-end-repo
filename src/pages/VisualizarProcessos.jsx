@@ -177,6 +177,16 @@ export default function VisualizarProcessos() {
     setExpandido(expandido === id ? null : id);
   };
 
+    useEffect(() => {
+    axios.get('localhost:8080/')
+      .then(response => setProcessos(response.data))
+      .catch(error => {
+        console.error('Erro ao buscar processos:', error);
+        setProcessos([]);
+      });
+  }, []);
+
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div className="w-64 flex-shrink-0">
