@@ -1,30 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../../service/api';
-import ModalAguardando from './ModalAguardando';
 
 const ProcessoAndamento = ({ andamentos = [], processoId }) => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
-  function gerarAnaliseIA(item) {
-    setLoading(true);
-    api.post(`/analise-processo/${item.id}`)
-      .then((res) =>{ 
-        console.log("Análise IA gerada com sucesso:", res.data);
-        setLoading(false);
-        navigate(`/analise-ia/${processoId}/${item.id}`)
-      })
-      .catch(() => {
-        console.error("Erro ao gerar análise IA");
-        setLoading(false);
-        navigate(`/analise-ia/${processoId}/${item.id}`)
-      });
+  if (!andamentos || andamentos.length === 0) {
+    return (
+      <div style={{
+        background: '#172042',
+        color: '#bfc8e2',
+        borderRadius: '8px',
+        padding: '10px 16px',
+        fontSize: '1rem',
+        marginTop: '8px'
+      }}>
+        Nenhum andamento encontrado.
+      </div>
+    );
   }
 
   return (
     <div className="timeline-horizontal-container">
-      <ModalAguardando loadingEnd={!loading} />
       <ul className="timeline-horizontal">
         {andamentos.map((item, idx) => (
           <li key={item.id || idx} className="timeline-horizontal-item">
@@ -42,9 +38,7 @@ const ProcessoAndamento = ({ andamentos = [], processoId }) => {
               />
             </div>
             <div className="timeline-horizontal-status">
-              <button className="timeline-horizontal-btn" onClick={() => 
-                gerarAnaliseIA(item)
-                }>
+              <button className="timeline-horizontal-btn" onClick={() => navigate(`/analise-ia/${processoId}/${item.id}`)}>
                 Ver análise
               </button>
             </div>
