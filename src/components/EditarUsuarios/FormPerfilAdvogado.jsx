@@ -48,7 +48,7 @@ function FormPerfilAdvogado()
                 })
                 .catch((erro) => {
                     console.log(erro)
-                    console.log(error.response?.data?.message || 'Erro ao buscar dados do advogado físico');
+                    console.log(erro.response?.data?.message || 'Erro ao buscar dados do advogado físico');
                 })
 
         } else if (sessionStorage.getItem('tipoUsuario') == "AdvogadoJuridico") {
