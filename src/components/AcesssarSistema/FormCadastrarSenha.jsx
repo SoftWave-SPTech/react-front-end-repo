@@ -112,7 +112,10 @@ export default function FormCadastrarSenha() {
           label="SENHA"
           name="senha"
           value={senha}
-          onChange={(e) => setSenha(e.target.value) && console.log(senha)}
+          onChange={(e) => {
+            setSenha(e.target.value);
+            console.log(e.target.value);
+          }}
           placeholder="*********"
           largura="cheia"
           errorMessage={errors.senha}
