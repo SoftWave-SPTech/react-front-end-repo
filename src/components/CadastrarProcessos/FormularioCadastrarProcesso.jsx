@@ -44,7 +44,26 @@ export default function FormularioCadastrarProcesso() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // lógica de submit
+        
+        // Validações básicas
+        const erros = {};
+        if (!numero) erros.numero = "Número do processo é obrigatório";
+        if (!descricao) erros.descricao = "Descrição é obrigatória";
+        if (advogadosSelecionados.length === 0) erros.advogados = "Selecione pelo menos um advogado";
+        if (clientesSelecionados.length === 0) erros.clientes = "Selecione pelo menos um cliente";
+
+        if (Object.keys(erros).length > 0) {
+            Object.values(erros).forEach(erro => alert(erro));
+            return;
+        }
+
+        // Aqui você pode adicionar a chamada para a API
+        console.log({
+            numero,
+            descricao,
+            advogados: advogadosSelecionados,
+            clientes: clientesSelecionados
+        });
     };
 
     // Filtra advogados e clientes pelo texto digitado

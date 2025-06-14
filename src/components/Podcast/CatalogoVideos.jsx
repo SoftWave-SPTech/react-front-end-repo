@@ -24,6 +24,7 @@ const CatalogoVideos = () => {
                 setVideos(dataVideos.items.reverse());
             } catch (error) {
                 console.error("Erro ao carregar vídeos:", error);
+                console.error(error.response?.data?.message || "Erro desconhecido ao carregar vídeos.");
             }
         };
 
