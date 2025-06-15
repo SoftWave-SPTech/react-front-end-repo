@@ -11,25 +11,51 @@ export default function ItemListaProcesso() {
     const [busca, setBusca] = useState("");
     const [loading, setLoading] = useState(false);
     const [usuarioId, setUsuarioId] = useState("");
+    const [role, setRole] = useState("");
     const [modalExcluir, setModalExcluir] = useState({ aberto: false, id: null });
     const navigate = useNavigate();
 
-    
+    useEffect(() => {
+        const id = sessionStorage.getItem('id');
+        const role = sessionStorage.getItem('role');
+        if (id && role) {
+            setUsuarioId(id);
+            setRole(role);
+        }
+    }, []);
 
     useEffect(() => {
-        (async () => {
+        const fetchProcessos = async () => {
             try {
-                const response = await api.get('/processos', {
-                    headers: {
-                        Authorization: `Bearer ${sessionStorage.getItem('token')}`
-                    }
-                });
-                setProcessos(response.data);
+                let response;
+                if (role === 'ROLE_ADVOGADO') {
+                    // Se for advogado, busca apenas os processos do usuário
+                    response = await api.get(`/processos/usuario-id/${usuarioId}`, {
+                        headers: {
+                            Authorization: `Bearer ${sessionStorage.getItem('token')}`
+                        }
+                    });
+                } else if (role === 'ROLE_ADMIN' || role === 'ROLE_DONO') {
+                    // Se for admin ou dono, busca todos os processos
+                    response = await api.get('/processos', {
+                        headers: {
+                            Authorization: `Bearer ${sessionStorage.getItem('token')}`
+                        }
+                    });
+                }
+                
+                if (response) {
+                    setProcessos(response.data);
+                }
             } catch (error) {
                 console.error('Erro ao buscar processos:', error);
             }
-        })();
-    }, []);
+        };
+
+        if (role && usuarioId) {
+            fetchProcessos();
+        }
+    }, [role, usuarioId]);
 
     const processosFiltrados = processos.filter(
         (proc) =>
@@ -37,40 +63,17 @@ export default function ItemListaProcesso() {
             (proc.descricao?.toLowerCase().includes(busca.toLowerCase()) || "")
     );
 
-    // Função para buscar processo por ID de usuário
-    async function buscarProcessoPorUsuarioId(usuarioId) {
-        try {
-            const response = await api.get(`processos/usuario-id/${usuarioId}`, {
-                headers: {
-                    Authorization: `Bearer ${sessionStorage.getItem('token')}`
-                }
-            });
-            return response.data; // ProcessoSimplesDTO
-        } catch (error) {
-            console.error('Erro ao buscar processo por usuário:', error);
-            throw error;
-        }
-    }
-
-    // Função para visualizar processo pelo usuário vinculado
-    const handleViewProcessoPorUsuario = async () => {
-        setLoading(true);
-        try {
-            const processo = await buscarProcessoPorUsuarioId(usuarioId);
-            if (processo && processo.id) {
-                navigate(`/visualizar-processo/${processo.id}`);
-            } else {
-                alert('Processo não encontrado para este usuário.');
-            }
-        } catch (error) {
-            alert('Processo não encontrado para este usuário.');
-        } finally {
-            setLoading(false);
-        }
+    // Função para visualizar processo
+    const handleViewProcesso = (processoId) => {
+        navigate(`/visualizar-processo/${processoId}`);
     };
 
     // Abrir modal de confirmação
     const confirmarExclusao = (id) => {
+        if (role === 'ROLE_ADVOGADO') {
+            alert('Você não tem permissão para excluir processos.');
+            return;
+        }
         setModalExcluir({ aberto: true, id });
     };
 
@@ -163,19 +166,21 @@ export default function ItemListaProcesso() {
                             </div>
                             <div className="flex space-x-6">
                                 <button 
-                                    onClick={() => handleViewProcessoPorUsuario(processo.usuarioId)}
+                                    onClick={() => handleViewProcesso(processo.id)}
                                     className="text-branco hover:text-dourado transition-colors" 
                                     title="Visualizar processo"
                                 >
                                     <FiFileText size={24} className="md:w-6 md:h-6" />
                                 </button>
-                                <button 
-                                    onClick={() => confirmarExclusao(processo.id)}
-                                    className="text-branco hover:text-dourado transition-colors" 
-                                    title="Excluir processo"
-                                >
-                                    <FiTrash size={24} className="md:w-6 md:h-6" />
-                                </button>
+                                    {(role === 'ROLE_ADMIN' || role === 'ROLE_DONO') && (
+                                    <button 
+                                        onClick={() => confirmarExclusao(processo.id)}
+                                        className="text-branco hover:text-dourado transition-colors" 
+                                        title="Excluir processo"
+                                    >
+                                        <FiTrash size={24} className="md:w-6 md:h-6" />
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}
