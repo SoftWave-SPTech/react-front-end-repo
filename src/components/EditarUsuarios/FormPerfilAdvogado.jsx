@@ -258,6 +258,12 @@ function FormPerfilAdvogado() {
         if (!file) {
             alert("Escolha uma foto primeiro!");
         } else {
+               const tiposPermitidos = ["image/png", "image/jpg", "image/jpeg"];
+        if (!tiposPermitidos.includes(file.type)) {
+            alert("Por favor, selecione uma imagem PNG, JPG ou JPEG.");
+            return;
+        }
+
 
             // FormData é um objeto nativo do JavaScript (existe mesmo sem React).
             // Ele foi criado para simular um formulário HTML em JavaScript, para que a gente possa enviar arquivos e outros dados para o servidor via código.
@@ -269,9 +275,22 @@ function FormPerfilAdvogado() {
             arquivoFormatado.append("fotoPerfil", file);
 
             api.put(`${URLFOTO}/${sessionStorage.getItem('id')}`, arquivoFormatado, {
+<<<<<<< campos-formulario-editar
                 headers: {
                     "Authorization": TOKEN
                 }
+=======
+            headers: {
+                "Authorization":  TOKEN
+            }
+            })
+            .then(response => {
+            console.log("Upload realizado com sucesso:", response.data);
+            
+            alert("Upload realizado com sucesso!");
+              sessionStorage.setItem('fotoPerfil', response.data);
+              window.location.reload()
+>>>>>>> release/sprint-3
             })
                 .then(response => {
                     console.log("Upload realizado com sucesso:", response.data);
