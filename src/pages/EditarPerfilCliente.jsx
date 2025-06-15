@@ -5,8 +5,8 @@ import FormPerfilCliente from '../components/EditarUsuarios/FormPerfilCliente';
 const EditarPerfilCliente = () => 
 {
   return (
-    <LayoutBase>
-      <FormPerfilCliente backgroundClass="bg-cinzaAzulado" />
+   <LayoutBase backgroundClass="bg-cinzaAzulado">
+      <FormPerfilCliente/>
     </LayoutBase>
   );
 };
