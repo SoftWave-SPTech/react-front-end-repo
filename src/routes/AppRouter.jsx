@@ -5,11 +5,16 @@ import CadastrarUsuarios from "../pages/CadastrarUsuarios";
 import Login from "../pages/Login";
 import PrimeiroAcesso from "../pages/PrimeiroAcesso";
 import CadastrarSenha from "../pages/CadastrarSenha";
-import FormEditPerfilAdvogado from "../components/EditarUsuarios/FormEditPerfilAdvogado";
-import FormEditPerfilCliente from "../components/EditarUsuarios/FormEditPerfilCliente";
+import FormEditPerfilAdvogado from "../pages/EditarPerfilAdvogado";
+import FormEditPerfilCliente from "../pages/EditarPerfilCliente";
 import VisualizarDocumentosProcesso from "../pages/VisualizarDocumentosProcesso";
 import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais";
+import VisualizarProcessos from "../pages/VisualizarProcessos";
 import AnaliseComIa from "../pages/AnaliseComIa";
+import CadastrarProcesso from "../pages/CadastrarProcesso";
+import VisualizarProcessosAdvogado from "../pages/VisualizarProcessosAdvogado";
+import Podcast from "../pages/Podcast";
+import Dashboard from "../pages/Dashboard";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -17,7 +22,7 @@ export const AppRouter = createBrowserRouter([
     element: <SiteInstitucional/>,
   },
   {
-    path: "/cadastro",
+    path: "/cadastrar-usuario",
     element: <CadastrarUsuarios/>,
   },
   {
@@ -49,7 +54,27 @@ export const AppRouter = createBrowserRouter([
     element: <VisualizarDocumentosPessoais/>
   },
   {
-    path: "/analie-ia",
+    path: "/analise-ia",
     element: <AnaliseComIa/>
+  },
+  {
+    path: "/processos-cliente",
+    element: <VisualizarProcessos/>
+  },
+  {
+    path: "/cadastrar-processos",
+    element: <CadastrarProcesso/>
+  },
+  {
+    path: "/processos-advogado",
+    element: <VisualizarProcessosAdvogado/>
+  },
+  {
+    path: "/podcast",
+    element: <Podcast/>
+  },
+   {
+    path: "/dashboard",
+    element: <Dashboard/>
   }
 ]);
