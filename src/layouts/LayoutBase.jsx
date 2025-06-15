@@ -1,23 +1,14 @@
-import React, { useState, useEffect } from "react";
-import MenuLateral from "../components/Menu/MenuLateral";
+import React from 'react';
+import MenuAdvogado from '../components/Menu/MenuLateralAdvogado';
+import MenuCliente from '../components/Menu/MenuLateralCliente';
 
-const LayoutBase = ({ children, backgroundClass }) => {
-  const [fechado, setFechado] = useState(() => {
-    const larguraSalva = sessionStorage.getItem("larguraMenu");
-    return larguraSalva === "70"; 
-  });
-
-  useEffect(() => {
-    const largura = parseInt(sessionStorage.getItem("larguraMenu"), 10);
-    if (!isNaN(largura)) {
-      setFechado(largura === 70);
-    }
-  }, []);
+const LayoutBase = ({ tipoMenu, children }) => {
+  const MenuLateral = tipoMenu === "advogado" ? MenuAdvogado : MenuCliente;
 
   return (
-    <div className={`flex min-h-screen ${backgroundClass}`}>
+    <div className="flex h-screen w-screen">
       <MenuLateral />
-      <main className="flex-1 transition-all duration-300 ease-in-out overflow-y-auto p-6">
+      <main className="flex-1 overflow-y-auto p-6 pl-[500px] transition-all duration-300">
         {children}
       </main>
     </div>
