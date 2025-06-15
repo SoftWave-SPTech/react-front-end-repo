@@ -29,7 +29,7 @@ export default function FormLogin()
                 sessionStorage.setItem("token", response.data.token);
                 sessionStorage.setItem("tipoUsuario", response.data.tipoUsuario);
                 sessionStorage.setItem("role", response.data.role);
-                if (response.data.role == '"ROLE_USUARIO"') 
+                if (response.data.role == "ROLE_USUARIO") 
                 {
                     window.location.href = "/perfil-cliente";
                 } else {
