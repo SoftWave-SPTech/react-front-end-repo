@@ -94,6 +94,9 @@ export const AppRouter = createBrowserRouter([
     element: <Podcast/>
   },
   {
+    path: "/pesquisar-processos",
+    element: <PesquisarProcessos/>
+  },
     path: "/dashboard",
     element: <Dashboard/>
   }
