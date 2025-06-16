@@ -10,8 +10,6 @@ export default function CardClientesProcessos({ cliente }) {
   const totalFrames = Math.ceil(cliente.processos.length / frameSize);
   const [fotoPerfil, setFotoPerfil] = useState(null);
 
-  console.log(fotoPerfil);
-
   useEffect(() => {
     async function fetchFoto() {
       try {
@@ -20,7 +18,7 @@ export default function CardClientesProcessos({ cliente }) {
             Authorization: `Bearer ${sessionStorage.getItem('token')}`
           }
         });
-        setFotoPerfil(response.data); // pode ser uma URL ou base64
+        setFotoPerfil(response.data); 
       } catch (error) {
         setFotoPerfil(null);
       }
@@ -36,8 +34,8 @@ export default function CardClientesProcessos({ cliente }) {
     if (frame > 0) setFrame(frame - 1);
   };
 
-  const handleProcessoClick = (processoId) => {
-    navigate(`/processos-advogado/${processoId}`);
+  const parametrosVisualizarProcesso = (clienteId,processoId) => {
+    navigate(`/processos-advogado/${clienteId}/${processoId}`);
   };
 
   const visibleProcessos = cliente.processos.slice(frame * frameSize, frame * frameSize + frameSize);
@@ -91,7 +89,7 @@ export default function CardClientesProcessos({ cliente }) {
           {visibleProcessos.map((processo) => (
             <div
               key={processo.id}
-              onClick={() => handleProcessoClick(processo.id)}
+              onClick={() => parametrosVisualizarProcesso(processo.id, cliente.id)}
               className="bg-cinzaAzulado rounded-lg px-4 py-2 flex items-center justify-between cursor-pointer hover:bg-opacity-80 transition-colors"
               style={{ minHeight: "2.5rem" }}
             >
