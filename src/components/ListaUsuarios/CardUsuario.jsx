@@ -71,7 +71,7 @@ export default function CardUsuario(props) {
                     {
                         processos.map((processo) => (
                              <CardProcesso
-                                idProcesso={processo.idProcesso}
+                                idProcesso={processo.id}
                                 numeroProcesso={processo.numeroProcesso}
                                 idUsuario={props.idUsuario} />                       
                         ))

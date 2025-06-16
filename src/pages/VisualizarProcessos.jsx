@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MenuLateralAdvogado from '../components/Menu/MenuLateral';
 import BarraTitulo from '../components/Ui/BarraTitulo';
 import {Input} from '../components/Ui/Input';
 import Botao from '../components/Ui/Botao';
 import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
+import { api } from '../service/api';
+
 
 const processosFake = [
   {
@@ -176,6 +178,16 @@ export default function VisualizarProcessos() {
   const toggleExpandido = (id) => {
     setExpandido(expandido === id ? null : id);
   };
+
+    useEffect(() => {
+    api.get('localhost:8080/')
+      .then(response => setProcessos(response.data))
+      .catch(error => {
+        console.error('Erro ao buscar processos:', error);
+        setProcessos([]);
+      });
+  }, []);
+
 
   return (
     <div className="flex min-h-screen bg-gray-100">

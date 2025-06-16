@@ -12,9 +12,13 @@ import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais"
 import VisualizarProcessos from "../pages/VisualizarProcessos";
 import AnaliseComIa from "../pages/AnaliseComIa";
 import CadastrarProcesso from "../pages/CadastrarProcesso";
+import AreaCliente from "../pages/AreaCliente";
 import VisualizarProcessosAdvogado from "../pages/VisualizarProcessosAdvogado";
 import Podcast from "../pages/Podcast";
 import ListaUsuarios from "../pages/ListaUsuarios";
+import Dashboard from "../pages/Dashboard";
+import PesquisarProcessos from "../pages/PesquisarProcessos";
+
 
 export const AppRouter = createBrowserRouter([
   {
@@ -66,6 +70,14 @@ export const AppRouter = createBrowserRouter([
     element: <CadastrarProcesso/>
   },
   {
+    path: "/area-cliente",
+    element: <AreaCliente/>
+  },
+  {
+    path: "/pesquisar-processos",
+    element: <PesquisarProcessos/>
+  },
+  {
     path: "/processos-advogado",
     element: <VisualizarProcessosAdvogado/>
   },
@@ -76,5 +88,17 @@ export const AppRouter = createBrowserRouter([
   {
     path: "/lista-usuarios",
     element: <ListaUsuarios/>
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard/>
+  },
+  {
+    path:"/processos-advogado/:idUsuario/:idProcesso", 
+    element:<VisualizarProcessosAdvogado /> 
+  },
+  {
+    path:"/documentos-processo/:idProcesso", 
+    element:<VisualizarDocumentosProcesso /> 
   }
 ]);

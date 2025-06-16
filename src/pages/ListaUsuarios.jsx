@@ -63,7 +63,7 @@ export default function ListaUsuarios() {
                             telefone={usuario.telefone}
                             role={usuario.role}
                             status={usuario.status}
-                            processos={usuario.processos} />
+                            processos={usuario.procesos} />
                         ))
                     }
                 </div>
