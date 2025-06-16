@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid';
 import Botao from '../../components/Ui/Botao';
 import { Input } from '../Ui/Input';
 
-import { mascaraCNPJ, mascaraTelefone, mascaraCEP } from '../../Utils/mascaras';
+import { mascaraCNPJ, mascaraTelefone, mascaraCEP, mascaraOAB } from '../../Utils/mascaras';
 import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoJuridico } from '../../Utils/validacoes';
 
@@ -161,6 +161,7 @@ export default function AdvogadoJuridicoForm() {
             placeholder="000000"
             value={formData.oab}
             onChange={handleChange}
+            mask={mascaraOAB}
             errorMessage={errors.oab}
           />
           <Input

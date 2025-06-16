@@ -95,7 +95,7 @@ const ProcessoAndamento = ({ andamentos = [], processoId }) => {
           transition: background 0.2s;
         }
         .timeline-horizontal-btn:hover {
-          background: white;
+          background: #3451a3;
         }
         .timeline-horizontal-line {
           position: absolute;

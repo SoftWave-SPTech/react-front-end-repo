@@ -7,7 +7,8 @@ import { Input } from '../Ui/Input';
 
 import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoFisico } from '../../Utils/validacoes';
-import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG } from '../../Utils/mascaras';
+
+import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG,mascaraOAB } from '../../Utils/mascaras';
 
 export default function AdvogadoFisicoForm() {
   const [formData, setFormData] = useState({
@@ -94,6 +95,7 @@ export default function AdvogadoFisicoForm() {
         });
       })
       .catch((err) => {
+
         console.error(err);
         if (err.response?.data) {
           const erros = err.response.data;
@@ -103,6 +105,8 @@ export default function AdvogadoFisicoForm() {
         } else {
           alert('Erro ao cadastrar advogado. Por favor, tente novamente.');
         }
+        //alert(err.response?.data?.message || 'Erro ao cadastrar');
+
       });
   };
 
@@ -151,6 +155,7 @@ export default function AdvogadoFisicoForm() {
             placeholder="000000"
             value={formData.oab}
             onChange={handleChange}
+            mask={mascaraOAB}
             errorMessage={errors.oab}
           />
           <Input

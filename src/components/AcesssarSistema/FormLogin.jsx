@@ -51,7 +51,8 @@ export default function FormLogin()
                 sessionStorage.setItem("nome", response.data.nome);
                 sessionStorage.setItem("fotoPerfil", "http://localhost:8080/" + response.data.foto);
                 
-                if (response.data.role === '"ROLE_USUARIO"') {
+                if (response.data.role == "ROLE_USUARIO") 
+                {
                     window.location.href = "/perfil-cliente";
                 } else {
                     window.location.href = "/perfil-advogado";
