@@ -61,7 +61,6 @@ const AreaCliente = () => {
                     </button>
                 </div>
              </div>
-            </div>
         </LayoutBase>
     );
 };
