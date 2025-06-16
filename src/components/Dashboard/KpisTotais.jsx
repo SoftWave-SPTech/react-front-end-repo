@@ -1,20 +1,22 @@
 import React from 'react';
 
-const KpisTotais = () => {
+const KpisTotais = ({ dados }) => {
+  if (!dados) return null;
+
   const kpiData = [
-    { value: 3, label: 'Total de Processos' },
-    { value: 6, label: 'Total de Advogados' },
-    { value: 9, label: 'Total de Clientes' },
+    { value: dados.quantidadeProcessosTotais, label: 'Total de Processos' },
+    { value: dados.quantidadeAdvogados, label: 'Total de Advogados' },
+    { value: dados.quantidadeClientes, label: 'Total de Clientes' },
   ];
 
   return (
-    <div className="flex justify-evenly mb-6 p-4 border rounded-lg bg-white flex-1 h-full shadow-lg">
+    <div className="flex justify-evenly p-4 border rounded-lg bg-white flex-1 h-[12rem] shadow-lg">
       {kpiData.map((kpi, index) => (
-        <div key={index} className="flex flex-col items-center flex-1 justify-center">
-          <div className="flex items-center justify-center w-28 h-28 rounded-full border-8 border-dourado text-dourado font-semibold text-6xl">
+        <div key={index} className="flex flex-col items-center justify-center flex-1">
+          <div className="flex items-center justify-center w-20 h-20 rounded-full border-[6px] border-dourado text-dourado font-semibold text-5xl">
             {kpi.value}
           </div>
-          <span className="mt-2 text-xl font-semibold text-center font-quicksand">
+          <span className="mt-5 text-lg font-semibold text-center font-quicksand">
             {kpi.label}
           </span>
         </div>
