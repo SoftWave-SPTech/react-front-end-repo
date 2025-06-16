@@ -22,7 +22,7 @@ const MenuLateral = () => {
     const novoEstado = !fechado;
     setFechado(novoEstado);
     const largura = novoEstado ? 70 : window.innerWidth * 0.22;
-    sessionStorage.setItem("larguraMenu", largura.toString()); // Armazena o estado
+    sessionStorage.setItem("larguraMenu", largura.toString());
   };
 
   const usuario = {
@@ -49,45 +49,50 @@ const MenuLateral = () => {
     { rotulo: "Cadastrar Usuário", icone: <FiUserPlus />, rota: "/cadastrar-usuario", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Documentos", icone: <FiFileText />, rota: "/documentos-pessoais", roles: ["ROLE_USUARIO"] },
     { rotulo: "Área financeira", icone: <FiDollarSign />, rota: "/area-financeira", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
-     { rotulo: "Podcast", icone: <FiMic />, rota: "/podcast", roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
+    { rotulo: "Podcast", icone: <FiMic />, rota: "/podcast", roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
   ];
 
   return (
     <div
       className={`menu-lateral sticky top-0 h-screen flex-shrink-0 flex flex-col justify-between
-      bg-[#050e26] text-white overflow-y-auto transition-all duration-300
-      ${fechado ? "w-[70px]" : "w-[clamp(240px,20%,320px)]"}`}
+    bg-[#050e26] text-white overflow-y-auto transition-all duration-300
+    ${fechado ? "w-[70px]" : "w-[clamp(220px,18%,280px)]"}`}
     >
       <div>
         <div
           className={`flex items-center justify-end cursor-pointer 
-            ${fechado ? "mb-[2.5rem]" : "mb-[1.8rem]"} px-[1rem] pt-[1.2rem] hover:text-[#D9B166]`}
+          ${fechado ? "mb-6" : "mb-4"} px-3 pt-4 hover:text-[#D9B166]`}
           onClick={alternarMenu}
         >
-          <FiMenu className="text-[1.6rem]" />
+          <FiMenu className="text-[1.4rem]" />
         </div>
+
         <div className="transition-all duration-300">
           {!fechado && (
             <a
               href={rotaPerfil}
-              className="flex items-center gap-[1rem] px-[0.8rem] py-[1.2rem] mx-[0.3rem] my-[1rem] border border-white rounded-lg
-                transition-all duration-300 hover:border-[#D9B166] hover:text-[#D9B166] text-white no-underline"
+              className="flex items-center gap-3 px-3 py-3 mx-1 border border-white rounded-lg
+              transition-all duration-300 hover:border-[#D9B166] hover:text-[#D9B166] text-white no-underline"
             >
-              <div className="bg-white text-[#050e26] p-[0.6rem] rounded-full">
-                <FiUser className="text-[1.6rem]" />
+              <div className="bg-white text-[#050e26] p-2 rounded-full">
+                <FiUser className="text-[1.3rem]" />
               </div>
               <div className="flex flex-col leading-tight max-w-full">
-                <span className="font-semibold text-[clamp(1rem,1.5vw,1.3rem)] truncate max-w-full whitespace-nowrap mb-[0.2rem]">
+                <span className="font-semibold text-[clamp(0.9rem,1.2vw,1.1rem)] truncate">
                   {nome}
                 </span>
-                <span className="text-[0.9rem] truncate max-w-full whitespace-nowrap group-hover:text-[#D9B166]">
+                <span
+                  title={email}
+                  className="text-[clamp(0.75rem,1vw,0.9rem)] truncate"
+                >
                   {email}
                 </span>
               </div>
             </a>
           )}
         </div>
-        <ul className="space-y-[1.4rem] px-[0.5rem] mt-[1rem]">
+
+        <ul className="space-y-3 px-2 mt-2">
           {itensMenu
             .filter(
               (item) =>
@@ -98,28 +103,29 @@ const MenuLateral = () => {
               <li key={item.rotulo}>
                 <Link
                   to={item.rota}
-                  className={`flex items-center w-full py-[0.75rem] rounded-md
-                    transition-colors text-[clamp(1rem,2vw,1.3rem)]
-                    ${fechado ? "justify-center px-[1rem]" : "justify-start px-[1rem] gap-[1rem]"}
-                    hover:text-[#D9B166] hover:bg-[#0F2A5E]`}
+                  className={`flex items-center py-2 rounded-md
+                  text-[clamp(0.9rem,1.2vw,1.1rem)] transition-colors
+                  ${fechado ? "justify-center px-2" : "justify-start px-3 gap-2"}
+                  hover:text-[#D9B166] hover:bg-[#0F2A5E]`}
                 >
-                  <span className="text-[1.6rem]">{item.icone}</span>
+                  <span className="text-[1.3rem]">{item.icone}</span>
                   {!fechado && <span>{item.rotulo}</span>}
                 </Link>
               </li>
             ))}
         </ul>
       </div>
+
       <div
-        className={`flex items-center mb-[1rem] py-[0.75rem] cursor-pointer
-          text-[clamp(1rem,2vw,1.3rem)] hover:text-[#D9B166] hover:bg-[#0F2A5E]
-          ${fechado ? "justify-center px-[1rem]" : "justify-start px-[1rem] gap-[1rem]"}`}
+        className={`flex items-center mb-4 py-2 cursor-pointer
+        text-[clamp(0.9rem,1.2vw,1.1rem)] hover:text-[#D9B166] hover:bg-[#0F2A5E]
+        ${fechado ? "justify-center px-2" : "justify-start px-3 gap-2"}`}
         onClick={() => {
           sessionStorage.clear();
           window.location.href = "/";
         }}
       >
-        <FiLogOut className="text-[1.6rem]" />
+        <FiLogOut className="text-[1.3rem]" />
         {!fechado && <span>Sair</span>}
       </div>
     </div>
