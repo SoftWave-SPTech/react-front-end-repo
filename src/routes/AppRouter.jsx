@@ -97,7 +97,8 @@ export const AppRouter = createBrowserRouter([
     path: "/pesquisar-processos",
     element: <PesquisarProcessos/>
   },
+  {
     path: "/dashboard",
     element: <Dashboard/>
-  }
+  },
 ]);
