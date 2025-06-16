@@ -7,7 +7,7 @@ import { Input } from '../Ui/Input';
 
 import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoFisico } from '../../Utils/validacoes';
-import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG } from '../../Utils/mascaras';
+import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG,mascaraOAB } from '../../Utils/mascaras';
 
 export default function AdvogadoFisicoForm() {
   const [formData, setFormData] = useState({
@@ -104,7 +104,7 @@ export default function AdvogadoFisicoForm() {
           <Input
             label="Nome Completo:"
             name="nome"
-            placeholder="Digite o nome completo"
+            placeholder="Ex: João Silva"
             value={formData.nome}
             onChange={handleChange}
             errorMessage={errors.nome}
@@ -142,6 +142,7 @@ export default function AdvogadoFisicoForm() {
             placeholder="000000"
             value={formData.oab}
             onChange={handleChange}
+            mask={mascaraOAB}
             errorMessage={errors.oab}
           />
           <Input
