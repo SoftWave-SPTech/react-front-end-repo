@@ -57,7 +57,6 @@ const AreaCliente = () => {
                         flexDirection: 'column',
                         height: '100%',
                         order: 1,
-                        maxHeight: '500px',
                         maxHeight: '600px',
 
                         overflowY: 'auto'
