@@ -1,29 +1,165 @@
 import React, { useState, useEffect } from 'react';
 import MenuLateralAdvogado from '../components/Menu/MenuLateral';
 import BarraTitulo from '../components/Ui/BarraTitulo';
-import { Input } from '../components/Ui/Input';
+import {Input} from '../components/Ui/Input';
 import Botao from '../components/Ui/Botao';
 import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
 import { api } from '../service/api';
-import { FiSearch } from 'react-icons/fi';
+
+
+const processosFake = [
+  {
+    id: 1,
+    numero: '2023.0001',
+    cliente: 'João da Silva',
+    advogado: 'Dr. Marcos',
+    status: 'Em andamento',
+    inicio: '10/03/2023',
+    classe: 'Ação Civil Pública',
+    assunto: 'Danos Morais',
+    foro: 'TJSP',
+    movimentacao: 'Audiência realizada em 12/04/2023',
+  },
+  {
+    id: 2,
+    numero: '2023.0002',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+  {
+    id: 3,
+    numero: '2023.0003',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+  {
+    id: 4,
+    numero: '2023.0004',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+  {
+    id: 5,
+    numero: '2023.0005',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+  {
+    id: 6,
+    numero: '2023.0006',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+  {
+    id: 7,
+    numero: '2023.0007',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+  {
+    id: 8,
+    numero: '2023.0008',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+  {
+    id: 9,
+    numero: '2023.0009',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+  {
+    id: 10,
+    numero: '2023.00010',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+  {
+    id: 11,
+    numero: '2023.00011',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  },
+  {
+    id: 12,
+    numero: '2023.00',
+    cliente: 'Maria Oliveira',
+    advogado: 'Dra. Paula',
+    status: 'Finalizado',
+    inicio: '21/01/2023',
+    classe: 'Ação Trabalhista',
+    assunto: 'Rescisão Contratual',
+    foro: 'TRT 2ª Região',
+    movimentacao: 'Sentença proferida em 10/05/2023',
+  }
+];
 
 export default function VisualizarProcessos() {
-  const [processos, setProcessos] = useState([]);
+  const [processos, setProcessos] = useState(processosFake);
   const [busca, setBusca] = useState('');
   const [modalConfirma, setModalConfirma] = useState(false);
   const [processoSelecionado, setProcessoSelecionado] = useState(null);
-  const [expandido, setExpandido] = useState(null);
-
-  useEffect(() => {
-    api.get(`/processos/usuario-id${sessionStorage.getItem('id')}`)
-      .then((response) => {
-        console.log('Processos recebidos:', response.data);
-        setProcessos(response.data);
-      })
-      .catch((error) => {
-        console.error('Erro ao buscar processos:', error);
-      });
-  }, []);
+  const [expandido, setExpandido] = useState(null); // novo estado
 
   const abrirExclusao = (processo) => {
     setProcessoSelecionado(processo);
@@ -43,42 +179,38 @@ export default function VisualizarProcessos() {
     setExpandido(expandido === id ? null : id);
   };
 
+    useEffect(() => {
+    api.get('localhost:8080/')
+      .then(response => setProcessos(response.data))
+      .catch(error => {
+        console.error('Erro ao buscar processos:', error);
+        setProcessos([]);
+      });
+  }, []);
+
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div className="w-64 flex-shrink-0">
         <MenuLateralAdvogado />
       </div>
+
       <div className="flex-1 p-6 sm:p-8 overflow-auto">
-        {/* Barra de pesquisa acima do título */}
-        <div className="flex justify-end mb-4">
-          <div className="max-w-xl w-full sm:w-96">
-            <div className="relative">
-              <div className='flex items-center flex-row gap-2'>
-              <Input
-                nome="Buscar por número do processo"
-                type="text"
-                valor={busca}
-                onChange={(e) => setBusca(e.target.value)}
-                className="pl-10"
-                placeholder="Buscar por número do processo"
-                />
-                <div className='cursor-pointer bg-azulEscuroForte w-12 h-11 flex items-center rounded-r-md justify-center'>
-                  <FiSearch className="w-7 h-6 text-white" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mb-6">
+        <div className="flex justify-between items-center mb-6">
           <BarraTitulo>
-            Olá, {sessionStorage.getItem('nome')}!
+            Visualizar Processos
           </BarraTitulo>
-          <div className="flex justify-center">
-            <BarraTitulo tamanho="medio" largura="medio" cor="claro" className="flex justify-center">
-              Visualize seus processos e o respectivo andamento.
-            </BarraTitulo>
-          </div>
         </div>
+
+        <div className="mb-6 max-w-xl">
+          <Input
+            nome="Buscar por número do processo"
+            type="text"
+            valor={busca}
+            onChange={(e) => setBusca(e.target.value)}
+          />
+        </div>
+
         <div className="overflow-x-auto">
           <table className="w-full text-sm bg-white rounded shadow-md">
             <tbody>
@@ -128,6 +260,7 @@ export default function VisualizarProcessos() {
             </tbody>
           </table>
         </div>
+
         {modalConfirma && (
           <ModalConfirmacao
             titulo="Excluir Processo"

@@ -18,7 +18,10 @@ export default {
         AzulEscuro: '#010D26',
         azulClaro: '#0F2A5E',
         AzulPodcast: '#081A40',
-        cinzaAzulado: '#F4F4F4'
+        cinzaAzulado: '#F4F4F4',
+        vermelhoToggle: "#BE0200",
+        verdeToggle: "#1BD660",
+        azulMenu: "#AAD6ED"
       },
     },
   },
