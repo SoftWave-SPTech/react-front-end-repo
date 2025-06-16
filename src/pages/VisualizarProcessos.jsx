@@ -5,6 +5,7 @@ import { Input } from '../components/Ui/Input';
 import Botao from '../components/Ui/Botao';
 import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
 import { api } from '../service/api';
+import { FiSearch } from 'react-icons/fi';
 
 export default function VisualizarProcessos() {
   const [processos, setProcessos] = useState([]);
@@ -52,13 +53,7 @@ export default function VisualizarProcessos() {
         <div className="flex justify-end mb-4">
           <div className="max-w-xl w-full sm:w-96">
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                {/* Ícone de lupa */}
-                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-              </span>
+              <div className='flex items-center flex-row gap-2'>
               <Input
                 nome="Buscar por número do processo"
                 type="text"
@@ -66,7 +61,11 @@ export default function VisualizarProcessos() {
                 onChange={(e) => setBusca(e.target.value)}
                 className="pl-10"
                 placeholder="Buscar por número do processo"
-              />
+                />
+                <div className='cursor-pointer bg-azulEscuroForte w-12 h-11 flex items-center rounded-r-md justify-center'>
+                  <FiSearch className="w-7 h-6 text-white" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
