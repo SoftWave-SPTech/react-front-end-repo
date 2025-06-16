@@ -10,7 +10,8 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-const GraficoSetores = ({ dados }) => {
+const GraficoSetores = ({ dados }) => 
+{
   if (!dados || dados.length === 0) {
     return (
       <div className="p-3 bg-white border border-gold-500 rounded-lg shadow-lg w-full h-full">
