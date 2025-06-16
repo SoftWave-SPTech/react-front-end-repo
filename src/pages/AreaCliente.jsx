@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../service/api';
 import LayoutBase from '../layouts/LayoutBase';
 import DocumentosList from '../components/Ui/DocumentosList';
@@ -9,6 +9,7 @@ import BarraTitulo from '../components/Ui/BarraTitulo';
 
 const AreaCliente = () => {
     const { processoId } = useParams();
+    const navigate = useNavigate();
     const [documentos, setDocumentos] = useState([]);
     const [andamentos, setAndamentos] = useState([]);
     const [comentarios, setComentarios] = useState([]);
@@ -30,124 +31,35 @@ const AreaCliente = () => {
     return (
         <LayoutBase tipoMenu="cliente">
             <BarraTitulo>Contratos e petições</BarraTitulo>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                    gap: '32px',
-                    padding: '32px',
-                    justifyContent: 'center',
-                    alignItems: 'flex-start',
-                    background: '#e7ecfa',
-                    borderRadius: '16px',
-                    minHeight: '60vh',
-                }}
-            >
-                {/* Documentos */}
-                <div
-                    style={{
-                        flex: '1 1 320px',
-                        minWidth: '320px',
-                        maxWidth: '350px',
-                        background: '#020E29',
-                        borderRadius: '16px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                        padding: '16px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        height: '100%',
-                        order: 1,
-                        maxHeight: '500px',
-                        overflowY: 'auto'
-                    }}
-                >
-                    <h2 style={{
-                        fontSize: '1.2rem',
-                        fontWeight: 'bold',
-                        marginBottom: '12px',
-                        color: 'white',
-                        letterSpacing: '1px'
-                    }}>Documentos</h2>
-                    <DocumentosList documentos={documentos} />
-                </div>
-                {/* Andamento + Comentários em coluna */}
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        flex: '1 1 400px',
-                        minWidth: '320px',
-                        maxWidth: '400px',
-                        gap: '32px',
-                        height: '100%',
-                        order: 2
-                    }}
-                >
-                    {/* Andamento */}
-                    <div
-                        style={{
-                            background: '#020E29',
-                            borderRadius: '16px',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                            padding: '16px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            height: '100%',
-                            color: 'white',
-                        }}
-                    >
-                        <h2 style={{
-                            fontSize: '1.2rem',
-                            fontWeight: 'bold',
-                            marginBottom: '12px',
-                            color: 'white',
-                            letterSpacing: '1px'
-                        }}>Andamento</h2>
-                        <ProcessoAndamento andamentos={andamentos} processoId={processoId} />
+            <div className="flex flex-col min-h-[60vh] bg-[#e7ecfa] rounded-2xl p-8">
+                <div className="flex flex-row flex-wrap gap-8 justify-center items-start w-full">
+                    {/* Documentos */}
+                    <div className="flex-1 min-w-[320px] max-w-[350px] bg-[#020E29] rounded-2xl shadow-lg p-4 flex flex-col h-full max-h-[500px] overflow-y-auto order-1">
+                        <h2 className="text-white text-xl font-bold mb-3 tracking-wide">Documentos</h2>
+                        <DocumentosList documentos={documentos} />
                     </div>
-                    {/* Comentários */}
-                    <div
-                        style={{
-                            background: '#020E29',
-                            borderRadius: '16px',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                            padding: '16px',
-                            color: 'white',
-                            display: 'flex',
-                            flexDirection: 'column',
-                        }}
-                    >
-                        <h2 style={{
-                            fontSize: '1.2rem',
-                            fontWeight: 'bold',
-                            marginBottom: '12px',
-                            color: 'white',
-                            letterSpacing: '1px'
-                        }}>Comentários</h2>
-                        <ComentariosList comentarios={comentarios} />
+                    {/* Andamento + Comentários em coluna */}
+                    <div className="flex flex-col flex-1 min-w-[320px] max-w-[400px] gap-8 h-full order-2">
+                        {/* Andamento */}
+                        <div className="bg-[#020E29] rounded-2xl shadow-lg p-4 flex flex-col h-full text-white">
+                            <h2 className="text-white text-xl font-bold mb-3 tracking-wide">Andamento</h2>
+                            <ProcessoAndamento andamentos={andamentos} processoId={processoId} />
+                        </div>
+                        {/* Comentários */}
+                        <div className="bg-[#020E29] rounded-2xl shadow-lg p-4 text-white flex flex-col">
+                            <h2 className="text-white text-xl font-bold mb-3 tracking-wide">Comentários</h2>
+                            <ComentariosList comentarios={comentarios} />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div style={{ textAlign: 'center', marginTop: '32px' }}>
-                <button
-                    style={{
-                        padding: '12px 40px',
-                        backgroundColor: '#001e3c',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        fontSize: '1.1rem',
-                        fontWeight: 'bold',
-                        cursor: 'pointer',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                        transition: 'background 0.2s',
-                    }}
-                    onMouseOver={e => (e.target.style.backgroundColor = '#003366')}
-                    onMouseOut={e => (e.target.style.backgroundColor = '#001e3c')}
-                >
-                    Voltar
-                </button>
+                <div className="w-full flex justify-center mt-8">
+                    <button
+                        className="bg-[#0f1b3e] text-white rounded-lg font-bold text-lg px-16 py-3 shadow-md transition-colors duration-200 hover:bg-[#20294a] hover:text-[#d4b063] focus:outline-none focus:ring-2 focus:ring-[#d4b063] focus:ring-offset-2"
+                        onClick={() => navigate(-1)}
+                    >
+                        Voltar
+                    </button>
+                </div>
             </div>
         </LayoutBase>
     );
