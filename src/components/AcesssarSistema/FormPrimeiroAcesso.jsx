@@ -68,7 +68,7 @@ export default function FormPrimeiroAcesso() {
         </Botao>
         <p className="mt-4 text-center mb-4 text-black">
           JÁ ACESSOU O SITE ANTES?{" "}
-          <a href="/login" className="text-azulEscuroForte">
+          <a href="/login" className="text-azulEscuroForte hover:underline hover:text-dourado">
             ENTRE AQUI.
           </a>
         </p>

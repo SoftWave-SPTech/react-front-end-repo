@@ -17,6 +17,8 @@ import VisualizarProcessosAdvogado from "../pages/VisualizarProcessosAdvogado";
 import Podcast from "../pages/Podcast";
 import Dashboard from "../pages/Dashboard";
 import PesquisarProcessos from "../pages/PesquisarProcessos";
+import RedefinirSenha from "../pages/RedefinirSenha";
+import EsqueciSenha from "../pages/EsqueciSenha";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -38,6 +40,14 @@ export const AppRouter = createBrowserRouter([
   {
     path: "/cadastrar-senha",
     element: <CadastrarSenha/>
+  },
+  {
+    path: "/redefinir-senha",
+    element: <RedefinirSenha/>
+  },
+  {
+    path: "/esqueci-senha",
+    element: <EsqueciSenha/>
   },
   {
     path: "/perfil-cliente",

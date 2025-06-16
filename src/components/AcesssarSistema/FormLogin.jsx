@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { api } from '../../service/api';
 import Botao from '../Ui/Botao';
 import { Input } from '../Ui/Input';
+import { Link } from 'react-router-dom';
 
 export default function FormLogin() 
 {
@@ -29,8 +30,10 @@ export default function FormLogin()
                 sessionStorage.setItem("token", response.data.token);
                 sessionStorage.setItem("tipoUsuario", response.data.tipoUsuario);
                 sessionStorage.setItem("role", response.data.role);
-                if (response.data.role == "ROLE_USUARIO") 
-                {
+                sessionStorage.setItem("nome", response.data.nome);
+                sessionStorage.setItem("foto", response.data.foto);
+                //Logica para redirecionar para o perfil do cliente ou advogado
+                if (response.data.role == '"ROLE_USUARIO"') {
                     window.location.href = "/perfil-cliente";
                 } else {
                     window.location.href = "/perfil-advogado";
@@ -71,9 +74,11 @@ export default function FormLogin()
                     largura="cheia"
                 />
 
-                <a href="#" className="text-azulEscuroForte mb-6 block text-left">
+                <p className="mb-6 block text-left">
+                    <Link to="/redefinir-senha" className="text-azulEscuroForte hover:underline hover:text-dourado">
                     ESQUECI MINHA SENHA
-                </a>
+                    </Link>
+                </p>
 
                 <Botao largura="cheia" cor="padrao" type="submit">
                     ENTRAR
@@ -81,7 +86,7 @@ export default function FormLogin()
 
                 <p className="mt-4 text-center mb-4 text-black">
                     É SEU PRIMEIRO ACESSO?{" "}
-                    <a href="/primeiro-acesso" className="text-azulEscuroForte">
+                    <a href="/primeiro-acesso" className="text-azulEscuroForte hover:underline hover:text-dourado">
                         ENTRE AQUI.
                     </a>
                 </p>
