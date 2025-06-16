@@ -4,7 +4,7 @@ import BarraTitulo from '../components/Ui/BarraTitulo';
 import { Input } from '../components/Ui/Input';
 import Botao from '../components/Ui/Botao';
 import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
-import {api} from '../service/api';
+import { api } from '../service/api';
 
 export default function VisualizarProcessos() {
   const [processos, setProcessos] = useState([]);
@@ -15,7 +15,7 @@ export default function VisualizarProcessos() {
 
   useEffect(() => {
     api.get(`/processos/usuario-id${sessionStorage.getItem('id')}`)
-      .then((response) => { 
+      .then((response) => {
         console.log('Processos recebidos:', response.data);
         setProcessos(response.data);
       })
@@ -47,23 +47,39 @@ export default function VisualizarProcessos() {
       <div className="w-64 flex-shrink-0">
         <MenuLateralAdvogado />
       </div>
-
       <div className="flex-1 p-6 sm:p-8 overflow-auto">
-        <div className="flex justify-between items-center mb-6">
+        {/* Barra de pesquisa acima do título */}
+        <div className="flex justify-end mb-4">
+          <div className="max-w-xl w-full sm:w-96">
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                {/* Ícone de lupa */}
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </span>
+              <Input
+                nome="Buscar por número do processo"
+                type="text"
+                valor={busca}
+                onChange={(e) => setBusca(e.target.value)}
+                className="pl-10"
+                placeholder="Buscar por número do processo"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="mb-6">
           <BarraTitulo>
-            Visualizar Processos
+            Olá, {sessionStorage.getItem('nome')}!
           </BarraTitulo>
+          <div className="flex justify-center">
+            <BarraTitulo tamanho="medio" largura="medio" cor="claro" className="flex justify-center">
+              Visualize seus processos e o respectivo andamento.
+            </BarraTitulo>
+          </div>
         </div>
-
-        <div className="mb-6 max-w-xl">
-          <Input
-            nome="Buscar por número do processo"
-            type="text"
-            valor={busca}
-            onChange={(e) => setBusca(e.target.value)}
-          />
-        </div>
-
         <div className="overflow-x-auto">
           <table className="w-full text-sm bg-white rounded shadow-md">
             <tbody>
@@ -113,7 +129,6 @@ export default function VisualizarProcessos() {
             </tbody>
           </table>
         </div>
-
         {modalConfirma && (
           <ModalConfirmacao
             titulo="Excluir Processo"
