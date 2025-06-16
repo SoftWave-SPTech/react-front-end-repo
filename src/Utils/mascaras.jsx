@@ -22,15 +22,14 @@ export const mascaraCPF = (value) =>
     .slice(0, 14);
 };
 
-export const mascaraRG = (value) =>
-{
-  const cleaned = clean(value);
+export const mascaraRG = (value) => {
+  const cleaned = clean(value).slice(0, 10); 
   return cleaned
     .replace(/^(\w{2})(\w)/, '$1.$2')
     .replace(/^(\w{2})\.(\w{3})(\w)/, '$1.$2.$3')
-    .replace(/^(\w{2})\.(\w{3})\.(\w{3})(\w)/, '$1.$2.$3-$4')
-    .slice(0, 14);
+    .replace(/^(\w{2})\.(\w{3})\.(\w{3})(\w)/, '$1.$2.$3-$4');
 };
+
 
 export const mascaraTelefone = (value) =>
 {
@@ -55,4 +54,10 @@ export const mascaraCEP = (value) =>
   return cleaned
     .replace(/^(\d{5})(\d)/, '$1-$2')
     .slice(0, 9);
+};
+
+export const mascaraOAB = (value) => 
+{
+  const somenteNumeros = value.replace(/\D/g, ''); 
+  return somenteNumeros.slice(0, 6); 
 };

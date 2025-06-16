@@ -12,7 +12,7 @@ const VisualizarDocumentosProcesso = () => {
             <div
                 style={{
                     display: 'flex',
-                    flexDirection: 'row', // Garante lin
+                    flexDirection: 'row',
                     flexWrap: 'wrap',
                     gap: '32px',
                     padding: '32px',
@@ -20,15 +20,14 @@ const VisualizarDocumentosProcesso = () => {
                     alignItems: 'flex-start',
                     background: '#e7ecfa',
                     borderRadius: '16px',
-                    minHeight: '60vh',
+                    minHeight: '70vh',
                 }}
             >
-                {/* Documentos */}
                 <div
                     style={{
-                        flex: '1 1 320px',
+                        flex: '1 1 350px',
                         minWidth: '320px',
-                        maxWidth: '350px',
+                        maxWidth: '420px',
                         background: '#020E29',
                         borderRadius: '16px',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
@@ -37,14 +36,14 @@ const VisualizarDocumentosProcesso = () => {
                         flexDirection: 'column',
                         height: '100%',
                         order: 1,
-                        maxHeight: '500px', // Limite de altura
+                        maxHeight: '600px',
                         overflowY: 'auto'
                     }}
                 >
                     <h2 style={{
-                        fontSize: '1.2rem',
+                        fontSize: '1.5rem',
                         fontWeight: 'bold',
-                        marginBottom: '12px',
+                        marginBottom: '16px',
                         color: 'white',
                         letterSpacing: '1px'
                     }}>Documentos</h2>
@@ -57,7 +56,7 @@ const VisualizarDocumentosProcesso = () => {
                         flexDirection: 'column',
                         flex: '1 1 400px',
                         minWidth: '320px',
-                        maxWidth: '400px',
+                        maxWidth: '520px',
                         gap: '32px',
                         height: '100%',
                         order: 2
@@ -77,15 +76,15 @@ const VisualizarDocumentosProcesso = () => {
                         }}
                     >
                         <h2 style={{
-                            fontSize: '1.2rem',
+                            fontSize: '1.5rem',
                             fontWeight: 'bold',
-                            marginBottom: '12px',
+                            marginBottom: '16px',
                             color: 'white',
                             letterSpacing: '1px'
                         }}>Andamento</h2>
                         <ProcessoAndamento />
                     </div>
-                    {/* Comentários */}
+
                     <div
                         style={{
                             background: '#020E29',
@@ -98,9 +97,9 @@ const VisualizarDocumentosProcesso = () => {
                         }}
                     >
                         <h2 style={{
-                            fontSize: '1.2rem',
+                            fontSize: '1.5rem',
                             fontWeight: 'bold',
-                            marginBottom: '12px',
+                            marginBottom: '16px',
                             color: 'white',
                             letterSpacing: '1px'
                         }}>Comentários</h2>
@@ -111,12 +110,12 @@ const VisualizarDocumentosProcesso = () => {
             <div style={{ textAlign: 'center', marginTop: '32px' }}>
                 <button
                     style={{
-                        padding: '12px 40px',
+                        padding: '12px 32px',
                         backgroundColor: '#001e3c',
                         color: 'white',
                         border: 'none',
                         borderRadius: '8px',
-                        fontSize: '1.1rem',
+                        fontSize: '1.2rem',
                         fontWeight: 'bold',
                         cursor: 'pointer',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
