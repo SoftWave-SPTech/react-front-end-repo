@@ -38,7 +38,11 @@ const ProcessoAndamento = ({ andamentos = [], processoId }) => {
               />
             </div>
             <div className="timeline-horizontal-status">
-              <button className="timeline-horizontal-btn" onClick={() => navigate(`/analise-ia/${processoId}/${item.id}`)}>
+              <button
+                className="timeline-horizontal-btn bg-[#0f1b3e] text-white rounded-lg font-bold py-2 px-4 transition-colors duration-200 hover:bg-[#20294a] hover:text-[#d4b063] focus:outline-none focus:ring-2 focus:ring-[#d4b063] focus:ring-offset-2"
+                onClick={() => navigate(`/analise-ia/${processoId}/${item.id}`)}
+                style={{ minWidth: '120px' }}
+              >
                 Ver análise
               </button>
             </div>
@@ -87,9 +91,6 @@ const ProcessoAndamento = ({ andamentos = [], processoId }) => {
           cursor: pointer;
           font-size: 0.9rem;
           transition: background 0.2s;
-        }
-        .timeline-horizontal-btn:hover {
-          background: white;
         }
         .timeline-horizontal-line {
           position: absolute;
