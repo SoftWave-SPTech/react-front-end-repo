@@ -49,6 +49,7 @@ export default function FormLogin()
                 sessionStorage.setItem("tipoUsuario", response.data.tipoUsuario);
                 sessionStorage.setItem("role", response.data.role);
                 sessionStorage.setItem("nome", response.data.nome);
+
                 sessionStorage.setItem("fotoPerfil", "http://localhost:8080/" + response.data.foto);
                 
                 if (response.data.role == "ROLE_USUARIO") 
@@ -110,7 +111,7 @@ export default function FormLogin()
 
                 <p className="mb-6 block text-left">
                     <Link to="/redefinir-senha" className="text-azulEscuroForte hover:underline hover:text-dourado">
-                        ESQUECI MINHA SENHA
+                    ESQUECI MINHA SENHA
                     </Link>
                 </p>
 

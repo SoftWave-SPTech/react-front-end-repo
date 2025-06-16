@@ -5,6 +5,7 @@ import { api } from '../../service/api';
 import { useNavigate } from 'react-router-dom';
 
 const FormRedefinirSenha = () => {
+  
     const [email, setEmail] = useState("");
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();

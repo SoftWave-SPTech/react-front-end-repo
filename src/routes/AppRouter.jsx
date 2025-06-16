@@ -46,7 +46,7 @@ export const AppRouter = createBrowserRouter([
     element: <RedefinirSenha/>
   },
   {
-    path: "esqueci-senha",
+    path: "/esqueci-senha",
     element: <EsqueciSenha/>
   },
   {
