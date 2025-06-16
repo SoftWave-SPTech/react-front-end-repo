@@ -60,6 +60,7 @@ const AreaCliente = () => {
                         Voltar
                     </button>
                 </div>
+             </div>
             </div>
         </LayoutBase>
     );

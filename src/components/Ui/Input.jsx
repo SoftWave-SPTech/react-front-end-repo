@@ -62,7 +62,7 @@ export const Input = (
   return (
     <div className={`flex flex-col gap-2 ${width}`}>
       {label && (
-        <label className="text-lg md:text-xl font-medium text-gray-700">
+        <label className="text-sm md:text-base font-medium text-gray-700">
           {label}
         </label>
       )}
@@ -76,9 +76,9 @@ export const Input = (
           placeholder={placeholder}
           className={`
             w-full 
-            px-3 py-2 
-            text-base md:text-lg lg:text-xl 
-            placeholder:text-base md:placeholder:text-lg lg:placeholder:text-xl
+            px-2 py-1.5
+            text-xs md:text-sm lg:text-base 
+            placeholder:text-xs md:placeholder:text-sm lg:placeholder:text-base
             border 
             rounded-md 
             bg-white 

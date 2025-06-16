@@ -15,11 +15,18 @@
   <script src="https://cdn.jsdelivr.net/npm/react/umd/react.production.min.js" crossorigin></script>
 
   <script src="https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.production.min.js" crossorigin></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script>
-
-  <script>var Alert = ReactBootstrap.Alert;</script>
+  
   <script type="module" src="/src/main.jsx"></script>
+  <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
 </body>
 
 </html>
