@@ -63,11 +63,35 @@ export default function ItemListaProcesso() {
             (proc.descricao?.toLowerCase().includes(busca.toLowerCase()) || "")
     );
 
-    // Função para visualizar processo
-    const handleViewProcesso = (processoId) => {
-        navigate(`/processos-advogado/${processoId}`);
+    const parametrosVisualizarProcesso = async (processo) => {
+        try {
+            const response = await api.get(`/clientes/com-processos`, {
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem('token')}`
+                }
+            });
+    
+            const listaClientes = response.data;
+    
+            for (let cliente of listaClientes) {
+                const processoEncontrado = cliente.processos.find(p => p.id === processo.id);
+                if (processoEncontrado) {
+                    navigate(`/processos-advogado/${cliente.id}/${processo.id}`, {
+                        state: {
+                            tipoUsuario: cliente.tipoUsuario
+                        }
+                    });
+                    return;
+                }
+            }
+    
+            alert('Processo não vinculado a nenhum cliente encontrado.');
+    
+        } catch (error) {
+            console.error("Erro ao buscar cliente do processo:", error);
+        }
     };
-
+    
     // Abrir modal de confirmação
     const confirmarExclusao = (id) => {
         if (role === 'ROLE_ADVOGADO') {
@@ -166,7 +190,7 @@ export default function ItemListaProcesso() {
                             </div>
                             <div className="flex space-x-6">
                                 <button 
-                                    onClick={() => handleViewProcesso(processo.id)}
+                                    onClick={() => parametrosVisualizarProcesso(processo)}
                                     className="text-branco hover:text-dourado transition-colors" 
                                     title="Visualizar processo"
                                 >
