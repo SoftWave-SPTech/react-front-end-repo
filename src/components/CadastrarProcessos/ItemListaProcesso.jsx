@@ -65,7 +65,7 @@ export default function ItemListaProcesso() {
 
     // Função para visualizar processo
     const handleViewProcesso = (processoId) => {
-        navigate(`/visualizar-processo/${processoId}`);
+        navigate(`/processos-advogado/${processoId}`);
     };
 
     // Abrir modal de confirmação
@@ -100,7 +100,7 @@ export default function ItemListaProcesso() {
     };
 
     return (
-        <div className="bg-AzulEscuro rounded-lg p-[2.5rem] font-sans w-full max-w-[56.25rem] mx-auto min-h-[44.5rem] flex flex-col" style={{ height: "70vh" }}>
+        <div className="bg-AzulEscuro rounded-lg p-[2.5rem] font-sans w-full max-w-[56.25rem] mx-auto min-h-[45.8rem] flex flex-col" style={{ height: "70vh" }}>
             <div className="flex items-center mb-6 pb-4">
                 <h2 className="text-3xl font-normal text-dourado flex-1">Processos</h2>
                 <div className="relative w-[16rem] max-w-full">
