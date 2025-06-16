@@ -1,163 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MenuLateralAdvogado from '../components/Menu/MenuLateral';
 import BarraTitulo from '../components/Ui/BarraTitulo';
-import {Input} from '../components/Ui/Input';
+import { Input } from '../components/Ui/Input';
 import Botao from '../components/Ui/Botao';
 import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
-
-const processosFake = [
-  {
-    id: 1,
-    numero: '2023.0001',
-    cliente: 'João da Silva',
-    advogado: 'Dr. Marcos',
-    status: 'Em andamento',
-    inicio: '10/03/2023',
-    classe: 'Ação Civil Pública',
-    assunto: 'Danos Morais',
-    foro: 'TJSP',
-    movimentacao: 'Audiência realizada em 12/04/2023',
-  },
-  {
-    id: 2,
-    numero: '2023.0002',
-    cliente: 'Maria Oliveira',
-    advogado: 'Dra. Paula',
-    status: 'Finalizado',
-    inicio: '21/01/2023',
-    classe: 'Ação Trabalhista',
-    assunto: 'Rescisão Contratual',
-    foro: 'TRT 2ª Região',
-    movimentacao: 'Sentença proferida em 10/05/2023',
-  },
-  {
-    id: 3,
-    numero: '2023.0003',
-    cliente: 'Maria Oliveira',
-    advogado: 'Dra. Paula',
-    status: 'Finalizado',
-    inicio: '21/01/2023',
-    classe: 'Ação Trabalhista',
-    assunto: 'Rescisão Contratual',
-    foro: 'TRT 2ª Região',
-    movimentacao: 'Sentença proferida em 10/05/2023',
-  },
-  {
-    id: 4,
-    numero: '2023.0004',
-    cliente: 'Maria Oliveira',
-    advogado: 'Dra. Paula',
-    status: 'Finalizado',
-    inicio: '21/01/2023',
-    classe: 'Ação Trabalhista',
-    assunto: 'Rescisão Contratual',
-    foro: 'TRT 2ª Região',
-    movimentacao: 'Sentença proferida em 10/05/2023',
-  },
-  {
-    id: 5,
-    numero: '2023.0005',
-    cliente: 'Maria Oliveira',
-    advogado: 'Dra. Paula',
-    status: 'Finalizado',
-    inicio: '21/01/2023',
-    classe: 'Ação Trabalhista',
-    assunto: 'Rescisão Contratual',
-    foro: 'TRT 2ª Região',
-    movimentacao: 'Sentença proferida em 10/05/2023',
-  },
-  {
-    id: 6,
-    numero: '2023.0006',
-    cliente: 'Maria Oliveira',
-    advogado: 'Dra. Paula',
-    status: 'Finalizado',
-    inicio: '21/01/2023',
-    classe: 'Ação Trabalhista',
-    assunto: 'Rescisão Contratual',
-    foro: 'TRT 2ª Região',
-    movimentacao: 'Sentença proferida em 10/05/2023',
-  },
-  {
-    id: 7,
-    numero: '2023.0007',
-    cliente: 'Maria Oliveira',
-    advogado: 'Dra. Paula',
-    status: 'Finalizado',
-    inicio: '21/01/2023',
-    classe: 'Ação Trabalhista',
-    assunto: 'Rescisão Contratual',
-    foro: 'TRT 2ª Região',
-    movimentacao: 'Sentença proferida em 10/05/2023',
-  },
-  {
-    id: 8,
-    numero: '2023.0008',
-    cliente: 'Maria Oliveira',
-    advogado: 'Dra. Paula',
-    status: 'Finalizado',
-    inicio: '21/01/2023',
-    classe: 'Ação Trabalhista',
-    assunto: 'Rescisão Contratual',
-    foro: 'TRT 2ª Região',
-    movimentacao: 'Sentença proferida em 10/05/2023',
-  },
-  {
-    id: 9,
-    numero: '2023.0009',
-    cliente: 'Maria Oliveira',
-    advogado: 'Dra. Paula',
-    status: 'Finalizado',
-    inicio: '21/01/2023',
-    classe: 'Ação Trabalhista',
-    assunto: 'Rescisão Contratual',
-    foro: 'TRT 2ª Região',
-    movimentacao: 'Sentença proferida em 10/05/2023',
-  },
-  {
-    id: 10,
-    numero: '2023.00010',
-    cliente: 'Maria Oliveira',
-    advogado: 'Dra. Paula',
-    status: 'Finalizado',
-    inicio: '21/01/2023',
-    classe: 'Ação Trabalhista',
-    assunto: 'Rescisão Contratual',
-    foro: 'TRT 2ª Região',
-    movimentacao: 'Sentença proferida em 10/05/2023',
-  },
-  {
-    id: 11,
-    numero: '2023.00011',
-    cliente: 'Maria Oliveira',
-    advogado: 'Dra. Paula',
-    status: 'Finalizado',
-    inicio: '21/01/2023',
-    classe: 'Ação Trabalhista',
-    assunto: 'Rescisão Contratual',
-    foro: 'TRT 2ª Região',
-    movimentacao: 'Sentença proferida em 10/05/2023',
-  },
-  {
-    id: 12,
-    numero: '2023.00',
-    cliente: 'Maria Oliveira',
-    advogado: 'Dra. Paula',
-    status: 'Finalizado',
-    inicio: '21/01/2023',
-    classe: 'Ação Trabalhista',
-    assunto: 'Rescisão Contratual',
-    foro: 'TRT 2ª Região',
-    movimentacao: 'Sentença proferida em 10/05/2023',
-  }
-];
+import {api} from '../service/api';
 
 export default function VisualizarProcessos() {
-  const [processos, setProcessos] = useState(processosFake);
+  const [processos, setProcessos] = useState([]);
   const [busca, setBusca] = useState('');
   const [modalConfirma, setModalConfirma] = useState(false);
   const [processoSelecionado, setProcessoSelecionado] = useState(null);
-  const [expandido, setExpandido] = useState(null); // novo estado
+  const [expandido, setExpandido] = useState(null);
+
+  useEffect(() => {
+    api.get(`/processos/usuario-id${sessionStorage.getItem('id')}`)
+      .then((response) => { 
+        console.log('Processos recebidos:', response.data);
+        setProcessos(response.data);
+      })
+      .catch((error) => {
+        console.error('Erro ao buscar processos:', error);
+      });
+  }, []);
 
   const abrirExclusao = (processo) => {
     setProcessoSelecionado(processo);
@@ -176,16 +41,6 @@ export default function VisualizarProcessos() {
   const toggleExpandido = (id) => {
     setExpandido(expandido === id ? null : id);
   };
-
-    useEffect(() => {
-    axios.get('localhost:8080/')
-      .then(response => setProcessos(response.data))
-      .catch(error => {
-        console.error('Erro ao buscar processos:', error);
-        setProcessos([]);
-      });
-  }, []);
-
 
   return (
     <div className="flex min-h-screen bg-gray-100">
