@@ -1,24 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import LayoutBase from '../layouts/LayoutBase';
 import ProcessoHeader from '../components/Ui/ProcessoHeader';
 import DocumentosCliente from '../components/Ui/DocumentosCliente';
 import LinhaDoTempoProcesso from '../components/Ui/LinhaDoTempoProcesso';
 import ComentarioCliente from '../components/Ui/ComentarioCliente';
 import Botao from '../components/Ui/Botao';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const VisualizarProcessosAdvogado = () => {
-  // Exemplo de handlers para os botões
+const { idUsuario, idProcesso } = useParams();
+  const navigate = useNavigate();
+
+  const [dadosProcesso, setDadosProcesso] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+
+    
+
+  }, []);
+
   const handleAtualizar = () => {
-    // lógica para atualizar processo
+    // lógica de atualizar processo
   };
 
   const handleDocumentos = () => {
-    // lógica para visualizar documentos do processo
+    navigate(`/documentos-processo/${idProcesso}`);
   };
 
   const handleVoltar = () => {
-    // lógica para voltar
+    navigate(-1); // volta para a página anterior
   };
+
 
   return (
     <LayoutBase>

@@ -14,6 +14,7 @@ import AnaliseComIa from "../pages/AnaliseComIa";
 import CadastrarProcesso from "../pages/CadastrarProcesso";
 import VisualizarProcessosAdvogado from "../pages/VisualizarProcessosAdvogado";
 import Podcast from "../pages/Podcast";
+import ListaUsuarios from "../pages/ListaUsuarios";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -71,5 +72,9 @@ export const AppRouter = createBrowserRouter([
   {
     path: "/podcast",
     element: <Podcast/>
+  },
+  {
+    path: "/lista-usuarios",
+    element: <ListaUsuarios/>
   }
 ]);
