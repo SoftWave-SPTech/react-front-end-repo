@@ -55,13 +55,13 @@ export default function CardUsuario(props) {
     
                 {/* 🔝 Toggle no canto superior direito */}
                 <div className="absolute top-0 right-0">
-                    <Toggle />
+                    <Toggle idUsuario={props.idUsuario} status={props.status} />
                 </div>
 
                 {/* 📋 Menu centralizado */}
                 <div className="flex justify-center items-center h-[20%]">
                     {props.role != "ROLE_USUARIO" && (
-                        <MenuLista role={props.role} />
+                        <MenuLista idUsuario={props.idUsuario} role={props.role} />
                     )}  
                 </div>
 

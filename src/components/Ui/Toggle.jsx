@@ -2,13 +2,28 @@ import { useState } from "react";
 import 'tailwindcss/tailwind.css';
 import { api } from "../../service/api";
 
+
 export default function Toggle(props) {
-    const [ligado, setLigado] = useState(false);
+    const [ligado, setLigado] = useState(props.status);
+
+    const idUsuario = props.idUsuario;
 
     function mudarStatusUsuario(){
         setLigado(!ligado)
 
-        
+        api.put(`/usuarios/atualizar-status/${idUsuario}`, 
+            // {
+            // headers: {
+            //   "Authorization":  TOKEN
+            // }
+            // }
+        )
+        .then((res) => {
+            console.log(res)
+        })
+        .catch((error) =>{
+            console.log(error);
+        })
     }
 
     return (

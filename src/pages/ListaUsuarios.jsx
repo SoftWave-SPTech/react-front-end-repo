@@ -62,6 +62,7 @@ export default function ListaUsuarios() {
                             email={usuario.email}
                             telefone={usuario.telefone}
                             role={usuario.role}
+                            status={usuario.status}
                             processos={usuario.processos} />
                         ))
                     }
