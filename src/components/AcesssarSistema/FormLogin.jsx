@@ -31,7 +31,8 @@ export default function FormLogin()
                 sessionStorage.setItem("tipoUsuario", response.data.tipoUsuario);
                 sessionStorage.setItem("role", response.data.role);
                 sessionStorage.setItem("nome", response.data.nome);
-                sessionStorage.setItem("foto", response.data.foto);
+                // Aqui precisa mudar para uma Constante que armazena o prefixo no caminho da foto do perfil
+                sessionStorage.setItem("fotoPerfil", "http://localhost:8080/" + response.data.foto);
                 //Logica para redirecionar para o perfil do cliente ou advogado
                 if (response.data.role == '"ROLE_USUARIO"') {
                     window.location.href = "/perfil-cliente";
