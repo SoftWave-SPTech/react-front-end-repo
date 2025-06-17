@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
+import 
+{
   FiMenu,
   FiLogOut,
   FiFileText,
@@ -15,7 +16,7 @@ import {
 const MenuLateral = () => {
   const [fechado, setFechado] = useState(() => {
     const larguraSalva = sessionStorage.getItem("larguraMenu");
-    return larguraSalva === "70"; // Se a largura for 70, o menu está fechado
+    return larguraSalva === "70";
   });
 
   const alternarMenu = () => {
@@ -31,12 +32,12 @@ const MenuLateral = () => {
     role: sessionStorage.getItem("role"),
     tipoUsuario: sessionStorage.getItem("tipoUsuario"),
     token: sessionStorage.getItem("token"),
+    fotoPerfil: sessionStorage.getItem("fotoPerfil"),
   };
 
   const role = (usuario?.role || "").toUpperCase();
   const email = usuario?.email || "sem-email@example.com";
   const nome = usuario?.email?.split("@")[0] || "Usuário";
-
   const rotaPerfil =
     role === "ROLE_USUARIO" ? "/perfil-cliente" : "/perfil-advogado";
 
@@ -55,13 +56,13 @@ const MenuLateral = () => {
   return (
     <div
       className={`menu-lateral sticky top-0 h-screen flex-shrink-0 flex flex-col justify-between
-    bg-[#050e26] text-white overflow-y-auto transition-all duration-300
-    ${fechado ? "w-[70px]" : "w-[clamp(220px,18%,280px)]"}`}
+      bg-[#050e26] text-white overflow-y-auto transition-all duration-300
+      ${fechado ? "w-[70px]" : "w-[clamp(220px,18%,280px)]"}`}
     >
       <div>
         <div
-          className={`flex items-center justify-end cursor-pointer 
-          ${fechado ? "mb-6" : "mb-4"} px-3 pt-4 hover:text-[#D9B166]`}
+          className={`flex items-center ${fechado ? "justify-center mb-6" : "justify-end mb-4"} 
+          cursor-pointer px-3 pt-4 hover:text-[#D9B166]`}
           onClick={alternarMenu}
         >
           <FiMenu className="text-[1.4rem]" />
@@ -71,19 +72,21 @@ const MenuLateral = () => {
           {!fechado && (
             <a
               href={rotaPerfil}
-              className="flex items-center gap-3 px-3 py-3 mx-1 border border-white rounded-lg
+              className="flex items-center gap-2 px-2 py-3 w-[clamp(190px,93%,250px)] mx-auto border border-white rounded-lg
               transition-all duration-300 hover:border-[#D9B166] hover:text-[#D9B166] text-white no-underline"
             >
-              <div className="bg-white text-[#050e26] p-2 rounded-full">
-                <FiUser className="text-[1.3rem]" />
-              </div>
-              <div className="flex flex-col leading-tight max-w-full">
+              <img
+                src={usuario?.fotoPerfil || "https://i.pravatar.cc/100"}
+                alt="Foto de perfil"
+                className="w-12 h-12 rounded-full object-cover border border-white"
+              />
+              <div className="flex flex-col leading-tight max-w-[calc(100%-3.2rem)]">
                 <span className="font-semibold text-[clamp(0.9rem,1.2vw,1.1rem)] truncate">
                   {nome}
                 </span>
                 <span
                   title={email}
-                  className="text-[clamp(0.75rem,1vw,0.9rem)] truncate"
+                  className="text-[clamp(0.7rem,0.95vw,0.85rem)] truncate mt-[3px]"
                 >
                   {email}
                 </span>
@@ -92,7 +95,7 @@ const MenuLateral = () => {
           )}
         </div>
 
-        <ul className="space-y-3 px-2 mt-2">
+        <ul className="space-y-3 px-2 mt-4">
           {itensMenu
             .filter(
               (item) =>
