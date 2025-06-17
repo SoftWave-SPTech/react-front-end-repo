@@ -15,7 +15,7 @@ export default function VisualizarProcessos() {
   const [expandido, setExpandido] = useState(null);
 
   useEffect(() => {
-    api.get(`/processos/usuario-id${sessionStorage.getItem('id')}`)
+    api.get(`/processos/usuario-id/${sessionStorage.getItem('id')}`)
       .then((response) => {
         console.log('Processos recebidos:', response.data);
         setProcessos(response.data);
@@ -35,9 +35,9 @@ export default function VisualizarProcessos() {
     setModalConfirma(false);
   };
 
-  const processosFiltrados = processos.filter(p =>
-    p.numero.includes(busca) || p.cliente.toLowerCase().includes(busca.toLowerCase())
-  );
+  // const processosFiltrados = processos.filter(p =>
+  //   p.numero.includes(busca) || p.cliente.toLowerCase().includes(busca.toLowerCase())
+  // );
 
   const toggleExpandido = (id) => {
     setExpandido(expandido === id ? null : id);
