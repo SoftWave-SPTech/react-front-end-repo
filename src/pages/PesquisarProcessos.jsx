@@ -24,6 +24,7 @@ const PesquisarProcessos = () => {
   const [filtroAtivo, setFiltroAtivo] = useState(null);
   const [role, setRole] = useState('');
   const [usuarioId, setUsuarioId] = useState('');
+  const [filtroAberto, setFiltroAberto] = useState(null);
 
   useEffect(() => {
     const id = sessionStorage.getItem('id');
@@ -125,6 +126,10 @@ const PesquisarProcessos = () => {
     }
   };
 
+  const handleToggleFiltro = (label) => {
+    setFiltroAberto(filtroAberto === label ? null : label);
+  };
+
   const clientesFiltrados = clientes.filter(cliente => 
     (cliente.nome?.toLowerCase() || '').includes(busca.toLowerCase()) ||
     (cliente.nomeFantasia?.toLowerCase() || '').includes(busca.toLowerCase()) ||
@@ -181,6 +186,8 @@ const PesquisarProcessos = () => {
                 label={filtro.label}
                 onClick={(valor) => handleFiltro(filtro, valor)}
                 ativo={filtroAtivo?.label === filtro.label}
+                isOpen={filtroAberto === filtro.label}
+                onToggle={handleToggleFiltro}
               />
             ))}
             {filtroAtivo && (

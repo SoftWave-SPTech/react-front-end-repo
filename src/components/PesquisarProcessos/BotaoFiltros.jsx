@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { FiChevronDown, FiChevronUp, FiFilter } from 'react-icons/fi';
 
-export default function BotaoFiltros({ label, onClick, ativo }) {
-  const [aberto, setAberto] = useState(false);
+export default function BotaoFiltros({ label, onClick, ativo, isOpen, onToggle }) {
   const [valorSelecionado, setValorSelecionado] = useState('');
 
   const handleClick = () => {
-    setAberto(!aberto);
+    onToggle(label);
   };
 
   const handleSelecionarValor = (valor) => {
     setValorSelecionado(valor);
-    setAberto(false);
+    onToggle(label);
     onClick(valor);
   };
 
@@ -25,10 +24,10 @@ export default function BotaoFiltros({ label, onClick, ativo }) {
         <span className="flex items-center gap-2">
           {label}
         </span>
-        {aberto ? <FiFilter className="text-dourado" /> : <FiFilter className="text-dourado" />}
+        {isOpen ? <FiFilter className="text-dourado" /> : <FiFilter className="text-dourado" />}
       </button>
 
-      {aberto && (
+      {isOpen && (
         <div className="absolute z-10 w-full mt-1 bg-branco rounded-md shadow-lg">
           <div className="py-1">
             <input
