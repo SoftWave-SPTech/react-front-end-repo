@@ -179,29 +179,31 @@ const PesquisarProcessos = () => {
               </svg>
             </span>
           </div>
-          <div className="flex flex-col gap-[1rem]">
-            {filtros.map(filtro => (
-              <BotaoFiltros 
-                key={filtro.label} 
-                label={filtro.label}
-                onClick={(valor) => handleFiltro(filtro, valor)}
-                ativo={filtroAtivo?.label === filtro.label}
-                isOpen={filtroAberto === filtro.label}
-                onToggle={handleToggleFiltro}
-              />
-            ))}
-            {filtroAtivo && (
-              <div className="flex justify-center w-full">
-                <button
-                  className="text-s text-azulEscuro underline mt-2 hover:text-dourado transition-colors font-semibold"
-                  onClick={handleLimparFiltros}
-                  type="button"
-                >
-                  Limpar Filtros
-                </button>
-              </div>
-            )}
-          </div>
+          {role !== 'ROLE_ADVOGADO' && (
+            <div className="flex flex-col gap-[1rem]">
+              {filtros.map(filtro => (
+                <BotaoFiltros 
+                  key={filtro.label} 
+                  label={filtro.label}
+                  onClick={(valor) => handleFiltro(filtro, valor)}
+                  ativo={filtroAtivo?.label === filtro.label}
+                  isOpen={filtroAberto === filtro.label}
+                  onToggle={handleToggleFiltro}
+                />
+              ))}
+              {filtroAtivo && (
+                <div className="flex justify-center w-full">
+                  <button
+                    className="text-s text-azulEscuro underline mt-2 hover:text-dourado transition-colors font-semibold"
+                    onClick={handleLimparFiltros}
+                    type="button"
+                  >
+                    Limpar Filtros
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
           <div className="fixed right-[4.5rem] bottom-8 z-50 max-w-[14rem] w-full flex justify-end lg:justify-center">
             <Botao
               cor="padrao"
