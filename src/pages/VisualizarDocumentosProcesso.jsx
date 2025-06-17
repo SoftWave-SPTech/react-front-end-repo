@@ -6,6 +6,7 @@ import ModalUpload from '../components/Ui/ModalUpload';
 import CardDocumento from '../components/Ui/CardDocumento';
 import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
 import { api } from '../service/api';
+import { useParams, useNavigate } from 'react-router-dom';
 
 
 export default function VisualizarDocumentosProcesso() {
@@ -14,15 +15,8 @@ export default function VisualizarDocumentosProcesso() {
   const [filtro, setFiltro] = useState('');
   const [modalExcluir, setModalExcluir] = useState({ aberto: false, index: null });
   const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
-
-  // Essa constante é a que deve ficar o get item deve ser implementado de acordo com o nome
-  //  escolhido pela pessoal que fez a lógica para trazer a essa tela do id do processo
-
-  // const idProcesso = sessionStorage.getItem('idProcesso');
-
-  //Variavel em que os Processos serão setados enquanto lógica da tela de visualizar processos não está pronta
-
-  const idProcesso = 1;
+  const { idProcesso } = useParams();
+  const navigate = useNavigate();
 
   const abrirModal = () => setModalAberto(true);
   const fecharModal = () => setModalAberto(false);

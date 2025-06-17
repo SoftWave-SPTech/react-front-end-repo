@@ -6,13 +6,17 @@ import Botao from '../components/Ui/Botao';
 import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
 import { api } from '../service/api';
 import { FiSearch } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 
 export default function VisualizarProcessos() {
   const [processos, setProcessos] = useState([]);
+  const [processoDaVez, setProcessoDaVez] = useState([]);
   const [busca, setBusca] = useState('');
   const [modalConfirma, setModalConfirma] = useState(false);
   const [processoSelecionado, setProcessoSelecionado] = useState(null);
   const [expandido, setExpandido] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     api.get(`/processos/usuario-id/${sessionStorage.getItem('id')}`)
@@ -25,15 +29,15 @@ export default function VisualizarProcessos() {
       });
   }, []);
 
-  const abrirExclusao = (processo) => {
-    setProcessoSelecionado(processo);
-    setModalConfirma(true);
-  };
+  // const abrirExclusao = (processo) => {
+  //   setProcessoSelecionado(processo);
+  //   setModalConfirma(true);
+  // };
 
-  const excluirProcesso = () => {
-    setProcessos(processos.filter(p => p.id !== processoSelecionado.id));
-    setModalConfirma(false);
-  };
+  // const excluirProcesso = () => {
+  //   setProcessos(processos.filter(p => p.id !== processoSelecionado.id));
+  //   setModalConfirma(false);
+  // };
 
   // const processosFiltrados = processos.filter(p =>
   //   p.numero.includes(busca) || p.cliente.toLowerCase().includes(busca.toLowerCase())
@@ -41,7 +45,20 @@ export default function VisualizarProcessos() {
 
   const toggleExpandido = (id) => {
     setExpandido(expandido === id ? null : id);
+
+    api.get(`/processos/visualizar-processo/${id}`)
+      .then((response) => {
+        console.log('Processos recebidos:', response.data);
+        setProcessoDaVez(response.data);
+      })
+      .catch((error) => {
+        console.error('Erro ao buscar processos:', error);
+      });
   };
+
+  function transferirPageProcessoCliente(){
+
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -71,7 +88,7 @@ export default function VisualizarProcessos() {
         </div>
         <div className="mb-6">
           <BarraTitulo>
-            Olá, {sessionStorage.getItem('nome')}!
+            Olá, {sessionStorage.getItem("nome")}!
           </BarraTitulo>
           <div className="flex justify-center">
             <BarraTitulo tamanho="medio" largura="medio" cor="claro" className="flex justify-center">
@@ -82,14 +99,14 @@ export default function VisualizarProcessos() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm bg-white rounded shadow-md">
             <tbody>
-              {processosFiltrados.map((p) => (
+              {processos.map((p) => (
                 <React.Fragment key={p.id}>
                   <tr
                     className="border-b hover:bg-gray-50 cursor-pointer"
                     onClick={() => toggleExpandido(p.id)}
                   >
                     <td className="px-4 py-2 font-semibold mb-4" style={{ paddingBottom: '1rem' }} colSpan={10}>
-                      Processo nº {p.numero}
+                      Processo nº {p.numeroProcesso}
                       <span className="float-right text-gray-400">
                         {expandido === p.id ? '▲' : '▼'}
                       </span>
@@ -99,17 +116,18 @@ export default function VisualizarProcessos() {
                     <tr className="bg-gray-50 mb-4">
                       <td colSpan={10} className="px-4 py-2">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
-                          <div><b>Cliente:</b> {p.cliente}</div>
-                          <div><b>Advogado:</b> {p.advogado}</div>
-                          <div><b>Classe:</b> {p.classe}</div>
-                          <div><b>Assunto:</b> {p.assunto}</div>
-                          <div><b>Foro:</b> {p.foro}</div>
-                          <div><b>Movimentação:</b> {p.movimentacao}</div>
-                          <div><b>Status:</b> {p.status}</div>
-                          <div><b>Início:</b> {p.inicio}</div>
+                          {processoDaVez.advogados?.map((nome, index) => (
+                            <div key={index}><b>Advogado:</b> {nome}</div>
+                          ))}
+                          <div><b>Área:</b> {processoDaVez.area}</div>
+                          <div><b>Assunto:</b> {processoDaVez.assunto}</div>
+                          <div><b>Foro:</b> {processoDaVez.foro}</div>
+                          <div><b>Juiz:</b> {processoDaVez.juiz}</div>
+                          <div><b>Valor Ação:</b> {processoDaVez.valorAcao}</div>
+                          <div><b>Vara:</b> {processoDaVez.vara}</div>
                         </div>
                         <div className="flex justify-end">
-                          <Botao onClick={() => alert(`Visualizar processo ${p.numero}`)}>
+                          <Botao onClick={() => navigate(`/area-cliente/processo/${p.id}`)}>
                             Visualizar Processo
                           </Botao>
                         </div>
@@ -118,7 +136,7 @@ export default function VisualizarProcessos() {
                   )}
                 </React.Fragment>
               ))}
-              {processosFiltrados.length === 0 && (
+              {processos.length === 0 && (
                 <tr>
                   <td colSpan="10" className="text-center py-6 text-gray-500">
                     Nenhum processo encontrado.
