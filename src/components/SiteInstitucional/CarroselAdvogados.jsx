@@ -1,5 +1,4 @@
-import { useRef, useState } from 'react';
-import Carousel from 'react-bootstrap/Carousel';
+import { useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation , Pagination} from 'swiper/modules';
 

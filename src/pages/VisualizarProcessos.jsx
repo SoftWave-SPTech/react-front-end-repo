@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MenuLateralAdvogado from '../components/Menu/MenuLateral';
 import BarraTitulo from '../components/Ui/BarraTitulo';
 import { Input } from '../components/Ui/Input';
@@ -6,7 +7,6 @@ import Botao from '../components/Ui/Botao';
 import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
 import { api } from '../service/api';
 import { FiSearch } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
 
 export default function VisualizarProcessos() {
   const [processos, setProcessos] = useState([]);

@@ -18,6 +18,8 @@ import Podcast from "../pages/Podcast";
 import ListaUsuarios from "../pages/ListaUsuarios";
 import Dashboard from "../pages/Dashboard";
 import PesquisarProcessos from "../pages/PesquisarProcessos";
+import RedefinirSenha from "../pages/RedefinirSenha";
+import EsqueciSenha from "../pages/EsqueciSenha";
 
 
 export const AppRouter = createBrowserRouter([
@@ -42,6 +44,14 @@ export const AppRouter = createBrowserRouter([
     element: <CadastrarSenha/>
   },
   {
+    path: "/redefinir-senha",
+    element: <RedefinirSenha/>
+  },
+  {
+    path: "/esqueci-senha",
+    element: <EsqueciSenha/>
+  },
+  {
     path: "/perfil-cliente",
     element: <FormEditPerfilCliente/> 
   },
@@ -58,7 +68,7 @@ export const AppRouter = createBrowserRouter([
     element: <VisualizarDocumentosPessoais/>
   },
   {
-    path: "/analise-ia",
+    path: "/analise-ia/:processoId/:movimentacaoId",
     element: <AnaliseComIa/>
   },
   {
@@ -70,7 +80,7 @@ export const AppRouter = createBrowserRouter([
     element: <CadastrarProcesso/>
   },
   {
-    path: "/area-cliente",
+    path: "/area-cliente/processo/:processoId",
     element: <AreaCliente/>
   },
   {
@@ -88,6 +98,9 @@ export const AppRouter = createBrowserRouter([
   {
     path: "/lista-usuarios",
     element: <ListaUsuarios/>
+  },{
+    path: "/pesquisar-processos",
+    element: <PesquisarProcessos/>
   },
   {
     path: "/dashboard",
