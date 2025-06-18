@@ -60,7 +60,7 @@ const VisualizarProcessosAdvogado = () => {
   }, []);
 
   const handleAtualizar = () => {
-    api.post(`/api/processo/numero/${dadosProcesso.numeroProcesso}`, 
+    api.get(`/api/processo/numero/${dadosProcesso.numeroProcesso}`, 
       // {
       //   headers: {
       //     "Authorization": TOKEN
@@ -156,7 +156,7 @@ const VisualizarProcessosAdvogado = () => {
         }}>
           <BarraTitulo className="w-[55%]">Vizualizar Processo</BarraTitulo>
  <div style={{ display: 'flex', gap: '10px' }}>
-            <Botao tamanho="grande" largura="grande" onClick={() => handleAtualizar}>
+            <Botao tamanho="grande" largura="grande" onClick={() => handleAtualizar()}>
               Atualize seu processo
             </Botao>
             <Botao tamanho="grande" largura="grande" onClick={handleDocumentos}>
