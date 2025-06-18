@@ -76,4 +76,3 @@ export const mascaraOAB = (value) =>
   const somenteNumeros = value.replace(/\D/g, ''); 
   return somenteNumeros.slice(0, 6); 
 };
-

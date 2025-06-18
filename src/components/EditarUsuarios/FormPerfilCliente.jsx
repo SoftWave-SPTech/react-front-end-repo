@@ -111,6 +111,77 @@ function FormPerfilCliente() {
     }
   }, []);
 
+  //TODO avaliar utilidade dessa função
+  const handleInputChange = async (e) => {
+    const { name, value } = e.target;
+    setUsuarioParaAtualizar(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+    setUsuario(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    if (name === 'cep') {
+      const cepLimpo = value.replace(/\D/g, '');
+      if (cepLimpo.length === 8) {
+        try {
+          const endereco = await buscarCep(cepLimpo);
+          setUsuarioParaAtualizar(prev => ({
+            ...prev,
+            logradouro: endereco.logradouro || '',
+            bairro: endereco.bairro || '',
+            cidade: endereco.localidade || '',
+          }));
+          setUsuario(prev => ({
+            ...prev,
+            logradouro: endereco.logradouro || '',
+            bairro: endereco.bairro || '',
+            cidade: endereco.localidade || '',
+          }));
+        } catch (error) {
+          console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
+          alert('CEP inválido ou não encontrado.');
+        }
+      }
+    }
+  };
+
+  //TODO Avaliar FUncionalidade desta função  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const errosEncontrados = validarPerfilCliente(usuario);
+    
+    if (Object.keys(errosEncontrados).length > 0) {
+      setErrors(errosEncontrados);
+      return;
+    }
+
+    setErrors({});
+
+    api.put(`/usuarios-${sessionStorage.getItem('tipoUsuario') === 'UsuarioFisico' ? 'fisicos' : 'juridicos'}/${usuario.id}`, usuario, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      },
+    })
+    .then(() => {
+      alert('Dados atualizados com sucesso!');
+    })
+    .catch((err) => {
+      console.error(err);
+      if (err.response?.data) {
+        const erros = err.response.data;
+        Object.keys(erros).forEach(campo => {
+          alert(`${campo}: ${erros[campo]}`);
+        });
+      } else {
+        alert('Erro ao atualizar dados. Por favor, tente novamente.');
+      }
+    });
+  };
+
   function criarAtualizarFisicos(dados) {
     setUsuario(dados);
     setUsuarioParaAtualizar({
@@ -459,7 +530,6 @@ function FormPerfilCliente() {
             }}
           />
         </div>
-
         <div className="w-full flex justify-center items-center px-4 pb-4">
           <Botao onClick={enviarDadosParaAtualizacao} tamanho="grande" largura="pequeno">Salvar</Botao>
         </div>

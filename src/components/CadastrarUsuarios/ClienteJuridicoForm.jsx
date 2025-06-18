@@ -50,6 +50,7 @@ export default function ClienteJuridicoForm() {
             cidade: endereco.localidade || '',
           }));
         } catch (error) {
+          console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
           alert('CEP inválido ou não encontrado.');
         }
       }
@@ -99,7 +100,15 @@ export default function ClienteJuridicoForm() {
         });
       })
       .catch((err) => {
-        alert(err.response?.data?.message || 'Erro ao cadastrar');
+        console.error(err);
+        if (err.response?.data) {
+          const erros = err.response.data;
+          Object.keys(erros).forEach(campo => {
+            alert(`${campo}: ${erros[campo]}`);
+          });
+        } else {
+          alert('Erro ao cadastrar cliente. Por favor, tente novamente.');
+        }
       });
 
   };

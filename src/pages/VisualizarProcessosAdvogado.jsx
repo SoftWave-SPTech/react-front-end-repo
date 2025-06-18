@@ -10,6 +10,7 @@ import { PiSealQuestionBold } from 'react-icons/pi';
 import BarraTitulo from '../components/Ui/BarraTitulo';
 import { api } from "../service/api";
 import CardDocumento from '../components/Ui/CardDocumento';
+import ModalAguardando from "../components/Ui/ModalAguardando";
 
 const VisualizarProcessosAdvogado = () => {
   const { idUsuario, idProcesso } = useParams();
@@ -17,7 +18,7 @@ const VisualizarProcessosAdvogado = () => {
   const [comentario, setComentario] = useState('');
   const [dadosProcesso, setDadosProcesso] = useState({});
   const [dadosUsuario, setDadosUsuario] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
 
   useEffect(() => {
@@ -77,10 +78,20 @@ const VisualizarProcessosAdvogado = () => {
     navigate(-1); // volta para a página anterior
   };
 
-  const mudarPagina = (movimentacaoId, processoId) => {
-    navigate(`/analise-ia/${processoId}/${movimentacaoId}`);
-  };
+  function gerarAnaliseIA(processoId, movimentacaoId) {
+      setLoading(true);
+      api.post(`/analise-processo/${movimentacaoId}`)
+        .then((res) =>{ 
+          console.log("Análise IA gerada com sucesso:", res.data);
+          setLoading(false);
+          navigate(`/analise-ia/${processoId}/${movimentacaoId}`)
+        })
+        .catch(() => {
+          console.error("Erro ao gerar análise IA");
+          setLoading(false);
+        });
 
+    }
   const cadastrarComentario = (idProcesso) => {
     api.post(`/comentarios-processos/processo`, 
       {
@@ -126,6 +137,7 @@ const VisualizarProcessosAdvogado = () => {
   return (
     <LayoutBase>
       <div style={{ padding: '20px', fontFamily: 'Segoe UI, sans-serif', color: '#2f2f2f' }}>
+        <ModalAguardando loadingEnd={!loading} />
         {/* Top Bar */}
         <div style={{
           display: 'flex',
@@ -238,7 +250,7 @@ const VisualizarProcessosAdvogado = () => {
                     borderRadius: '50%',
                     margin: '6px auto'
                   }}></div>
-                  <button onClick={() => mudarPagina(movimentacao.id, dadosProcesso.id)} style={{
+                  <button onClick={() => gerarAnaliseIA(movimentacao.id, dadosProcesso.id)} style={{
                     background: '#0A1F44',
                     color: '#fff',
                     border: 'none',

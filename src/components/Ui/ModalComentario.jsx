@@ -32,21 +32,20 @@ export default function ModalComentario({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-[#0A1A33] text-white rounded-xl w-full max-w-2xl p-6 relative max-h-[60vh] overflow-y-auto">
+          <div className="bg-[#2454D3] rounded-t-xl px-4 py-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white w-full text-center">
+              Comentário do advogado
+            </h3>
+            <button
+              onClick={onClose}
+              className="absolute right-6 top-4 w-[72px] h-[72px] text-white text-4xl font-light" // Alterado de text-2xl para text-4xl
+               // Opcional: aumenta área clicável
+            >
+              &times;
+            </button>
+          </div>
 
-        {/* Cabeçalho */}
-        <div className="bg-[#2454D3] rounded-t-xl px-4 py-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-white w-full text-center">
-            Comentário do advogado
-          </h3>
-          <button
-            onClick={onClose}
-            className="absolute right-6 top-4 text-white text-2xl font-light"
-          >
-            &times;
-          </button>
-        </div>
-
-        {/* Nome, data e botão */}
+          {/* Nome, data e botão */}
         <div className="flex items-center justify-between mt-6 mb-4 flex-wrap gap-4">
           <div className="flex items-center gap-3">
             <img

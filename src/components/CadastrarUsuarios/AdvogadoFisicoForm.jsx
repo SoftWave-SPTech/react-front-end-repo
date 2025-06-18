@@ -47,6 +47,7 @@ export default function AdvogadoFisicoForm() {
             cidade: endereco.localidade || '',
           }));
         } catch (error) {
+          console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
           alert('CEP inválido ou não encontrado.');
         }
       }
@@ -93,7 +94,18 @@ export default function AdvogadoFisicoForm() {
         });
       })
       .catch((err) => {
-        alert(err.response?.data?.message || 'Erro ao cadastrar');
+
+        console.error(err);
+        if (err.response?.data) {
+          const erros = err.response.data;
+          Object.keys(erros).forEach(campo => {
+            alert(`${campo}: ${erros[campo]}`);
+          });
+        } else {
+          alert('Erro ao cadastrar advogado. Por favor, tente novamente.');
+        }
+        //alert(err.response?.data?.message || 'Erro ao cadastrar');
+
       });
   };
 
@@ -104,7 +116,7 @@ export default function AdvogadoFisicoForm() {
           <Input
             label="Nome Completo:"
             name="nome"
-            placeholder="Ex: João Silva"
+            placeholder="Digite o nome completo"
             value={formData.nome}
             onChange={handleChange}
             errorMessage={errors.nome}

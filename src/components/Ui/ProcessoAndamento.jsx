@@ -1,8 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../../service/api';
+import ModalAguardando from './ModalAguardando';
 
 const ProcessoAndamento = ({ andamentos = [], processoId }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = React.useState(false);
 
   if (!andamentos || andamentos.length === 0) {
     return (
@@ -19,8 +22,24 @@ const ProcessoAndamento = ({ andamentos = [], processoId }) => {
     );
   }
 
+  function gerarAnaliseIA(item) {
+    setLoading(true);
+    api.post(`/analise-processo/${item.id}`)
+      .then((res) =>{ 
+        console.log("Análise IA gerada com sucesso:", res.data);
+        setLoading(false);
+        navigate(`/analise-ia/${processoId}/${item.id}`)
+      })
+      .catch(() => {
+        console.error("Erro ao gerar análise IA");
+        setLoading(false);
+        navigate(`/analise-ia/${processoId}/${item.id}`)
+      });
+  }
+
   return (
     <div className="timeline-horizontal-container">
+      <ModalAguardando loadingEnd={!loading} />
       <ul className="timeline-horizontal">
         {andamentos.map((item, idx) => (
           <li key={item.id || idx} className="timeline-horizontal-item">
@@ -40,7 +59,7 @@ const ProcessoAndamento = ({ andamentos = [], processoId }) => {
             <div className="timeline-horizontal-status">
               <button
                 className="timeline-horizontal-btn bg-[#0f1b3e] text-white rounded-lg font-bold py-2 px-4 transition-colors duration-200 hover:bg-[#20294a] hover:text-[#d4b063] focus:outline-none focus:ring-2 focus:ring-[#d4b063] focus:ring-offset-2"
-                onClick={() => navigate(`/analise-ia/${processoId}/${item.id}`)}
+                onClick={() => gerarAnaliseIA(item)}
                 style={{ minWidth: '120px' }}
               >
                 Ver análise

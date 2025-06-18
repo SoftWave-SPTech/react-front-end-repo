@@ -28,9 +28,11 @@ export default function AnaliseMovimentacao() {
     api.get(`/analise-processo/por-movimentacao/${movimentacaoId}`, {
       headers: { Authorization: TOKEN }
     }).then((response) => {
+      console.log("Análise e movimentação recebidas:" , response.data);
+      // console.log(response.data);
       const analiseIA = response.data.resumoIA || "Análise não disponível no momento.";
-      const movimentacaoAtual = response.data.movimentacoes.movimento || "Movimentação não disponível no momento.";
-      const movimentacaoData = response.data.movimentacoes.data || "Data não disponível.";
+      const movimentacaoAtual = response.data.ultimaMovimentacao.movimento || "Movimentação não disponível no momento.";
+      const movimentacaoData = response.data.ultimaMovimentacao.data || "Data não disponível.";
       setAnalise(analiseIA);
       setMovimentacao(movimentacaoAtual);
       setMovimentacaoData(movimentacaoData)
@@ -45,6 +47,7 @@ export default function AnaliseMovimentacao() {
     api.get(`/comentarios-processos/buscar-por-ultima-movimentacao/${movimentacaoId}`, {
       headers: { Authorization: TOKEN }
     }).then((response) => {
+      console.log("Comentários recebidos:", response.data);
       if (Array.isArray(response.data)) {
         setComentarios(response.data);
       } else {
@@ -143,7 +146,7 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
                   data={formatarData(coment.dataComentario)}
                   texto={coment.comentario}
                   // Precisa mudar para uma constante que armazena o prefixo no caminho da foto do perfil do comentario
-                  imagem={coment.fotoUsuario.includes("http") ? coment.fotoUsuario : `http://localhost:8080/${coment.fotoUsuario}`}
+                  imagem={typeof coment.fotoUsuario === "string" && coment.fotoUsuario.includes("http") ? coment.fotoUsuario : `http://localhost:8080/${coment.fotoUsuario}`}
                   onClick={() => {
                     setComentarioSelecionado({
                       id: coment.id,
