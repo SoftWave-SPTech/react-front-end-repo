@@ -14,7 +14,6 @@ export default function AdvogadoJuridicoForm() {
   const [formData, setFormData] = useState({
     nomeFantasia: '',
     razaoSocial: '',
-    representante: '', 
     cnpj: '',
     email: '',
     oab: '',
@@ -25,6 +24,7 @@ export default function AdvogadoJuridicoForm() {
     bairro: '',
     cidade: '',
     complemento: '',
+    representante: '', 
   });
 
   const [errors, setErrors] = useState({});
