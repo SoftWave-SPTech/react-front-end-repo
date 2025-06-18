@@ -67,34 +67,70 @@ export const validarClienteJuridico = (dados) => {
 
 export const validarAdvogadoFisico = (dados) => {
   const erros = {};
-  if (!dados.nome) erros.nome = "Campo obrigatório";
+  
+  // Validações obrigatórias
+  if (!dados.nome) erros.nome = "Nome é obrigatório";
   if (!dados.cpf || !validarCPF(dados.cpf)) erros.cpf = "CPF inválido";
-  if (!dados.rg || !validarRG(dados.rg)) erros.rg = "RG inválido";
+  if (!dados.rg) erros.rg = "RG é obrigatório";
   if (!dados.email || !validarEmail(dados.email)) erros.email = "Email inválido";
   if (!dados.oab || !validarOAB(dados.oab)) erros.oab = "OAB deve ter 6 dígitos númericos.";
   if (!dados.telefone || !validarTelefone(dados.telefone)) erros.telefone = "Telefone inválido";
-  if (!dados.cep || !validarCEP(dados.cep)) erros.cep = "CEP deve ter 8 dígitos.";
-  if (!dados.logradouro) erros.logradouro = "Campo obrigatório";
-  if (!dados.bairro) erros.bairro = "Campo obrigatório";
-   if (!dados.numero) erros.numero = "Campo obrigatório";
-  if (!dados.cidade) erros.cidade = "Campo obrigatório";
+  
+  // Validações de endereço
+  if (!dados.cep || !validarCEP(dados.cep)) erros.cep = "CEP inválido";
+  if (!dados.logradouro) erros.logradouro = "Logradouro é obrigatório";
+  if (!dados.numero) erros.numero = "Número é obrigatório";
+  if (!dados.bairro) erros.bairro = "Bairro é obrigatório";
+  if (!dados.cidade) erros.cidade = "Cidade é obrigatória";
+
+  // Validações específicas do backend
+  if (dados.oab && (dados.oab.length < 6 || dados.oab.length > 6)) {
+    erros.oab = "O número da OAB deve ter 6 dígitos";
+  }
+  //if (!dados.oab || !validarCEP(dados.oab)) erros.oab = "OAB deve ter 6 dígitos númericos.";
+  //if (!dados.telefone || !validarTelefone(dados.telefone)) erros.telefone = "Telefone inválido";
+  //if (!dados.cep || !validarCEP(dados.cep)) erros.cep = "CEP deve ter 8 dígitos.";
+  //if (!dados.logradouro) erros.logradouro = "Campo obrigatório";
+  //if (!dados.bairro) erros.bairro = "Campo obrigatório";
+  //if (!dados.cidade) erros.cidade = "Campo obrigatório";
   return erros;
 };
 
 export const validarAdvogadoJuridico = (dados) => {
   const erros = {};
-  if (!dados.nomeFantasia) erros.nomeFantasia = "Campo obrigatório";
-  if (!dados.nomeRepresentante) erros.nomeRepresentante = "Campo obrigatório";
-  if (!dados.razaoSocial) erros.razaoSocial = "Campo obrigatório";
+  
+  // Validações obrigatórias
+  if (!dados.nomeFantasia) erros.nomeFantasia = "Nome fantasia é obrigatório";
+  if (!dados.nomeRepresentante) erros.nomeRepresentante = "Nome do representante é obrigatório";
+  if (!dados.razaoSocial) erros.razaoSocial = "Razão social é obrigatória";
   if (!dados.cnpj || !validarCNPJ(dados.cnpj)) erros.cnpj = "CNPJ inválido";
   if (!dados.email || !validarEmail(dados.email)) erros.email = "Email inválido";
   if (!dados.oab || !validarOAB(dados.oab)) erros.oab = "OAB deve ter 6 dígitos.";
   if (!dados.telefone || !validarTelefone(dados.telefone)) erros.telefone = "Telefone inválido";
-  if (!dados.cep || !validarCEP(dados.cep)) erros.cep = "CEP deve ter 8 dígitos.";
-  if (!dados.logradouro) erros.logradouro = "Campo obrigatório";
-  if (!dados.numero) erros.numero = "Campo obrigatório";
-  if (!dados.bairro) erros.bairro = "Campo obrigatório";
-  if (!dados.cidade) erros.cidade = "Campo obrigatório";
+  // Validações de endereço
+  if (!dados.cep || !validarCEP(dados.cep)) erros.cep = "CEP inválido";
+  if (!dados.logradouro) erros.logradouro = "Logradouro é obrigatório";
+  if (!dados.numero) erros.numero = "Número é obrigatório";
+  if (!dados.bairro) erros.bairro = "Bairro é obrigatório";
+  if (!dados.cidade) erros.cidade = "Cidade é obrigatória";
+
+  // Validações específicas do backend
+  if (dados.oab && (dados.oab.length < 6 || dados.oab.length > 6)) {
+    erros.oab = "O número da OAB deve ter 6 dígitos";
+  }
+
+  //if (!dados.nomeFantasia) erros.nomeFantasia = "Campo obrigatório";
+  //if (!dados.nomeRepresentante) erros.nomeRepresentante = "Campo obrigatório";
+  //if (!dados.razaoSocial) erros.razaoSocial = "Campo obrigatório";
+  //if (!dados.cnpj || !validarCNPJ(dados.cnpj)) erros.cnpj = "CNPJ inválido";
+  //if (!dados.email || !validarEmail(dados.email)) erros.email = "Email inválido";
+  //if (!dados.oab || !validarCEP(dados.oab)) erros.oab = "OAB deve ter 6 dígitos.";
+  //if (!dados.telefone || !validarTelefone(dados.telefone)) erros.telefone = "Telefone inválido";
+  //if (!dados.cep || !validarCEP(dados.cep)) erros.cep = "CEP deve ter 8 dígitos.";
+  //if (!dados.logradouro) erros.logradouro = "Campo obrigatório";
+  //if (!dados.numero) erros.numero = "Campo obrigatório";
+  //if (!dados.bairro) erros.bairro = "Campo obrigatório";
+  //if (!dados.cidade) erros.cidade = "Campo obrigatório";
   return erros;
 };
 

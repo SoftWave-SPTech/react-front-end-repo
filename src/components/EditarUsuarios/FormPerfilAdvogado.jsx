@@ -85,6 +85,7 @@ function FormPerfilAdvogado() {
                 })
                 .catch((erro) => {
                     console.log(erro)
+                    console.log(erro.response?.data?.message || 'Erro ao buscar dados do advogado físico');
                 })
 
         } else if (sessionStorage.getItem('tipoUsuario') == "AdvogadoJuridico") {
@@ -118,6 +119,7 @@ function FormPerfilAdvogado() {
                 })
                 .catch((erro) => {
                     console.log(erro)
+                    console.log(erro.response?.data?.message || 'Erro ao buscar dados do advogado jurídico');
                 })
         }
     }, []);
@@ -154,6 +156,7 @@ function FormPerfilAdvogado() {
                 })
                 .catch((erro) => {
                     console.log(erro)
+                    console.log(erro.response?.data?.message || 'Erro ao atualizar dados do advogado físico');
                     alert("Ocorreu um erro, tente novamente!");
                 })
 
@@ -186,6 +189,7 @@ function FormPerfilAdvogado() {
                 })
                 .catch((erro) => {
                     console.log(erro)
+                    console.log(erro.response?.data?.message || 'Erro ao atualizar dados do advogado jurídico');
                     alert("Ocorreu um erro, tente novamente!");
                 })
         }
@@ -280,6 +284,10 @@ function FormPerfilAdvogado() {
                     "Authorization": TOKEN
                 }
             })
+            //.catch(error => {
+             //   console.error("Erro ao enviar o arquivo:", error.response?.data?.message || 'Erro ao enviar o arquivo');
+              //  console.error("Erro ao enviar o arquivo:", error);
+            //});
                 .then(response => {
                     console.log("Upload realizado com sucesso:", response.data);
                     sessionStorage.setItem('fotoPerfil', response.data);
@@ -306,6 +314,7 @@ function FormPerfilAdvogado() {
             })
             .catch(error => {
                 console.error("Erro ao enviar o arquivo:", error);
+                console.error("Erro ao enviar o arquivo:", error.response?.data?.message || 'Erro ao enviar o arquivo');
             });
     }
 

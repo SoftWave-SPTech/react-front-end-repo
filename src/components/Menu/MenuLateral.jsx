@@ -10,6 +10,7 @@ import {
   FiDollarSign,
   FiUserPlus,
   FiUser,
+  FiSearch,
 } from "react-icons/fi";
 
 const MenuLateral = () => {

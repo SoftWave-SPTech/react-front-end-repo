@@ -8,6 +8,7 @@ import Botao from '../../components/Ui/Botao';
 import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG } from '../../Utils/mascaras';
 import { buscarCep } from '../../service/buscarCep';
 import { validarClienteFisico } from '../../Utils/validacoes';
+import EnviarChaveAcesso from './EnvioEmail.jsx';
 
 export default function ClienteFisicoForm() {
   const [formData, setFormData] = useState({
@@ -46,6 +47,7 @@ export default function ClienteFisicoForm() {
             cidade: endereco.localidade || '',
           }));
         } catch (error) {
+          console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
           alert('CEP inválido ou não encontrado.');
         }
       }
@@ -71,7 +73,10 @@ export default function ClienteFisicoForm() {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
-      .then(() => {
+    .then(() => {
+
+        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+
         alert('Cadastro realizado com sucesso!');
         setFormData({
           nome: '',
@@ -86,10 +91,17 @@ export default function ClienteFisicoForm() {
           cidade: '',
           complemento: '',
         });
-      })
-      .catch((err) => {
+    })
+    .catch((err) => {
         console.error(err);
-        alert(err.response?.data?.message || 'Erro ao cadastrar');
+        if (err.response?.data) {
+          const erros = err.response.data;
+          Object.keys(erros).forEach(campo => {
+            alert(`${campo}: ${erros[campo]}`);
+          });
+        } else {
+          alert('Erro ao cadastrar cliente. Por favor, tente novamente.');
+        }
       });
   };
 

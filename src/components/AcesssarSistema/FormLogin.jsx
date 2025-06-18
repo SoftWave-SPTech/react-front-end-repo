@@ -7,9 +7,33 @@ import { Link } from 'react-router-dom';
 export default function FormLogin() {
     const [email, setEmail] = useState("");
     const [senha, setsenha] = useState("");
+    const [errors, setErrors] = useState({});
+
+    const validarFormulario = () => {
+        const novosErros = {};
+        
+        if (!email) {
+            novosErros.email = "Email é obrigatório";
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            novosErros.email = "Email inválido";
+        }
+        
+        if (!senha) {
+            novosErros.senha = "Senha é obrigatória";
+        } else if (senha.length < 8) {
+            novosErros.senha = "A senha deve ter pelo menos 8 caracteres";
+        }
+
+        setErrors(novosErros);
+        return Object.keys(novosErros).length === 0;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validarFormulario()) {
+            return;
+        }
 
         try {
             const response = await api.post('/auth/login', {
@@ -27,19 +51,34 @@ export default function FormLogin() {
                 sessionStorage.setItem("tipoUsuario", response.data.tipoUsuario);
                 sessionStorage.setItem("role", response.data.role);
                 sessionStorage.setItem("nome", response.data.nome);
-                sessionStorage.setItem("foto", response.data.foto);
 
-                if (response.data.role === '"ROLE_USUARIO"') {
+                sessionStorage.setItem("fotoPerfil", "http://localhost:8080/" + response.data.foto);
+                
+                if (response.data.role == "ROLE_USUARIO") 
+                {
                     window.location.href = "/perfil-cliente";
                 } else {
                     window.location.href = "/perfil-advogado";
                 }
-            } else {
-                alert("Erro no login: " + response.data.message);
             }
         } catch (error) {
             console.error("Erro ao fazer login:", error);
-            alert("Ocorreu um erro ao tentar fazer login. Tente novamente.");
+            
+            if (error.response?.status === 401) {
+                console.log(error.response.data);
+                alert("Email ou senha incorretos. Por favor, verifique suas credenciais.");
+            } else if (error.response?.status === 400) {
+                const mensagensErro = error.response.data;
+                if (typeof mensagensErro === 'object') {
+                    Object.values(mensagensErro).forEach(mensagem => {
+                        alert(mensagem);
+                    });
+                } else {
+                    alert(mensagensErro || "Dados inválidos. Por favor, verifique as informações.");
+                }
+            } else {
+                alert("Ocorreu um erro ao tentar fazer login. Por favor, tente novamente mais tarde.");
+            }
         }
     };
 
@@ -61,6 +100,7 @@ export default function FormLogin() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="leonardo@email.com"
                     largura="cheia"
+                    errorMessage={errors.email}
                 />
 
                 <Input
@@ -71,6 +111,7 @@ export default function FormLogin() {
                     onChange={(e) => setsenha(e.target.value)}
                     placeholder="*********"
                     largura="cheia"
+                    errorMessage={errors.senha}
                 />
 
                 <p className="mb-6 block text-left">

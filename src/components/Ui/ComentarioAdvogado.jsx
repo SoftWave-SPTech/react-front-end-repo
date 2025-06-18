@@ -1,7 +1,7 @@
 // ComentarioAdvogado.jsx
 import React from "react";
 
-export default function ComentarioAdvogado({ nome, data, texto, imagem, onClick }) {
+export default function ComentarioAdvogado({ nome, data, texto, imagem, onClick}) {
   return (
     <div
       className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow"

@@ -5,21 +5,52 @@ import { api } from '../../service/api';
 import { useNavigate } from 'react-router-dom';
 
 const FormRedefinirSenha = () => {
-    
+  
     const [email, setEmail] = useState("");
-
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+
+    const validarFormulario = () => {
+        const novosErros = {};
+        
+        if (!email) {
+            novosErros.email = "Email é obrigatório";
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            novosErros.email = "Email inválido";
+        }
+
+        setErrors(novosErros);
+        return Object.keys(novosErros).length === 0;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validarFormulario()) {
+            return;
+        }
+
         try {
             const response = await api.post(`/auth/solicitar-reset-senha?email=${email}`);
-            console.log("Resposta da API:", response.data);
-            alert("E-mail com Token Enviado com sucesso!");
+            alert("E-mail com Token enviado com sucesso!");
             navigate("/esqueci-senha");
         } catch (error) {
-            console.error("Erro ao cadastrar senha:", error);
-            alert("Ocorreu um erro ao enviar o e-mail. Verifique se o email está correto ou Tente novamente mais tarde.");
+            console.error("Erro ao solicitar redefinição de senha:", error);
+            
+            if (error.response?.status === 404) {
+                alert("Email não encontrado. Verifique se o email está correto.");
+            } else if (error.response?.status === 400) {
+                const mensagensErro = error.response.data;
+                if (typeof mensagensErro === 'object') {
+                    Object.values(mensagensErro).forEach(mensagem => {
+                        alert(mensagem);
+                    });
+                } else {
+                    alert(mensagensErro || "Dados inválidos. Por favor, verifique as informações.");
+                }
+            } else {
+                alert("Ocorreu um erro ao tentar enviar o email. Por favor, tente novamente mais tarde.");
+            }
         }
     };
 
@@ -39,13 +70,14 @@ const FormRedefinirSenha = () => {
                     <p className="text-base text-center mt-1"> Informe seu email para receber o token de troca de senha em seu email.</p>
                 </div>
                 <Input
-                    type="email"
+                    type="text"
                     label="E-MAIL"
                     name="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="leonardo@email.com"
                     largura="cheia"
+                    errorMessage={errors.email}
                 />
                 <Botao largura="cheia" cor="padrao" type="submit" className="mt-7">
                     ENVIAR TOKEN

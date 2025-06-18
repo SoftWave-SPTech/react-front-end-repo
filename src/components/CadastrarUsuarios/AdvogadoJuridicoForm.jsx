@@ -8,6 +8,7 @@ import { Input } from '../Ui/Input';
 import { mascaraCNPJ, mascaraTelefone, mascaraCEP, mascaraOAB } from '../../Utils/mascaras';
 import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoJuridico } from '../../Utils/validacoes';
+import EnviarChaveAcesso from './EnvioEmail.jsx';
 
 export default function AdvogadoJuridicoForm() {
   const [formData, setFormData] = useState({
@@ -50,6 +51,7 @@ export default function AdvogadoJuridicoForm() {
             cidade: endereco.localidade || '',
           }));
         } catch (error) {
+          console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
           alert('CEP inválido ou não encontrado.');
         }
       }
@@ -77,7 +79,10 @@ export default function AdvogadoJuridicoForm() {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
-    .then((response) => {
+    .then((response) => 
+    {
+      EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+
       alert('Cadastro realizado com sucesso!');
       setFormData({
         nomeFantasia: '',
@@ -96,7 +101,15 @@ export default function AdvogadoJuridicoForm() {
       });
     })
     .catch((err) => {
-      alert(err.response?.data?.message || 'Erro ao cadastrar');
+      console.error(err);
+      if (err.response?.data) {
+        const erros = err.response.data;
+        Object.keys(erros).forEach(campo => {
+          alert(`${campo}: ${erros[campo]}`);
+        });
+      } else {
+        alert('Erro ao cadastrar advogado. Por favor, tente novamente.');
+      }
     });
   };
 
