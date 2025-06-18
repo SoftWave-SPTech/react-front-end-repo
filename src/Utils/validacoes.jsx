@@ -52,7 +52,7 @@ export const validarClienteFisico = (dados) => {
 export const validarClienteJuridico = (dados) => {
   const erros = {};
   if (!dados.nomeFantasia) erros.nomeFantasia = "Campo obrigatório";
-  if (!dados.nomeRepresentante) erros.nomeRepresentante = "Campo obrigatório";
+  if (!dados.representante) erros.representante = "Campo obrigatório";
   if (!dados.razaoSocial) erros.razaoSocial = "Campo obrigatório";
   if (!dados.cnpj || !validarCNPJ(dados.cnpj)) erros.cnpj = "CNPJ inválido";
   if (!dados.email || !validarEmail(dados.email)) erros.email = "Email inválido";
@@ -101,7 +101,7 @@ export const validarAdvogadoJuridico = (dados) => {
   
   // Validações obrigatórias
   if (!dados.nomeFantasia) erros.nomeFantasia = "Nome fantasia é obrigatório";
-  if (!dados.nomeRepresentante) erros.nomeRepresentante = "Nome do representante é obrigatório";
+  if (!dados.representante) erros.representante = "Nome do representante é obrigatório";
   if (!dados.razaoSocial) erros.razaoSocial = "Razão social é obrigatória";
   if (!dados.cnpj || !validarCNPJ(dados.cnpj)) erros.cnpj = "CNPJ inválido";
   if (!dados.email || !validarEmail(dados.email)) erros.email = "Email inválido";
