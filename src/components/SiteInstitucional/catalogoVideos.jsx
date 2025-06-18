@@ -29,7 +29,7 @@ const CatalogoVideos = () => {
     }, []);
 
     return (
-        <div className="p-5 max-w-md mx-auto bg-azulEscuroForte border-2 border-dourado rounded-lg shadow-lg">
+        <div className="p-5 max-w-md mx-auto bg-azulEscuroForte border-2 border-gray-600 rounded-lg shadow-lg">
             <h3 className="text-center text-dourado mb-5 text-xl font-bold">EPISÓDIOS</h3>
             <div className="flex flex-col gap-5 max-h-[400px] overflow-y-auto p-2 bg-azulEscuroFraco">
                 {videos.slice(0, 3).map((video) => {

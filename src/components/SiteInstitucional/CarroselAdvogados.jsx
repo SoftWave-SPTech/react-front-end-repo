@@ -15,7 +15,6 @@ function CarroselAdvogados() {
             image: "../src/assets/images/SiteInstitucional/felipeAdvogado.png",
             text1: "Felipe Lauriano Rocha Marqueze é formado em Direito pela FMU e pós-graduando em Direito e Processo do Trabalho.",
             text2: "Com experiência no setor imobiliário, atua como palestrante e integra a Comissão da OAB Tatuapé.",
-            text3: "Coautor do livro sobre Direitos Humanos e Ética na Sociedade da Informação, com temas atuais.",
             text4: "Host do podcast Lauriano & Leão Cast, com debates jurídicos relevantes."
         },
         {
@@ -26,7 +25,7 @@ function CarroselAdvogados() {
             text1: "Raíssa Leão Marqueze é formada em Direito pela Universidade Cruzeiro do Sul e se especializa em Direito Civil e Processo Civil.",
             text2: "Integra a Comissão de Direito Processual Civil da OAB Tatuapé, contribuindo para o aprimoramento da área.",
             text3: "É uma das vozes do podcast jurídico Lauriano & Leão Cast.",
-            text4: "Destaca-se pelo atendimento personalizado, com foco nas necessidades e no profissionalismo."
+            
         },
         {
             id: 3,
@@ -36,7 +35,7 @@ function CarroselAdvogados() {
             text1: "João Pedro Nogueira tem ampla experiência em consultoria jurídica para empresas, ajudando a mitigar riscos legais.",
             text2: "Ele é formado pela Mackenzie e possui MBA em Gestão Empresarial pela FGV.",
             text3: "João também é mentor de jovens advogados e participa de iniciativas de educação jurídica.",
-            text4: "Fernanda também é consultora em planejamento tributário e palestrante em eventos corporativos.",
+            
         },
         // {
         //     id: 4,
@@ -65,7 +64,6 @@ function CarroselAdvogados() {
             image: "../src/assets/images/SiteInstitucional/advogada1.png",
             text1: "Fernanda Rocha Lima é especialista em Direito Tributário e apoia empresas na redução legal de tributos.",
             text2: "Formada pela UFMG, tem pós-graduação em Direito Tributário pela FGV.",
-            text3: "Atua como consultora em planejamento tributário e palestrante corporativa.",
             text4: "É reconhecida por oferecer soluções estratégicas e seguras na área tributária.",
         },
     ];
@@ -89,7 +87,7 @@ function CarroselAdvogados() {
             {advogados.map((advogado) => (
                 <SwiperSlide
                     key={advogado.id}
-                    className={`bg-azulEscuroFraco text-white flex justify-center items-center flex-row h-[500px] px-12 py-8 gap-8`}
+                    className={`bg-azulEscuroFraco text-white flex justify-center items-center flex-row h-[500px] px-12 py-8 gap-8 rounded-xl`}
                 >   
                     <div className='flex flex-col justify-center items-center gap-4 px-4'>
                         <img src={advogado.image} alt="" className="max-w-[200px] rounded-md" />
