@@ -38,8 +38,8 @@ export default function FormCadastrarSenha() {
       const email = sessionStorage.getItem("email");
       const response = await api.patch('/auth/cadastrar-senha', {
         email: email,
-        novaSenha: senha,
-        novaSenhaConfirma: confirmarSenha,
+        senha: senha,
+        confirmaSenha: confirmarSenha,
       });
       console.log(response);
       alert("Senha cadastrada com sucesso!");

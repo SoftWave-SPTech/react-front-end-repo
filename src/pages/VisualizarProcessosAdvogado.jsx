@@ -19,9 +19,11 @@ const VisualizarProcessosAdvogado = () => {
   const [dadosProcesso, setDadosProcesso] = useState({});
   const [dadosUsuario, setDadosUsuario] = useState({});
   const [loading, setLoading] = useState(false);
+  const [fotoPerfil, setFotoPerfil] = useState("/src/assets/images/boneco.png");
   const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
 
-  useEffect(() => {
+    
+    useEffect(() => {
       api.get(`/processos/visualizar-processo/${idProcesso}`, 
                   // {
                   // headers: {
@@ -46,6 +48,10 @@ const VisualizarProcessosAdvogado = () => {
                         )
                             .then(response => {
                             console.log("Consulta com sucesso:", response.data);
+                            console.log(response.data.foto)
+                            if (response.data.foto != null) {
+                              setFotoPerfil("http://localhost:8080/" + response.data.foto);
+                            }
                             setDadosUsuario(response.data)
                             })
                             .catch(error => {
@@ -165,7 +171,7 @@ const VisualizarProcessosAdvogado = () => {
             <div style={{ ...blocoStyle, display: 'flex', gap: '16px' }}>
               <img
                 alt="Cliente"
-                src={`http://localhost:8080/${dadosUsuario.foto}`}
+                src={fotoPerfil}
                 style={{
                   width: '100px',
                   height: '100px',

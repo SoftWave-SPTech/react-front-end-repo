@@ -65,12 +65,13 @@ export default function AnaliseMovimentacao() {
     const novoComentario = {
       id : comentarioSelecionado?.id || null,
       nomeUsuario: sessionStorage.getItem("nome"),
-      dataComentario: new Date().toISOString(),
+      dataComentario: getISOComFusoBrasil(),
       comentario: texto,
       fotoUsuario: sessionStorage.getItem("fotoPerfil"),
       idUsuario: sessionStorage.getItem("id"),
     };
 
+    console.log("Novo comentário:", novoComentario);
     const salvarComentario = {
       comentario: novoComentario.comentario,
       dataCriacao: novoComentario.dataComentario,
@@ -78,7 +79,7 @@ export default function AnaliseMovimentacao() {
       ultimaMovimentacaoID: movimentacaoId,
       processoID: null
     };
-if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para edição
+    if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para edição
     api.post(`/comentarios-processos/movimentacao`,  salvarComentario, {
       headers: { Authorization: TOKEN }
     }).then((response) => {
@@ -98,7 +99,7 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
     const atualizados = [...comentarios];
       atualizados[comentarioSelecionado.index] = { ...novoComentario, id: comentarioSelecionado.id };
       setComentarios(atualizados);
-  }
+    }
     setModalAberto(false);
     setComentarioSelecionado(null);
     setModoEdicao(false);
@@ -125,6 +126,13 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
       setModoEdicao(false);
     }
   };
+
+  function getISOComFusoBrasil() {
+  const data = new Date();
+  const offsetMs = -3 * 60 * 60 * 1000; // UTC-3 em milissegundos
+  const dataComOffset = new Date(data.getTime() + offsetMs);
+  return dataComOffset.toISOString();
+}
   return (
     <div className="w-full min-h-screen bg-[#E5EDFA] px-5 py-7">
       <div className="max-w-7xl mx-auto space-y-10">
@@ -171,7 +179,7 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
                   onClick={() => {
                     setComentarioSelecionado({
                       nomeUsuario: sessionStorage.getItem("nome"),
-                      dataComentario: new Date().toISOString(),
+                      dataComentario: getISOComFusoBrasil(),
                       comentario: "",
                       fotoUsuario: sessionStorage.getItem("fotoPerfil"),
                       idUsuario: sessionStorage.getItem("id"),
