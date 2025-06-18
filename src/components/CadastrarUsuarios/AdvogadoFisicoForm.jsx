@@ -102,9 +102,17 @@ export default function AdvogadoFisicoForm() {
         console.error(err);
         if (err.response?.data) {
           const erros = err.response.data;
+          let mensagem = "";
           Object.keys(erros).forEach(campo => {
-            alert(`${campo}: ${erros[campo]}`);
+            if(campo === "message" && campo) {
+                mensagem = erros[campo] ;
+              } else if (campo === "status") {
+                if (erros[campo] === 500){
+                  mensagem = "Já existe um advogado cadastrado com esses dados. Por favor, verifique os dados e tente novamente.";
+                }
+              }
           });
+          alert(mensagem)
         } else {
           alert('Erro ao cadastrar advogado. Por favor, tente novamente.');
         }
