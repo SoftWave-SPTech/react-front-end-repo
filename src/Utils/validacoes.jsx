@@ -105,7 +105,7 @@ export const validarAdvogadoJuridico = (dados) => {
   if (!dados.razaoSocial) erros.razaoSocial = "Razão social é obrigatória";
   if (!dados.cnpj || !validarCNPJ(dados.cnpj)) erros.cnpj = "CNPJ inválido";
   if (!dados.email || !validarEmail(dados.email)) erros.email = "Email inválido";
-  if (!dados.oab) erros.oab = "OAB é obrigatória";
+  if (!dados.oab || !validarOAB(dados.oab)) erros.oab = "OAB deve ter 6 dígitos.";
   if (!dados.telefone || !validarTelefone(dados.telefone)) erros.telefone = "Telefone inválido";
   // Validações de endereço
   if (!dados.cep || !validarCEP(dados.cep)) erros.cep = "CEP inválido";

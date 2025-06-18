@@ -1,7 +1,6 @@
 import { Input } from "../Ui/Input.jsx";
 import Botao from "../Ui/Botao.jsx";
 import BarraTitulo from "../Ui/BarraTitulo.jsx";
-import minhaImagem from '../../assets/images/boneco.png';
 import { useEffect, useState, useRef } from "react";
 import { FiUpload, FiTrash } from 'react-icons/fi';
 import { api } from '../../service/api.js';
@@ -149,38 +148,38 @@ function FormPerfilCliente() {
   };
 
   //TODO Avaliar FUncionalidade desta função  
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
     
-    const errosEncontrados = validarPerfilCliente(usuario);
+  //   const errosEncontrados = validarPerfilCliente(usuario);
     
-    if (Object.keys(errosEncontrados).length > 0) {
-      setErrors(errosEncontrados);
-      return;
-    }
+  //   if (Object.keys(errosEncontrados).length > 0) {
+  //     setErrors(errosEncontrados);
+  //     return;
+  //   }
 
-    setErrors({});
+  //   setErrors({});
 
-    api.put(`/usuarios-${sessionStorage.getItem('tipoUsuario') === 'UsuarioFisico' ? 'fisicos' : 'juridicos'}/${usuario.id}`, usuario, {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-      },
-    })
-    .then(() => {
-      alert('Dados atualizados com sucesso!');
-    })
-    .catch((err) => {
-      console.error(err);
-      if (err.response?.data) {
-        const erros = err.response.data;
-        Object.keys(erros).forEach(campo => {
-          alert(`${campo}: ${erros[campo]}`);
-        });
-      } else {
-        alert('Erro ao atualizar dados. Por favor, tente novamente.');
-      }
-    });
-  };
+  //   api.put(`/usuarios-${sessionStorage.getItem('tipoUsuario') === 'UsuarioFisico' ? 'fisicos' : 'juridicos'}/${usuario.id}`, usuario, {
+  //     headers: {
+  //       Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+  //     },
+  //   })
+  //   .then(() => {
+  //     alert('Dados atualizados com sucesso!');
+  //   })
+  //   .catch((err) => {
+  //     console.error(err);
+  //     if (err.response?.data) {
+  //       const erros = err.response.data;
+  //       Object.keys(erros).forEach(campo => {
+  //         alert(`${campo}: ${erros[campo]}`);
+  //       });
+  //     } else {
+  //       alert('Erro ao atualizar dados. Por favor, tente novamente.');
+  //     }
+  //   });
+  // };
 
   function criarAtualizarFisicos(dados) {
     setUsuario(dados);
@@ -346,7 +345,7 @@ function FormPerfilCliente() {
       }
     })
       .then(response => {
-        sessionStorage.setItem('fotoPerfil', null);
+        sessionStorage.setItem('fotoPerfil', "http://localhost:8080/null");
         window.location.reload();
       })
       .catch(error => {
@@ -365,7 +364,7 @@ function FormPerfilCliente() {
       <div className="w-full max-w-[75%] mx-auto py-3 mb-4 flex flex-col gap-4 shadow-md rounded-lg bg-white">
         <div className="px-4 py-3 flex flex-col sm:flex-row items-center justify-center gap-4">
           <img
-            src={sessionStorage.getItem('fotoPerfil') || minhaImagem}
+            src={sessionStorage.getItem('fotoPerfil') !== "http://localhost:8080/null" ? sessionStorage.getItem('fotoPerfil') : '/src/assets/images/boneco.png'}
             alt="Foto de perfil"
             className="w-28 h-28 rounded-full border-2 border-azulEscuroForte shadow-md object-cover bg-gray-100"
           />

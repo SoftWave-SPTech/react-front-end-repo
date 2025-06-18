@@ -1,6 +1,9 @@
 import React from 'react';
 
 const ComentariosList = ({ comentarios = [] }) => {
+
+  console.log("Comentários recebidos:", comentarios);
+
   return (
     <div style={{ flex: 1, padding: '10px' }}>
       <div style={{ backgroundColor: '#0f1b3e', color: 'white', borderRadius: '8px', padding: '10px' }}>
@@ -14,7 +17,7 @@ const ComentariosList = ({ comentarios = [] }) => {
           }
           return (
             <div key={com.id} style={{ marginBottom: '15px' }}>
-              <strong>{com.nome || 'Usuário'}</strong>
+              <strong>{com.nomeUsuario || 'Usuário'}</strong>
               <br />
               <small style={{ color: '#bfc8e2', display: 'block', marginBottom: '4px' }}>{dataHora}</small>
               <p>{com.comentario}</p>

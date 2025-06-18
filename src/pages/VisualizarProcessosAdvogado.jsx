@@ -89,6 +89,7 @@ const VisualizarProcessosAdvogado = () => {
         .catch(() => {
           console.error("Erro ao gerar análise IA");
           setLoading(false);
+          navigate(`/analise-ia/${processoId}/${movimentacaoId}`)
         });
 
     }

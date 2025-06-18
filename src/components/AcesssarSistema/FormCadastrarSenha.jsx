@@ -96,7 +96,7 @@ export default function FormCadastrarSenha() {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <form
-        className="bg-white p-8 rounded-lg shadow-lg w-96 md:w-1/4"
+        className="bg-white p-8 rounded-lg shadow-lg w-96 max-w-sm"
         onSubmit={handleSubmit}
       >
         <div className="text-center mb-4">

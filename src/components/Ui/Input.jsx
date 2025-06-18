@@ -99,7 +99,7 @@ export const Input = (
       </div>
 
       {errorMessage && (
-        <span className="text-red-500 text-[1.1rem] font-semibold mt-3">
+        <span className="text-red-500 text-sm font-semibold mt-3">
           {errorMessage}
         </span>
       )}

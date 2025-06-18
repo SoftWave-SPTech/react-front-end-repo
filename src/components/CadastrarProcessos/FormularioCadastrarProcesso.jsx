@@ -92,7 +92,7 @@ export default function FormularioCadastrarProcesso() {
                 }
             });
 
-            alert('Processo cadastrado e usuários vinculados com sucesso!');
+            alert('Processo cadastrado e clientes vinculados com sucesso!');
             setNumero('');
             setDescricao('');
             setAdvogadosSelecionados([]);

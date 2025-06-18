@@ -8,6 +8,7 @@ import { Input } from '../Ui/Input';
 import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoFisico } from '../../Utils/validacoes';
 import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG,mascaraOAB } from '../../Utils/mascaras';
+import EnviarChaveAcesso from './EnvioEmail.jsx';
 
 export default function AdvogadoFisicoForm() {
   const [formData, setFormData] = useState({
@@ -77,6 +78,9 @@ export default function AdvogadoFisicoForm() {
         },
       })
       .then(() => {
+
+        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+        
         alert('Cadastro realizado com sucesso!');
         setFormData({
           nome: '',

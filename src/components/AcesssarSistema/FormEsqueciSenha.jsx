@@ -75,20 +75,21 @@ const FormRedefinirSenha = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center min-h-screen bg-azulEscuroForte px-4">
             <form
-                className="bg-white p-8 rounded-lg shadow-lg w-96 md:w-1/4"
+                className="bg-white p-4 rounded-lg shadow-lg w-full max-w-sm"
                 onSubmit={handleSubmit}
             >
-                <div className="text-center mb-4">
+                <div className="text-center mb-2">
                     <img
                         src="src/assets/images/boneco.png"
                         alt=""
                         className="w-32 h-32 mx-auto mb-2"
                     />
                     <h2 className="text-2xl">ESQUECI A SENHA</h2>
-                    <p className='text-2x1'> Informe o Token que recebeu e a nova senha.</p>
+                    <p className="text-base mt-1 mb-1">Informe o Token que recebeu e a nova senha.</p>
                 </div>
+
                 <Input
                     label="TOKEN DE SENHA"
                     name="chave"
@@ -118,7 +119,8 @@ const FormRedefinirSenha = () => {
                     largura="cheia"
                     errorMessage={errors.confirmarSenha}
                 />
-                <Botao largura="cheia" cor="padrao" type="submit" className="mt-7">
+
+                <Botao largura="cheia" cor="padrao" type="submit" className="mt-5">
                     REDEFINIR SENHA
                 </Botao>
 
@@ -134,6 +136,7 @@ const FormRedefinirSenha = () => {
             </form>
         </div>
     );
+
 };
 
 export default FormRedefinirSenha;

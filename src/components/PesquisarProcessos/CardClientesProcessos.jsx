@@ -89,7 +89,7 @@ export default function CardClientesProcessos({ cliente }) {
           {visibleProcessos.map((processo) => (
             <div
               key={processo.id}
-              onClick={() => parametrosVisualizarProcesso(processo.id, cliente.id)}
+              onClick={() => parametrosVisualizarProcesso( cliente.id,processo.id)}
               className="bg-cinzaAzulado rounded-lg px-4 py-2 flex items-center justify-between cursor-pointer hover:bg-opacity-80 transition-colors"
               style={{ minHeight: "2.5rem" }}
             >
