@@ -117,7 +117,7 @@ export default function FormularioCadastrarProcesso() {
 
     return (
             <div
-                className="bg-cinzaAzulado rounded-md w-full max-w-[80rem] min-w-[28rem] px-[4rem] sm:px-[5rem] md:px-[6rem] pt-[2.5rem] pb-[2.5rem] shadow-[0.375rem_0.375rem_0_0_rgb(1,13,38)]"
+                className="bg-white rounded-md w-full max-w-[80rem] min-w-[28rem] px-[4rem] sm:px-[5rem] md:px-[6rem] pt-[2.5rem] pb-[2.5rem] shadow-[0.375rem_0.375rem_0_0_rgb(1,13,38)]"
                 style={{
                     minHeight: "25rem",
                     boxSizing: "border-box"
@@ -132,7 +132,7 @@ export default function FormularioCadastrarProcesso() {
                         <input
                             id="numero"
                             type="text"
-                            placeholder="#00000"
+                            placeholder="00000"
                             value={numero}
                             onChange={(e) => setNumero(e.target.value)}
                             className="border border-preto rounded-lg w-full py-[0.5rem] px-[0.75rem] text-preto text-base md:text-lg focus:outline-none focus:shadow-outline font-sans"

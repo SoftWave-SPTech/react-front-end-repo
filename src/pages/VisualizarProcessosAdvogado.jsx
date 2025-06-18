@@ -89,11 +89,13 @@ const VisualizarProcessosAdvogado = () => {
       api.post(`/analise-processo/${movimentacaoId}`)
         .then((res) =>{ 
           console.log("Análise IA gerada com sucesso:", res.data);
+          alert("Análise IA gerada com sucesso:", res.data);
           setLoading(false);
           navigate(`/analise-ia/${processoId}/${movimentacaoId}`)
         })
-        .catch(() => {
+        .catch((res) => {
           console.error("Erro ao gerar análise IA");
+          alert("Análise IA gerada com sucesso:", res.data);
           setLoading(false);
           navigate(`/analise-ia/${processoId}/${movimentacaoId}`)
         });
@@ -126,7 +128,7 @@ const VisualizarProcessosAdvogado = () => {
 
 
   const blocoStyle = {
-    background: '#F5F6FA',
+    background: '#FFFFFF',
     borderRadius: '8px',
     padding: '16px',
     boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
@@ -142,7 +144,7 @@ const VisualizarProcessosAdvogado = () => {
 
 
   return (
-    <LayoutBase>
+    <LayoutBase backgroundClass="bg-cinzaAzulado">
       <div style={{ padding: '20px', fontFamily: 'Segoe UI, sans-serif', color: '#2f2f2f' }}>
         <ModalAguardando loadingEnd={!loading} />
         {/* Top Bar */}
@@ -152,12 +154,12 @@ const VisualizarProcessosAdvogado = () => {
           alignItems: 'center',
           marginBottom: '16px'
         }}>
-          <span className="font-bold text-3xl">VISUALIZAR PROCESSO</span>
+          <BarraTitulo className="w-[55%]">Vizualizar Processo</BarraTitulo>
  <div style={{ display: 'flex', gap: '10px' }}>
-            <Botao tamanho='pequeno' onClick={() => handleAtualizar}>
+            <Botao tamanho="grande" largura="grande" onClick={() => handleAtualizar}>
               Atualize seu processo
             </Botao>
-            <Botao tamanho='pequeno' onClick={handleDocumentos}>
+            <Botao tamanho="grande" largura="grande" onClick={handleDocumentos}>
               Documentos do Processo
             </Botao>
           </div>
@@ -289,7 +291,7 @@ const VisualizarProcessosAdvogado = () => {
                   marginTop: '8px'
                 }}
               />
-            <Botao onClick={() => cadastrarComentario(dadosProcesso.id)} tamanho='pequeno'>
+            <Botao onClick={() => cadastrarComentario(dadosProcesso.id)} tamanho="pequeno" largura="pequeno">
               ENVIAR
             </Botao>
             </div>
@@ -298,7 +300,7 @@ const VisualizarProcessosAdvogado = () => {
 
         {/* Botão Voltar */}
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
-            <Botao tamanho='pequeno' cores='padrao' onClick={handleVoltar}>
+            <Botao tamanho='medio' largura="medio" cores='padrao' onClick={handleVoltar}>
               VOLTAR
             </Botao>
         </div>

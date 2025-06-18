@@ -93,8 +93,8 @@ export default function VisualizarDocumentosPessoais() {
     );
 
   return (
-    <LayoutBase tipoMenu="cliente">
-      <div className="p-6 relative">
+    <LayoutBase backgroundClass="bg-cinzaAzulado">
+      <div className="p-2 relative">
         <BarraTitulo className="mb-6">Meus documentos</BarraTitulo>
 
         <div className="flex justify-end mb-6">

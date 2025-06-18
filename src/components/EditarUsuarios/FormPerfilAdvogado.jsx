@@ -152,6 +152,9 @@ function FormPerfilAdvogado() {
                     console.log(resposta)
 
                     alert("Dados Atualizados com sucesso!");
+
+                    sessionStorage.setItem('nome', usuarioParaAtualizar.nome);
+                    sessionStorage.setItem('email', usuarioParaAtualizar.email);
                     window.location.reload();
                 })
                 .catch((erro) => {
@@ -185,6 +188,8 @@ function FormPerfilAdvogado() {
                 .then((resposta) => {
                     console.log(resposta)
                     alert("Dados Atualizados com sucesso!");
+                    sessionStorage.setItem('nome', usuarioParaAtualizar.nomeFantasia);
+                    sessionStorage.setItem('email', usuarioParaAtualizar.email);
                     window.location.reload();
                 })
                 .catch((erro) => {
@@ -262,11 +267,11 @@ function FormPerfilAdvogado() {
         if (!file) {
             alert("Escolha uma foto primeiro!");
         } else {
-               const tiposPermitidos = ["image/png", "image/jpg", "image/jpeg"];
-        if (!tiposPermitidos.includes(file.type)) {
-            alert("Por favor, selecione uma imagem PNG, JPG ou JPEG.");
-            return;
-        }
+            const tiposPermitidos = ["image/png", "image/jpg", "image/jpeg"];
+            if (!tiposPermitidos.includes(file.type)) {
+                alert("Por favor, selecione uma imagem PNG, JPG ou JPEG.");
+                return;
+            }
 
 
             // FormData é um objeto nativo do JavaScript (existe mesmo sem React).
@@ -279,15 +284,15 @@ function FormPerfilAdvogado() {
             arquivoFormatado.append("fotoPerfil", file);
 
             api.put(`${URLFOTO}/${sessionStorage.getItem('id')}`, arquivoFormatado, {
-                headers: 
+                headers:
                 {
                     "Authorization": TOKEN
                 }
             })
-            //.catch(error => {
-             //   console.error("Erro ao enviar o arquivo:", error.response?.data?.message || 'Erro ao enviar o arquivo');
-              //  console.error("Erro ao enviar o arquivo:", error);
-            //});
+                //.catch(error => {
+                //   console.error("Erro ao enviar o arquivo:", error.response?.data?.message || 'Erro ao enviar o arquivo');
+                //  console.error("Erro ao enviar o arquivo:", error);
+                //});
                 .then(response => {
                     console.log("Upload realizado com sucesso:", response.data);
                     sessionStorage.setItem('fotoPerfil', response.data);

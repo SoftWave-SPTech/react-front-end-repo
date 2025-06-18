@@ -7,6 +7,7 @@ import Botao from '../components/Ui/Botao';
 import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
 import { api } from '../service/api';
 import { FiSearch } from 'react-icons/fi';
+import LayoutBase from '../layouts/LayoutBase';
 
 export default function VisualizarProcessos() {
   const [processos, setProcessos] = useState([]);
@@ -61,11 +62,8 @@ export default function VisualizarProcessos() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <div className="w-64 flex-shrink-0">
-        <MenuLateralAdvogado />
-      </div>
-      <div className="flex-1 p-6 sm:p-8 overflow-auto">
+  <LayoutBase backgroundClass="bg-cinzaAzulado">
+      <div className="flex-1 sm:p-8 overflow-auto">
         {/* Barra de pesquisa acima do título */}
         <div className="flex justify-end mb-4">
           <div className="max-w-xl w-full sm:w-96">
@@ -127,7 +125,7 @@ export default function VisualizarProcessos() {
                           <div><b>Vara:</b> {processoDaVez.vara}</div>
                         </div>
                         <div className="flex justify-end">
-                          <Botao onClick={() => navigate(`/area-cliente/processo/${p.id}`)}>
+                          <Botao tamanho='medio' largura='pequeno' onClick={() => navigate(`/area-cliente/processo/${p.id}`)}>
                             Visualizar Processo
                           </Botao>
                         </div>
@@ -155,6 +153,6 @@ export default function VisualizarProcessos() {
           />
         )}
       </div>
-    </div>
+  </LayoutBase>
   );
 }

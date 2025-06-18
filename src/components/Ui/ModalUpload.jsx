@@ -32,14 +32,15 @@ export default function ModalUpload({ onClose, onUpload }) {
         label={"Descrição Documento"}
         onChange={(e) => setDescArquivo(e.target.value)} />
 
-        <div className="flex justify-end gap-2 mt-auto">
+        <div className="flex justify-end gap-2 mt-4">
           <Botao
             className="text-xs px-2 py-0.5 rounded"
             onClick={onClose}
             disabled={false}
             cor="contornoAzul"
             variant="secondary"
-            tamanho="responsivo"
+            tamanho="grande"
+            largura="medio"
           >
             Cancelar
           </Botao>
@@ -48,6 +49,8 @@ export default function ModalUpload({ onClose, onUpload }) {
             onClick={handleUpload}
             disabled={!arquivo}
             variant="primary"
+            tamanho="grande"
+            largura="medio"
           >
             Upload
           </Botao>

@@ -29,9 +29,9 @@ const AreaCliente = () => {
     }, [processoId]);
 
     return (
-        <LayoutBase tipoMenu="cliente">
+        <LayoutBase backgroundClass="bg-cinzaAzulado">
             <BarraTitulo>Contratos e petições</BarraTitulo>
-            <div className="flex flex-col min-h-[60vh] bg-[#e7ecfa] rounded-2xl p-8">
+            <div className="flex flex-col min-h-[60vh] rounded-2xl p-8">
                 <div className="flex flex-row flex-wrap gap-8 justify-center items-start w-full">
                     {/* Documentos */}
                     <div className="flex-1 min-w-[320px] max-w-[350px] bg-[#020E29] rounded-2xl shadow-lg p-4 flex flex-col h-full max-h-[500px] overflow-y-auto order-1">

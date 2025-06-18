@@ -57,7 +57,7 @@ const Dashboard = () => {
   return (
     <LayoutBase backgroundClass="bg-cinzaAzulado">
       <div className="px-4">
-        <BarraTitulo tamanho="responsivo" className="mb-4 shadow-lg font-bold">
+        <BarraTitulo tamanho="responsivo" className="mb-4 shadow-lg">
           Dashboard
         </BarraTitulo>
 
