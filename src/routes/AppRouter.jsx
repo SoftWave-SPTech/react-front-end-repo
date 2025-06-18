@@ -15,10 +15,12 @@ import CadastrarProcesso from "../pages/CadastrarProcesso";
 import AreaCliente from "../pages/AreaCliente";
 import VisualizarProcessosAdvogado from "../pages/VisualizarProcessosAdvogado";
 import Podcast from "../pages/Podcast";
+import ListaUsuarios from "../pages/ListaUsuarios";
 import Dashboard from "../pages/Dashboard";
 import PesquisarProcessos from "../pages/PesquisarProcessos";
 import RedefinirSenha from "../pages/RedefinirSenha";
 import EsqueciSenha from "../pages/EsqueciSenha";
+
 
 export const AppRouter = createBrowserRouter([
   {
@@ -94,7 +96,22 @@ export const AppRouter = createBrowserRouter([
     element: <Podcast/>
   },
   {
+    path: "/lista-usuarios",
+    element: <ListaUsuarios/>
+  },{
+    path: "/pesquisar-processos",
+    element: <PesquisarProcessos/>
+  },
+  {
     path: "/dashboard",
     element: <Dashboard/>
+  },
+  {
+    path:"/processos-advogado/:idUsuario/:idProcesso", 
+    element:<VisualizarProcessosAdvogado /> 
+  },
+  {
+    path:"/documentos-processo/:idProcesso", 
+    element:<VisualizarDocumentosProcesso /> 
   }
 ]);

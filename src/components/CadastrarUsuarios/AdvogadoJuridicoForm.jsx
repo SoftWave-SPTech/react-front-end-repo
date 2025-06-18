@@ -8,6 +8,7 @@ import { Input } from '../Ui/Input';
 import { mascaraCNPJ, mascaraTelefone, mascaraCEP, mascaraOAB } from '../../Utils/mascaras';
 import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoJuridico } from '../../Utils/validacoes';
+import EnviarChaveAcesso from './EnvioEmail.jsx';
 
 export default function AdvogadoJuridicoForm() {
   const [formData, setFormData] = useState({
@@ -78,7 +79,10 @@ export default function AdvogadoJuridicoForm() {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
-    .then((response) => {
+    .then((response) => 
+    {
+      EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+
       alert('Cadastro realizado com sucesso!');
       setFormData({
         nomeFantasia: '',

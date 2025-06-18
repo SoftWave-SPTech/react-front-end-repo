@@ -1,11 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../service/api';
 import ModalAguardando from './ModalAguardando';
 
 const ProcessoAndamento = ({ andamentos = [], processoId }) => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = React.useState(false);
+
+  if (!andamentos || andamentos.length === 0) {
+    return (
+      <div style={{
+        background: '#172042',
+        color: '#bfc8e2',
+        borderRadius: '8px',
+        padding: '10px 16px',
+        fontSize: '1rem',
+        marginTop: '8px'
+      }}>
+        Nenhum andamento encontrado.
+      </div>
+    );
+  }
 
   function gerarAnaliseIA(item) {
     setLoading(true);
@@ -42,9 +57,11 @@ const ProcessoAndamento = ({ andamentos = [], processoId }) => {
               />
             </div>
             <div className="timeline-horizontal-status">
-              <button className="timeline-horizontal-btn" onClick={() => 
-                gerarAnaliseIA(item)
-                }>
+              <button
+                className="timeline-horizontal-btn bg-[#0f1b3e] text-white rounded-lg font-bold py-2 px-4 transition-colors duration-200 hover:bg-[#20294a] hover:text-[#d4b063] focus:outline-none focus:ring-2 focus:ring-[#d4b063] focus:ring-offset-2"
+                onClick={() => gerarAnaliseIA(item)}
+                style={{ minWidth: '120px' }}
+              >
                 Ver análise
               </button>
             </div>
@@ -94,6 +111,7 @@ const ProcessoAndamento = ({ andamentos = [], processoId }) => {
           font-size: 0.9rem;
           transition: background 0.2s;
         }
+
         .timeline-horizontal-btn:hover {
           background: #3451a3;
         }

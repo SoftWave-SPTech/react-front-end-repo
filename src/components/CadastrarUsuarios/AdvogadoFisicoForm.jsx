@@ -7,7 +7,6 @@ import { Input } from '../Ui/Input';
 
 import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoFisico } from '../../Utils/validacoes';
-
 import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG,mascaraOAB } from '../../Utils/mascaras';
 
 export default function AdvogadoFisicoForm() {

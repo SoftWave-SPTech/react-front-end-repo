@@ -28,10 +28,11 @@ export default function AnaliseMovimentacao() {
     api.get(`/analise-processo/por-movimentacao/${movimentacaoId}`, {
       headers: { Authorization: TOKEN }
     }).then((response) => {
-      console.log(response.data);
+      console.log("Análise e movimentação recebidas:" , response.data);
+      // console.log(response.data);
       const analiseIA = response.data.resumoIA || "Análise não disponível no momento.";
-      const movimentacaoAtual = response.data.movimentacoes.movimento || "Movimentação não disponível no momento.";
-      const movimentacaoData = response.data.movimentacoes.data || "Data não disponível.";
+      const movimentacaoAtual = response.data.ultimaMovimentacao.movimento || "Movimentação não disponível no momento.";
+      const movimentacaoData = response.data.ultimaMovimentacao.data || "Data não disponível.";
       setAnalise(analiseIA);
       setMovimentacao(movimentacaoAtual);
       setMovimentacaoData(movimentacaoData)
