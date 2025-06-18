@@ -16,6 +16,13 @@ export default function ModalComentario({
   const idUsuario = Number (sessionStorage.getItem("id"));
   const idUsuarioComentario = Number (comentario?.idUsuario || 0);
 
+  function getISOComFusoBrasil() {
+    const data = new Date();
+    const offsetMs = -3 * 60 * 60 * 1000; // UTC-3 em milissegundos
+    const dataComOffset = new Date(data.getTime() + offsetMs);
+    return dataComOffset.toISOString();
+  }
+
   useEffect(() => {
     if (comentario && modoEdicao === true) {
       // Abrindo para visualizar um comentário já salvo
@@ -49,14 +56,14 @@ export default function ModalComentario({
         <div className="flex items-center justify-between mt-6 mb-4 flex-wrap gap-4">
           <div className="flex items-center gap-3">
             <img
-              src={comentario.fotoUsuario.includes("http") ? comentario.fotoUsuario : `http://localhost:8080/${comentario.fotoUsuario}`}
+              src={comentario.fotoUsuario}
               alt="Foto do advogado"
               className="w-12 h-12 rounded-full border border-white"
             />
             <div>
               <p className="font-bold">{comentario?.nomeUsuario}</p>
               <p className="text-sm text-gray-300">
-                {formatarData(comentario?.dataComentario || new Date().toISOString()) }
+                {formatarData(comentario?.dataComentario || getISOComFusoBrasil()) }
               </p>
             </div>
           </div>
