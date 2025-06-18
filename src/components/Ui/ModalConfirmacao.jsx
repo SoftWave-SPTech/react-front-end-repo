@@ -10,14 +10,16 @@ export default function ModalConfirmacao({ titulo = "Confirmar", mensagem, onCon
         <div className="flex justify-center gap-4">
           <Botao
             onClick={onCancelar}
-            className="px-4 py-2 rounded-md"
+            tamanho="grande"
+            largura="medio"
             cor="contornoAzul"
           >
             Cancelar
           </Botao>
           <Botao
             onClick={onConfirmar}
-            className="px-4 py-2 rounded-md"
+            tamanho="grande"
+            largura="medio"
             cor="padrao"
           >
             Confirmar

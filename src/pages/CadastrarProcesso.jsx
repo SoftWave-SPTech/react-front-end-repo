@@ -6,10 +6,10 @@ import BarraTitulo from '../components/Ui/BarraTitulo';
 
 const CadastrarProcesso = () => {
   return (
-    <LayoutBase tipoMenu="advogado">
+    <LayoutBase backgroundClass="bg-cinzaAzulado">
       <BarraTitulo>Cadastrar Processos</BarraTitulo>
       <div
-        className="flex flex-col lg:flex-row justify-center items-start gap-8 lg:gap-20 w-full max-w-[1920px] mx-auto px-2 py-4"
+        className="flex flex-col lg:flex-row justify-center items-start gap-8 lg:gap-20 w-full max-w-[1920px] mx-auto px-2 py-6"
         style={{ minHeight: 600 }}
       >
 

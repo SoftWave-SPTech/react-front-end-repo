@@ -24,6 +24,7 @@ const larguras =
 {
   grande: 'w-full',
   medio: 'w-[85%]',
+  medio2:'w-[78%]',
   pequeno: 'w-[60%]',
   auto: 'w-auto',
 };

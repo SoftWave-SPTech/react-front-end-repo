@@ -57,7 +57,13 @@ export default function FormLogin() {
                 if (response.data.role == "ROLE_USUARIO") 
                 {
                     window.location.href = "/perfil-cliente";
-                } else {
+                } 
+                else if(response.data.role == "ROLE_ADMIN")
+                {
+                    window.location.href = "/dashboard";
+                }
+                else
+                {
                     window.location.href = "/perfil-advogado";
                 }
             }

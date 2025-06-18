@@ -126,7 +126,7 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
     }
   };
   return (
-    <div className="w-full min-h-screen bg-[#E5EDFA] px-5 py-7">
+    <div className="w-full min-h-screen px-5">
       <div className="max-w-7xl mx-auto space-y-10">
         <div className="flex justify-center">
           <BarraTitulo className="justify-center">

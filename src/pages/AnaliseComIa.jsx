@@ -5,7 +5,7 @@ import AnaliseMovimentacao from "../Components/AnaliseDeIa/AnaliseMovimentacao";
 const VisualizarDocumentosProcesso = () => 
 {
   return (
-    <LayoutBase tipoMenu="cliente">
+    <LayoutBase backgroundClass="bg-cinzaAzulado">
       <AnaliseMovimentacao/>
     </LayoutBase>
   );

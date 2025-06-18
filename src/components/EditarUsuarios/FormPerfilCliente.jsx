@@ -150,9 +150,9 @@ function FormPerfilCliente() {
   //TODO Avaliar FUncionalidade desta função  
   // const handleSubmit = (e) => {
   //   e.preventDefault();
-    
+
   //   const errosEncontrados = validarPerfilCliente(usuario);
-    
+
   //   if (Object.keys(errosEncontrados).length > 0) {
   //     setErrors(errosEncontrados);
   //     return;
@@ -266,6 +266,8 @@ function FormPerfilCliente() {
       })
         .then((resposta) => {
           alert("Dados Atualizados com sucesso!");
+          sessionStorage.setItem('nome', usuarioParaAtualizar.nome);
+          sessionStorage.setItem('email', usuarioParaAtualizar.email);
           window.location.reload();
         })
         .catch((erro) => {
@@ -303,6 +305,8 @@ function FormPerfilCliente() {
       })
         .then((resposta) => {
           alert("Dados Atualizados com sucesso!");
+          sessionStorage.setItem('nome', usuarioParaAtualizar.nomeFantasia);
+          sessionStorage.setItem('email', usuarioParaAtualizar.email);
           window.location.reload();
         })
         .catch((erro) => {
@@ -497,7 +501,7 @@ function FormPerfilCliente() {
               />
             </div>
             <div className="w-1/4">
-              <Input label="Número:" name="numero"  placeholder="Ex: 123" value={usuario.numero || ""}
+              <Input label="Número:" name="numero" placeholder="Ex: 123" value={usuario.numero || ""}
                 onChange={(e) => {
                   setUsuarioParaAtualizar({ ...usuarioParaAtualizar, numero: e.target.value });
                   setUsuario({ ...usuario, numero: e.target.value });
@@ -537,4 +541,4 @@ function FormPerfilCliente() {
   );
 }
 
-  export default FormPerfilCliente;
+export default FormPerfilCliente;

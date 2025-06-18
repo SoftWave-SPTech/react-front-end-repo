@@ -139,11 +139,11 @@ const PesquisarProcessos = () => {
   );
 
   return (
-    <LayoutBase tipoMenu="advogado">
-      <div className="relative flex flex-col lg:flex-row w-full h-full min-h-screen px-[1.5rem] md:px-[3rem] py-[1.5rem] gap-[2rem]">
+    <LayoutBase backgroundClass="bg-cinzaAzulado">
+      <div className="relative flex flex-col lg:flex-row w-full h-full min-h-screen px-[1.5rem] md:px-[3rem] gap-[2rem]">
         <div className="flex-1 flex flex-col">
           <div className="mb-[1.5rem]">
-            <BarraTitulo>PESQUISAR PROCESSOS</BarraTitulo>
+            <BarraTitulo>Pesquisar Processos</BarraTitulo>
           </div>
           <div className="flex flex-col gap-[1.5rem]">
             {loading ? (
@@ -170,7 +170,7 @@ const PesquisarProcessos = () => {
                 setBusca(e.target.value);
                 handleBusca(e.target.value);
               }}
-              className="w-full rounded-md py-[0.5rem] pl-[1rem] pr-[2.5rem] text-base bg-cinzaAzulado text-preto focus:outline-none"
+              className="w-full rounded-md py-[0.5rem] pl-[1rem] pr-[2.5rem] text-base bg-white text-preto focus:outline-none"
             />
             <span className="absolute right-[0.75rem] top-[0.75rem] text-preto opacity-60 pointer-events-none">
               <svg width="1.25rem" height="1.25rem" fill="none" viewBox="0 0 24 24">
@@ -207,8 +207,8 @@ const PesquisarProcessos = () => {
           <div className="fixed right-[4.5rem] bottom-8 z-50 max-w-[14rem] w-full flex justify-end lg:justify-center">
             <Botao
               cor="padrao"
-              largura="auto"
-              onClick={() => navigate('/cadastrar-processos')}
+              tamanho='grande'
+              onClick={() => window.history.back()}
             >
               Voltar
             </Botao>
