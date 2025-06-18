@@ -14,7 +14,7 @@ export default function AdvogadoJuridicoForm() {
   const [formData, setFormData] = useState({
     nomeFantasia: '',
     razaoSocial: '',
-    nomeRepresentante: '', 
+    representante: '', 
     cnpj: '',
     email: '',
     oab: '',
@@ -87,7 +87,7 @@ export default function AdvogadoJuridicoForm() {
       setFormData({
         nomeFantasia: '',
         razaoSocial: '',
-        nomeRepresentante: '', 
+        representante: '', 
         cnpj: '',
         email: '',
         oab: '',
@@ -119,11 +119,11 @@ export default function AdvogadoJuridicoForm() {
         <div className="space-y-4">
           <Input
             label="Nome do Representante:"
-            name="nomeRepresentante"
+            name="representante"
             placeholder="Ex: João Silva"
-            value={formData.nomeRepresentante}
+            value={formData.representante}
             onChange={handleChange}
-            errorMessage={errors.nomeRepresentante}
+            errorMessage={errors.representante}
           />
           <Input
             label="Nome Fantasia:"

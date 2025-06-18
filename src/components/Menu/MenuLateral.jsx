@@ -57,9 +57,9 @@ const MenuLateral = () => {
     { rotulo: "Perfil", icone: <FiUser />, rota: rotaPerfil, esconderSeAberto: true, roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Dashboard", icone: <FiBarChart2 />, rota: "/dashboard", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Meus processos", icone: <FiCalendar />, rota: "/processos-cliente", roles: ["ROLE_USUARIO"] },
-    { rotulo: "Pesquisar processos", icone: <FiCalendar />, rota: "/pesquisar-processos", roles: ["ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
+    { rotulo: "Pesquisar processos", icone: <FiSearch />, rota: "/pesquisar-processos", roles: ["ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Cadastrar Processos", icone: <FiFileText />, rota: "/cadastrar-processos", roles: ["ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Pesquisar usuários", icone: <FiUser />, rota: "/usuarios", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
+    { rotulo: "Pesquisar usuários", icone: <FiUser />, rota: "/lista-usuarios", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Cadastrar Usuário", icone: <FiUserPlus />, rota: "/cadastrar-usuario", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Documentos pessoais", icone: <FiFileText />, rota: "/documentos-pessoais", roles: ["ROLE_USUARIO"] },
     // { rotulo: "Área financeira", icone: <FiDollarSign />, rota: "/area-financeira", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
@@ -89,7 +89,7 @@ const MenuLateral = () => {
               transition-all duration-300 hover:border-[#D9B166] hover:text-[#D9B166] text-white no-underline"
             >
               <img
-                src={usuario?.fotoPerfil || "src/assets/images/boneco.png"}
+                src={usuario.fotoPerfil !== "http://localhost:8080/null" ? usuario.fotoPerfil : "/src/assets/images/boneco.png"}
                 alt="Foto de perfil"
                 className="w-12 h-12 rounded-full object-cover border border-white"
               />
