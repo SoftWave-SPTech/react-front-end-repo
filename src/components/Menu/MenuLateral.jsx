@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import 
-{
+import {
   FiMenu,
   FiLogOut,
   FiFileText,
@@ -33,23 +32,36 @@ const MenuLateral = () => {
     tipoUsuario: sessionStorage.getItem("tipoUsuario"),
     token: sessionStorage.getItem("token"),
     fotoPerfil: sessionStorage.getItem("fotoPerfil"),
+    nome: sessionStorage.getItem("nome"),
   };
 
   const role = (usuario?.role || "").toUpperCase();
   const email = usuario?.email || "sem-email@example.com";
-  const nome = usuario?.email?.split("@")[0] || "Usuário";
+  const tipoUsuario = usuario?.tipoUsuario || "Desconhecido";
+
+  let nome = usuario?.nome || "Usuário";
+  if (tipoUsuario === "AdvogadoFisico") {
+    const partesNome = nome.trim().split(" ");
+    if (partesNome.length >= 2) {
+      nome = `${partesNome[0]} ${partesNome[partesNome.length - 1]}`;
+    }
+  } else if (tipoUsuario === "AdvogadoJuridico") {
+    nome = nome.length > 25 ? nome.slice(0, 25) + "..." : nome;
+  }
+
   const rotaPerfil =
     role === "ROLE_USUARIO" ? "/perfil-cliente" : "/perfil-advogado";
 
   const itensMenu = [
     { rotulo: "Perfil", icone: <FiUser />, rota: rotaPerfil, esconderSeAberto: true, roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Dashboard", icone: <FiBarChart2 />, rota: "/dashboard", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Processos", icone: <FiCalendar />, rota: "/processos-cliente", roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
+    { rotulo: "Meus processos", icone: <FiCalendar />, rota: "/processos-cliente", roles: ["ROLE_USUARIO"] },
+    { rotulo: "Pesquisar processos", icone: <FiCalendar />, rota: "/pesquisar-processos", roles: ["ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Cadastrar Processos", icone: <FiFileText />, rota: "/cadastrar-processos", roles: ["ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Usuários", icone: <FiUser />, rota: "/usuarios", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
+    { rotulo: "Pesquisar usuários", icone: <FiUser />, rota: "/usuarios", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Cadastrar Usuário", icone: <FiUserPlus />, rota: "/cadastrar-usuario", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Documentos", icone: <FiFileText />, rota: "/documentos-pessoais", roles: ["ROLE_USUARIO"] },
-    { rotulo: "Área financeira", icone: <FiDollarSign />, rota: "/area-financeira", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
+    { rotulo: "Documentos pessoais", icone: <FiFileText />, rota: "/documentos-pessoais", roles: ["ROLE_USUARIO"] },
+    // { rotulo: "Área financeira", icone: <FiDollarSign />, rota: "/area-financeira", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Podcast", icone: <FiMic />, rota: "/podcast", roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
   ];
 
@@ -76,7 +88,7 @@ const MenuLateral = () => {
               transition-all duration-300 hover:border-[#D9B166] hover:text-[#D9B166] text-white no-underline"
             >
               <img
-                src={usuario?.fotoPerfil || "https://i.pravatar.cc/100"}
+                src={usuario?.fotoPerfil || "src/assets/images/boneco.png"}
                 alt="Foto de perfil"
                 className="w-12 h-12 rounded-full object-cover border border-white"
               />

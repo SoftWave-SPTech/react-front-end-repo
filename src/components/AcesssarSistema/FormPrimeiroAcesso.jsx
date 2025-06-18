@@ -36,7 +36,7 @@ export default function FormPrimeiroAcesso() {
     return (
     <div className="flex items-center justify-center min-h-screen">
       <form
-        className="bg-white p-8 rounded-lg shadow-lg w-96 md:w-1/4"
+        className="bg-white p-6 rounded-lg shadow-lg w-96 max-w-sm"
         onSubmit={handleSubmit}
       >
         <div className="text-center mb-4">
@@ -52,7 +52,7 @@ export default function FormPrimeiroAcesso() {
           name="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="seuemail@exemplo.com"
+          placeholder="leonardo@email.com"
           largura="cheia"
         />
         <Input
@@ -68,7 +68,7 @@ export default function FormPrimeiroAcesso() {
         </Botao>
         <p className="mt-4 text-center mb-4 text-black">
           JÁ ACESSOU O SITE ANTES?{" "}
-          <a href="/login" className="text-azulEscuroForte hover:underline hover:text-dourado">
+          <a href="/login" className="font-bold text-azulEscuroForte hover:underline hover:text-dourado">
             ENTRE AQUI.
           </a>
         </p>

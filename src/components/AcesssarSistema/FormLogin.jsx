@@ -4,8 +4,7 @@ import Botao from '../Ui/Botao';
 import { Input } from '../Ui/Input';
 import { Link } from 'react-router-dom';
 
-export default function FormLogin() 
-{
+export default function FormLogin() {
     const [email, setEmail] = useState("");
     const [senha, setsenha] = useState("");
 
@@ -19,12 +18,9 @@ export default function FormLogin()
             });
 
             console.log("Resposta da API:", response.data);
-            console.log(response);
 
-            // Exemplo: redirecionar ou exibir mensagem de sucesso
-            if (response.status == 200) {
+            if (response.status === 200) {
                 alert("Login realizado com sucesso!");
-                // Redirecionar para outra página, se necessário
                 sessionStorage.setItem("id", response.data.id);
                 sessionStorage.setItem("email", response.data.email);
                 sessionStorage.setItem("token", response.data.token);
@@ -32,8 +28,8 @@ export default function FormLogin()
                 sessionStorage.setItem("role", response.data.role);
                 sessionStorage.setItem("nome", response.data.nome);
                 sessionStorage.setItem("foto", response.data.foto);
-                //Logica para redirecionar para o perfil do cliente ou advogado
-                if (response.data.role == '"ROLE_USUARIO"') {
+
+                if (response.data.role === '"ROLE_USUARIO"') {
                     window.location.href = "/perfil-cliente";
                 } else {
                     window.location.href = "/perfil-advogado";
@@ -48,9 +44,12 @@ export default function FormLogin()
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
-            <form className="bg-white p-8 rounded-lg shadow-lg w-96 md:w-1/4" onSubmit={handleSubmit}>
-                <div className="text-center mb-4">
+        <div className="flex items-center justify-center min-h-screen bg-azulEscuroForte px-4">
+            <form
+                className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm"
+                onSubmit={handleSubmit}
+            >
+                <div className="text-center">
                     <img src="src/assets/images/boneco.png" alt="" className="w-32 h-32 mx-auto mb-2" />
                     <h2 className="text-2xl">LOGIN</h2>
                 </div>
@@ -60,7 +59,7 @@ export default function FormLogin()
                     name="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="seuemail@exemplo.com"
+                    placeholder="leonardo@email.com"
                     largura="cheia"
                 />
 
@@ -76,7 +75,7 @@ export default function FormLogin()
 
                 <p className="mb-6 block text-left">
                     <Link to="/redefinir-senha" className="text-azulEscuroForte hover:underline hover:text-dourado">
-                    ESQUECI MINHA SENHA
+                        ESQUECI MINHA SENHA
                     </Link>
                 </p>
 
@@ -86,12 +85,18 @@ export default function FormLogin()
 
                 <p className="mt-4 text-center mb-4 text-black">
                     É SEU PRIMEIRO ACESSO?{" "}
-                    <a href="/primeiro-acesso" className="text-azulEscuroForte hover:underline hover:text-dourado">
+                    <a href="/primeiro-acesso" className="font-bold text-azulEscuroForte hover:underline hover:text-dourado">
                         ENTRE AQUI.
                     </a>
                 </p>
 
-                <Botao tamanho='pequeno' cor="contornoAzul" type="button" className="block mx-auto" onClick={() => window.history.back()}>
+                <Botao
+                    tamanho="pequeno"
+                    cor="contornoAzul"
+                    type="button"
+                    className="block mx-auto"
+                    onClick={() => window.history.back()}
+                >
                     VOLTAR
                 </Botao>
             </form>

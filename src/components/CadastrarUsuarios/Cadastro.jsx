@@ -27,7 +27,7 @@ export default function FormularioAbas()
         <div className="flex justify-end space-x-2 mt-0 mb-8">
           <button
             onClick={() => setAba('cliente')}
-            className={`px-5 py-3 rounded-md text-base font-semibold transition ${
+            className={`px-5 py-3 rounded-md text-sm font-semibold transition ${
               aba === 'cliente'
                 ? 'bg-white text-AzulPodcast'
                 : 'bg-AzulPodcast text-white'
@@ -37,7 +37,7 @@ export default function FormularioAbas()
           </button>
           <button
             onClick={() => setAba('advogado')}
-            className={`px-5 py-3 rounded-md text-base font-semibold transition ${
+            className={`px-5 py-3 rounded-md text-sm font-semibold transition ${
               aba === 'advogado'
                 ? 'bg-white text-AzulPodcast'
                 : 'bg-AzulPodcast text-white'
@@ -50,7 +50,7 @@ export default function FormularioAbas()
         <div className="flex gap-2 mt-0">
           <button
             onClick={() => setTipo('fisica')}
-            className={`flex-1 py-4 rounded-t-lg text-2xl font-bold transition ${
+            className={`flex-1 py-4 rounded-t-lg text-xl font-bold transition ${
               tipo === 'fisica'
                 ? 'bg-white text-AzulPodcast'
                 : 'bg-AzulPodcast text-white'
@@ -60,7 +60,7 @@ export default function FormularioAbas()
           </button>
           <button
             onClick={() => setTipo('juridica')}
-            className={`flex-1 py-4 rounded-t-lg text-2xl font-bold transition ${
+            className={`flex-1 py-4 rounded-t-lg text-xl font-bold transition ${
               tipo === 'juridica'
                 ? 'bg-white text-AzulPodcast'
                 : 'bg-AzulPodcast text-white'

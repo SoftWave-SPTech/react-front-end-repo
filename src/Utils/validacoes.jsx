@@ -71,11 +71,12 @@ export const validarAdvogadoFisico = (dados) => {
   if (!dados.cpf || !validarCPF(dados.cpf)) erros.cpf = "CPF inválido";
   if (!dados.rg || !validarRG(dados.rg)) erros.rg = "RG inválido";
   if (!dados.email || !validarEmail(dados.email)) erros.email = "Email inválido";
-  if (!dados.oab || !validarCEP(dados.oab)) erros.oab = "OAB deve ter 6 dígitos númericos.";
+  if (!dados.oab || !validarOAB(dados.oab)) erros.oab = "OAB deve ter 6 dígitos númericos.";
   if (!dados.telefone || !validarTelefone(dados.telefone)) erros.telefone = "Telefone inválido";
   if (!dados.cep || !validarCEP(dados.cep)) erros.cep = "CEP deve ter 8 dígitos.";
   if (!dados.logradouro) erros.logradouro = "Campo obrigatório";
   if (!dados.bairro) erros.bairro = "Campo obrigatório";
+   if (!dados.numero) erros.numero = "Campo obrigatório";
   if (!dados.cidade) erros.cidade = "Campo obrigatório";
   return erros;
 };
@@ -87,7 +88,7 @@ export const validarAdvogadoJuridico = (dados) => {
   if (!dados.razaoSocial) erros.razaoSocial = "Campo obrigatório";
   if (!dados.cnpj || !validarCNPJ(dados.cnpj)) erros.cnpj = "CNPJ inválido";
   if (!dados.email || !validarEmail(dados.email)) erros.email = "Email inválido";
-  if (!dados.oab || !validarCEP(dados.oab)) erros.oab = "OAB deve ter 6 dígitos.";
+  if (!dados.oab || !validarOAB(dados.oab)) erros.oab = "OAB deve ter 6 dígitos.";
   if (!dados.telefone || !validarTelefone(dados.telefone)) erros.telefone = "Telefone inválido";
   if (!dados.cep || !validarCEP(dados.cep)) erros.cep = "CEP deve ter 8 dígitos.";
   if (!dados.logradouro) erros.logradouro = "Campo obrigatório";

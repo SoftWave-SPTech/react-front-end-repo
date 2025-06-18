@@ -36,6 +36,7 @@ const Dashboard = () => {
       })
       .catch((err) => {
         setError('Erro ao buscar dados: ' + err.message);
+        console.log(err)
         setLoading(false);
       });
   };
@@ -69,7 +70,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap md:flex-nowrap gap-2 mb-2 min-h-[16rem]">
+        <div className="flex flex-wrap md:flex-nowrap gap-2 mb-4 min-h-[16rem]">
           <div className="flex-1 min-w-[300px]">
             <SetoresCasos dados={dadosDashboard?.qtdProcessosPorSetor} />
           </div>
@@ -81,7 +82,7 @@ const Dashboard = () => {
           </div> */}
         </div>
         <div>
-          <ProcessosRecentes />
+          <ProcessosRecentes processos={dadosDashboard?.processosOrdenadosPorData} />
         </div>
       </div>
     </LayoutBase>
