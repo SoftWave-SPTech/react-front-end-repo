@@ -4,8 +4,8 @@ import LayoutBase from '../layouts/LayoutBase';
 const VisualizarDocumentosProcesso = () => 
 {
   return (
-    <LayoutBase tipoMenu="cliente">
-      Seu conteúdo aqui
+    <LayoutBase backgroundClass="bg-cinzaAzulado">
+      <AnaliseMovimentacao/>
     </LayoutBase>
   );
 };

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { buscarCep } from '../../service/buscarCep';
-import { v4 as uuidv4 } from 'uuid';
-import Inputmask from 'inputmask';
+import { validarClienteFisico } from '../../Utils/validacoes';
+import EnviarChaveAcesso from './EnvioEmail.jsx';
 
 export default function ClienteFisicoForm() {
   const [formData, setFormData] = useState({
@@ -40,57 +40,23 @@ export default function ClienteFisicoForm() {
       [name]: value,
     }));
 
-    if (name === 'cep' && value.replace(/\D/g, '').length === 8) {
-      buscarEndereco(value.replace(/\D/g, ''));
+    if (name === 'cep') {
+      const cepLimpo = value.replace(/\D/g, '');
+      if (cepLimpo.length === 8) {
+        try {
+          const endereco = await buscarCep(cepLimpo);
+          setFormData((prevData) => ({
+            ...prevData,
+            logradouro: endereco.logradouro || '',
+            bairro: endereco.bairro || '',
+            cidade: endereco.localidade || '',
+          }));
+        } catch (error) {
+          console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
+          alert('CEP inválido ou não encontrado.');
+        }
+      }
     }
-  };
-
-  const buscarEndereco = async (cep) => {
-    try {
-      const data = await buscarCep(cep);
-      setFormData((prevData) => ({
-        ...prevData,
-        logradouro: data.logradouro || '',
-        bairro: data.bairro || '',
-        cidade: data.localidade || '',
-      }));
-    } catch (error) {
-      console.error('Erro ao buscar endereço:', error);
-      alert('Erro ao buscar endereço. Verifique o CEP digitado.');
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.nome) newErrors.nome = "Campo 'Nome' é obrigatório.";
-    if (!formData.cpf) newErrors.cpf = "Campo 'CPF' é obrigatório.";
-    if (!formData.rg) newErrors.rg = "Campo 'RG' é obrigatório.";
-    if (!formData.email) newErrors.email = "Campo 'E-mail' é obrigatório.";
-    if (!formData.telefone) newErrors.telefone = "Campo 'Telefone' é obrigatório.";
-    if (!formData.cep) newErrors.cep = "Campo 'CEP' é obrigatório.";
-    if (!formData.logradouro) newErrors.logradouro = "Campo 'Logradouro' é obrigatório.";
-    if (!formData.bairro) newErrors.bairro = "Campo 'Bairro' é obrigatório.";
-    if (!formData.cidade) newErrors.cidade = "Campo 'Cidade' é obrigatório.";
-
-    if (formData.nome && !/\w+\s+\w+/.test(formData.nome)) {
-      newErrors.nome = "Informe seu nome completo.";
-    }
-    if (formData.cpf && !/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(formData.cpf)) {
-      newErrors.cpf = "CPF inválido.";
-    }
-    if (formData.rg && !/^\d{2}\.\d{3}\.\d{3}-\d{1}$/.test(formData.rg)) {
-      newErrors.rg = "RG inválido.";
-    }
-    if (formData.telefone && !/^\(\d{2}\) \d{5}-\d{4}$/.test(formData.telefone)) {
-      newErrors.telefone = "Telefone inválido.";
-    }
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "E-mail inválido.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
@@ -107,13 +73,43 @@ export default function ClienteFisicoForm() {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
-      .then((response) => {
-        console.log('Resposta:', response.data);
+    .then(() => {
+
+        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+
         alert('Cadastro realizado com sucesso!');
-      })
-      .catch((err) => {
-        console.log('Erro:', err.response?.data || err.message);
-        alert(err.response.data.message);
+        setFormData({
+          nome: '',
+          cpf: '',
+          rg: '',
+          email: '',
+          telefone: '',
+          cep: '',
+          logradouro: '',
+          numero: '',
+          bairro: '',
+          cidade: '',
+          complemento: '',
+        });
+    })
+    .catch((err) => {
+        console.error(err);
+        if (err.response?.data) {
+          const erros = err.response.data;
+          let mensagem = "";
+          Object.keys(erros).forEach(campo => {
+            if(campo === "message" && campo) {
+                mensagem = erros[campo] ;
+              } else if (campo === "status") {
+                if (erros[campo] === 500){
+                  mensagem = "Já existe um cliente cadastrado com esses dados. Por favor, verifique os dados e tente novamente.";
+                }
+              }
+          });
+          alert(mensagem)
+        } else {
+          alert('Erro ao cadastrar cliente. Por favor, tente novamente.');
+        }
       });
   };
 

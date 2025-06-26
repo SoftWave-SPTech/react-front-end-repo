@@ -1,12 +1,83 @@
-# React + Vite
+# Lauriano & Leão - Sistema de Gestão Jurídica
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto é um sistema web desenvolvido em **React** com **Vite**, focado na gestão de clientes, advogados, processos e documentos para o escritório Lauriano & Leão Sociedade de Advogados.
 
-Currently, two official plugins are available:
+## Tecnologias Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [Axios](https://axios-http.com/)
+- [React Router DOM](https://reactrouter.com/)
+- [SwiperJS](https://swiperjs.com/)
+- [React Icons](https://react-icons.github.io/react-icons/)
+- [ESLint](https://eslint.org/)
 
-## Expanding the ESLint configuration
+## Estrutura do Projeto
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```
+src/
+  components/         # Componentes reutilizáveis (UI, Menus, Formulários, etc)
+  layouts/            # Layouts base para páginas
+  pages/              # Páginas principais do sistema
+  routes/             # Rotas do React Router
+  service/            # Serviços de integração com API
+  assets/             # Imagens e ícones
+  estilos/            # Arquivos CSS customizados
+```
+
+## Funcionalidades
+
+- **Login e Autenticação** (clientes e advogados)
+- **Cadastro de Usuários** (cliente físico, cliente jurídico, advogado físico, advogado jurídico)
+- **Edição de Perfil** (dados pessoais, foto de perfil)
+- **Visualização e Upload de Documentos**
+- **Gestão de Processos**
+- **Podcast e Catálogo de Vídeos**
+- **Menu Lateral Dinâmico** (diferente para cliente e advogado)
+- **Página Institucional** com áreas de especialidades e contatos
+
+## Como Rodar o Projeto
+
+1. **Clone o repositório:**
+   ```sh
+   git clone https://github.com/SoftWave-SPTech/react-front-end-repo.git
+   cd react-front-end-repo
+   ```
+
+2. **Instale as dependências:**
+   ```sh
+   npm install
+   ```
+
+3. **Inicie o servidor de desenvolvimento:**
+   ```sh
+   npm run dev
+   ```
+
+4. Acesse em [http://localhost:5173](http://localhost:5173)
+
+## Configuração
+
+- O projeto utiliza variáveis de ambiente para integração com a API backend (ajuste URLs conforme necessário).
+- Certifique-se de que o backend esteja rodando em `http://localhost:8080` ou ajuste as URLs nas chamadas do Axios.
+
+## Scripts Disponíveis
+
+- `npm run dev` — Inicia o servidor de desenvolvimento
+- `npm run build` — Gera a build de produção
+- `npm run lint` — Executa o ESLint
+
+## Observações
+
+- O projeto utiliza autenticação via JWT armazenado no `sessionStorage`.
+- Para rodar corretamente, é necessário ter o backend configurado e rodando.
+- As imagens e ícones estão na pasta `public/` e `src/assets/`.
+
+## Licença
+
+Este projeto é privado e de uso exclusivo do escritório Lauriano & Leão Sociedade de Advogados.
+
+---
+
+Desenvolvido por Softwave.

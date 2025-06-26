@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { buscarCep } from '../../service/buscarCep';
-import { v4 as uuidv4 } from 'uuid';
-import Inputmask from 'inputmask';
+import { validarAdvogadoFisico } from '../../Utils/validacoes';
+import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG,mascaraOAB } from '../../Utils/mascaras';
+import EnviarChaveAcesso from './EnvioEmail.jsx';
 
 export default function AdvogadoFisicoForm() 
 {
@@ -43,63 +44,23 @@ export default function AdvogadoFisicoForm()
       [name]: value,
     }));
 
-    if (name === 'cep' && value.replace(/\D/g, '').length === 8) {
-      buscarEndereco(value.replace(/\D/g, ''));
+    if (name === 'cep') {
+      const cepLimpo = value.replace(/\D/g, '');
+      if (cepLimpo.length === 8) {
+        try {
+          const endereco = await buscarCep(cepLimpo);
+          setFormData((prevData) => ({
+            ...prevData,
+            logradouro: endereco.logradouro || '',
+            bairro: endereco.bairro || '',
+            cidade: endereco.localidade || '',
+          }));
+        } catch (error) {
+          console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
+          alert('CEP inválido ou não encontrado.');
+        }
+      }
     }
-  };
-
-  const buscarEndereco = async (cep) => {
-    try {
-      const data = await buscarCep(cep);
-      setFormData((prevData) => ({
-        ...prevData,
-        logradouro: data.logradouro || '',
-        bairro: data.bairro || '',
-        cidade: data.localidade || '',
-      }));
-    } catch (error) {
-      console.error('Erro ao buscar endereço:', error);
-      alert('Erro ao buscar endereço. Verifique o CEP digitado.');
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    // Validação de campos obrigatórios
-    if (!formData.nome) newErrors.nome = "Campo 'Nome' é obrigatório.";
-    if (!formData.cpf) newErrors.cpf = "Campo 'CPF' é obrigatório.";
-    if (!formData.rg) newErrors.rg = "Campo 'RG' é obrigatório.";
-    if (!formData.email) newErrors.email = "Campo 'E-mail' é obrigatório.";
-    if (!formData.oab) newErrors.oab = "Campo 'OAB' é obrigatório.";
-    if (!formData.telefone) newErrors.telefone = "Campo 'Telefone' é obrigatório.";
-    if (!formData.cep) newErrors.cep = "Campo 'CEP' é obrigatório.";
-    if (!formData.logradouro) newErrors.logradouro = "Campo 'Logradouro' é obrigatório.";
-    if (!formData.bairro) newErrors.bairro = "Campo 'Bairro' é obrigatório.";
-    if (!formData.cidade) newErrors.cidade = "Campo 'Cidade' é obrigatório.";
-
-    // Validações de formato
-    if (formData.nome && !/\w+\s+\w+/.test(formData.nome)) {
-      newErrors.nome = "Informe seu nome completo.";
-    }
-    if (formData.cpf && !/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(formData.cpf)) {
-      newErrors.cpf = "CPF inválido.";
-    }
-    if (formData.rg && !/^\d{2}\.\d{3}\.\d{3}-\d{1}$/.test(formData.rg)) {
-      newErrors.rg = "RG inválido.";
-    }
-    if (formData.telefone && !/^\(\d{2}\) \d{5}-\d{4}$/.test(formData.telefone)) {
-      newErrors.telefone = "Telefone inválido.";
-    }
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "E-mail inválido.";
-    }
-    if (formData.oab && !/^\d{6}$/.test(formData.oab)) {
-      newErrors.oab = "OAB inválida. Deve conter exatamente 6 números.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
@@ -109,86 +70,102 @@ export default function AdvogadoFisicoForm()
     const novaSenha = uuidv4();
     const dadosParaEnviar = { ...formData, senha: novaSenha };
 
-    console.log('Dados do formulário:', dadosParaEnviar);
-    // TODO ESCREVER AUTORIZACAO PARA AS OUTRAS REQUESTS
-    axios.post('http://localhost:8080/advogados-fisicos', dadosParaEnviar, {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-      },
-    })
-      .then((response) => {
-        console.log('Resposta:', response.data);
+    console.log("Dados enviados para o backend:", dadosParaEnviar);
+
+    api
+      .post('/advogados-fisicos', dadosParaEnviar, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+        },
+      })
+      .then(() => {
+
+        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+        
         alert('Cadastro realizado com sucesso!');
       })
       .catch((err) => {
-        console.log('Erro:', err.response?.data || err.message);
-        alert(err.response.data.message);
+
+        console.error(err);
+        if (err.response?.data) {
+          const erros = err.response.data;
+          let mensagem = "";
+          Object.keys(erros).forEach(campo => {
+            if(campo === "message" && campo) {
+                mensagem = erros[campo] ;
+              } else if (campo === "status") {
+                if (erros[campo] === 500){
+                  mensagem = "Já existe um advogado cadastrado com esses dados. Por favor, verifique os dados e tente novamente.";
+                }
+              }
+          });
+          alert(mensagem)
+        } else {
+          alert('Erro ao cadastrar advogado. Por favor, tente novamente.');
+        }
+        //alert(err.response?.data?.message || 'Erro ao cadastrar');
+
       });
   };
 
   return (
-    <form className="formulario" onSubmit={handleSubmit}>
-      <div className="coluna">
-        <label>Nome:</label>
-        <input
-          type="text"
-          name="nome"
-          placeholder="Digite o nome completo"
-          value={formData.nome}
-          onChange={handleChange}
-        />
-        {errors.nome && <span className="error">{errors.nome}</span>}
-
-        <label>CPF:</label>
-        <input
-          type="text"
-          name="cpf"
-          placeholder="000.000.000-00"
-          value={formData.cpf}
-          onChange={handleChange}
-        />
-        {errors.cpf && <span className="error">{errors.cpf}</span>}
-
-        <label>RG:</label>
-        <input
-          type="text"
-          name="rg"
-          placeholder="00.000.000-0"
-          value={formData.rg}
-          onChange={handleChange}
-        />
-        {errors.rg && <span className="error">{errors.rg}</span>}
-
-        <label>Email:</label>
-        <input
-          type="email"
-          name="email"
-          placeholder="ana@email.com"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        {errors.email && <span className="error">{errors.email}</span>}
-
-        <label>OAB:</label>
-        <input
-          type="text"
-          name="oab"
-          placeholder="000000"
-          value={formData.oab}
-          onChange={handleChange}
-        />
-        {errors.oab && <span className="error">{errors.oab}</span>}
-
-        <label>Telefone:</label>
-        <input
-          type="text"
-          name="telefone"
-          placeholder="(11) 98030-3049"
-          value={formData.telefone}
-          onChange={handleChange}
-        />
-        {errors.telefone && <span className="error">{errors.telefone}</span>}
-      </div>
+    <form className="bg-white p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <Input
+            label="Nome Completo:"
+            name="nome"
+            placeholder="Digite o nome completo"
+            value={formData.nome}
+            onChange={handleChange}
+            errorMessage={errors.nome}
+          />
+          <Input
+            label="CPF:"
+            name="cpf"
+            placeholder="000.000.000-00"
+            value={formData.cpf}
+            onChange={handleChange}
+            mask={mascaraCPF}
+            errorMessage={errors.cpf}
+          />
+          <Input
+            label="RG:"
+            name="rg"
+            placeholder="00.000.000-0"
+            value={formData.rg}
+            onChange={handleChange}
+            mask={mascaraRG}
+            errorMessage={errors.rg}
+          />
+          <Input
+            label="Email:"
+            name="email"
+            type="email"
+            placeholder="ana@email.com"
+            value={formData.email}
+            onChange={handleChange}
+            errorMessage={errors.email}
+          />
+          <Input
+            label="OAB:"
+            name="oab"
+            placeholder="000000"
+            value={formData.oab}
+            onChange={handleChange}
+            mask={mascaraOAB}
+            errorMessage={errors.oab}
+          />
+          <Input
+            label="Telefone:"
+            name="telefone"
+            placeholder="(00) 00000-0000"
+            value={formData.telefone}
+            onChange={handleChange}
+            mask={mascaraTelefone}
+            errorMessage={errors.telefone}
+          />
+        </div>
 
       <div className="coluna">
         <label>CEP:</label>

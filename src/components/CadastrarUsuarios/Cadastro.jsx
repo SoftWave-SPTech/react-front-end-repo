@@ -30,34 +30,49 @@ export default function Cadastro()
         <div className="abas-principais">
           <button
             onClick={() => setAba('cliente')}
-            className={`aba ${aba === 'cliente' ? 'ativa' : ''}`}
+            className={`px-5 py-3 rounded-md text-sm font-semibold transition ${
+              aba === 'cliente'
+                ? 'bg-white text-AzulPodcast'
+                : 'bg-AzulPodcast text-white'
+            }`}
           >
             Cliente
           </button>
 
           <button
             onClick={() => setAba('advogado')}
-            className={`aba ${aba === 'advogado' ? 'ativa' : ''}`}
+            className={`px-5 py-3 rounded-md text-sm font-semibold transition ${
+              aba === 'advogado'
+                ? 'bg-white text-AzulPodcast'
+                : 'bg-AzulPodcast text-white'
+            }`}
           >
             Advogado
           </button>
         </div>
 
-        <div className="form-box">
-          <div className="abas-internas">
-            <button
-              onClick={() => setTipo('fisica')}
-              className={`aba-interna ${tipo === 'fisica' ? 'ativa-interna' : ''}`}
-            >
-              Pessoa Física
-            </button>
-            <button
-              onClick={() => setTipo('juridica')}
-              className={`aba-interna ${tipo === 'juridica' ? 'ativa-interna' : ''}`}
-            >
-              Pessoa Jurídica
-            </button>
-          </div>
+        <div className="flex gap-2 mt-0">
+          <button
+            onClick={() => setTipo('fisica')}
+            className={`flex-1 py-4 rounded-t-lg text-xl font-bold transition ${
+              tipo === 'fisica'
+                ? 'bg-white text-AzulPodcast'
+                : 'bg-AzulPodcast text-white'
+            }`}
+          >
+            Pessoa Física
+          </button>
+          <button
+            onClick={() => setTipo('juridica')}
+            className={`flex-1 py-4 rounded-t-lg text-xl font-bold transition ${
+              tipo === 'juridica'
+                ? 'bg-white text-AzulPodcast'
+                : 'bg-AzulPodcast text-white'
+            }`}
+          >
+            Pessoa Jurídica
+          </button>
+        </div>
 
           {renderFormulario()}
         </div>

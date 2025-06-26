@@ -10,6 +10,16 @@ import FormEditPerfilCliente from "../components/EditarUsuarios/FormEditPerfilCl
 import VisualizarDocumentosProcesso from "../pages/VisualizarDocumentosProcesso";
 import VisualizarDocumentosPessoais from "../pages/VisualizarDocumentosPessoais";
 import AnaliseComIa from "../pages/AnaliseComIa";
+import CadastrarProcesso from "../pages/CadastrarProcesso";
+import AreaCliente from "../pages/AreaCliente";
+import VisualizarProcessosAdvogado from "../pages/VisualizarProcessosAdvogado";
+import Podcast from "../pages/Podcast";
+import ListaUsuarios from "../pages/ListaUsuarios";
+import Dashboard from "../pages/Dashboard";
+import PesquisarProcessos from "../pages/PesquisarProcessos";
+import RedefinirSenha from "../pages/RedefinirSenha";
+import EsqueciSenha from "../pages/EsqueciSenha";
+
 
 export const AppRouter = createBrowserRouter([
   {
@@ -33,6 +43,14 @@ export const AppRouter = createBrowserRouter([
     element: <CadastrarSenha/>
   },
   {
+    path: "/redefinir-senha",
+    element: <RedefinirSenha/>
+  },
+  {
+    path: "/esqueci-senha",
+    element: <EsqueciSenha/>
+  },
+  {
     path: "/perfil-cliente",
     element: <FormEditPerfilCliente/> 
   },
@@ -49,7 +67,50 @@ export const AppRouter = createBrowserRouter([
     element: <VisualizarDocumentosPessoais/>
   },
   {
-    path: "/analie-ia",
+    path: "/analise-ia/:processoId/:movimentacaoId",
     element: <AnaliseComIa/>
+  },
+  {
+    path: "/processos-cliente",
+    element: <VisualizarProcessos/>
+  },
+  {
+    path: "/cadastrar-processos",
+    element: <CadastrarProcesso/>
+  },
+  {
+    path: "/area-cliente/processo/:processoId",
+    element: <AreaCliente/>
+  },
+  {
+    path: "/pesquisar-processos",
+    element: <PesquisarProcessos/>
+  },
+  {
+    path: "/processos-advogado",
+    element: <VisualizarProcessosAdvogado/>
+  },
+  {
+    path: "/podcast",
+    element: <Podcast/>
+  },
+  {
+    path: "/lista-usuarios",
+    element: <ListaUsuarios/>
+  },{
+    path: "/pesquisar-processos",
+    element: <PesquisarProcessos/>
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard/>
+  },
+  {
+    path:"/processos-advogado/:idUsuario/:idProcesso", 
+    element:<VisualizarProcessosAdvogado /> 
+  },
+  {
+    path:"/documentos-processo/:idProcesso", 
+    element:<VisualizarDocumentosProcesso /> 
   }
 ]);

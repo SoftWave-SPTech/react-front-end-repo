@@ -13,12 +13,18 @@ const tamanhos =
     lg:text-xl lg:px-6 lg:py-4
     xl:text-2xl xl:px-8 xl:py-5
   `,
+  Full: `
+    text-1xl sm:text-2xl md:text-3xl
+    font-bold
+    px-8 py-6
+  `
 };
 
 const larguras = 
 {
   grande: 'w-full',
   medio: 'w-[85%]',
+  medio2:'w-[78%]',
   pequeno: 'w-[60%]',
   auto: 'w-auto',
 };
