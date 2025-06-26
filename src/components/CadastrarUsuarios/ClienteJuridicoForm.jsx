@@ -1,5 +1,11 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { api } from '../../service/api.js';
+import { nanoid } from 'nanoid';
+
+import Botao from '../../components/Ui/Botao';
+import { Input } from '../Ui/Input';
+
+import { mascaraCNPJ, mascaraTelefone, mascaraCEP } from '../../Utils/mascaras';
 import { buscarCep } from '../../service/buscarCep';
 import { validarClienteJuridico } from '../../Utils/validacoes';
 import EnviarChaveAcesso from './EnvioEmail.jsx';
@@ -14,6 +20,7 @@ export default function ClienteJuridicoForm() {
     telefone: '',
     cep: '',
     logradouro: '',
+    numero: '',
     bairro: '',
     cidade: '',
     complemento: '',
@@ -21,17 +28,7 @@ export default function ClienteJuridicoForm() {
 
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    const telefoneMask = new Inputmask('(99) 99999-9999', { placeholder: '(__) _____-____' });
-    const cepMask = new Inputmask('99999-999', { placeholder: '_____-___' });
-    const cnpjMask = new Inputmask('99.999.999/9999-99', { placeholder: '__.___.___/____-__' });
-
-    telefoneMask.mask(document.querySelector('[name=telefone]'));
-    cepMask.mask(document.querySelector('[name=cep]'));
-    cnpjMask.mask(document.querySelector('[name=cnpj]'));
-  }, []);
-
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
 
     setFormData((prevData) => ({
@@ -62,9 +59,18 @@ export default function ClienteJuridicoForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    console.log("SUBMIT DISPARADO");
 
-    const novaSenha = uuidv4();
+    const errosEncontrados = validarClienteJuridico(formData);
+
+    if (Object.keys(errosEncontrados).length > 0) {
+      setErrors(errosEncontrados);
+      return;
+    }
+
+    setErrors({});
+
+    const novaSenha = nanoid(8);
     const dadosParaEnviar = { ...formData, senha: novaSenha };
 
     console.log("Erros encontrados:", errosEncontrados);
@@ -137,111 +143,114 @@ export default function ClienteJuridicoForm() {
             errorMessage={errors.nomeFantasia}
           />
 
-        <label>Razão Social:</label>
-        <input
-          type="text"
-          name="razaoSocial"
-          placeholder="Digite a razão social"
-          value={formData.razaoSocial}
-          onChange={handleChange}
-        />
-        {errors.razaoSocial && <span className="error">{errors.razaoSocial}</span>}
+          <Input
+            label="Razão Social:"
+            name="razaoSocial"
+            placeholder="Ex: SuperTech Soluções em Tecnologia LTDA"
+            value={formData.razaoSocial}
+            onChange={handleChange}
+            errorMessage={errors.razaoSocial}
+          />
 
-        <label>CNPJ:</label>
-        <input
-          type="text"
-          name="cnpj"
-          placeholder="00.000.000/0000-00"
-          value={formData.cnpj}
-          onChange={handleChange}
-        />
-        {errors.cnpj && <span className="error">{errors.cnpj}</span>}
+          <Input
+            label="CNPJ:"
+            name="cnpj"
+            placeholder="00.000.000/0000-00"
+            value={formData.cnpj}
+            onChange={handleChange}
+            mask={mascaraCNPJ}
+            errorMessage={errors.cnpj}
+          />
 
-        <label>Email:</label>
-        <input
-          type="email"
-          name="email"
-          placeholder="exemplo@email.com"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        {errors.email && <span className="error">{errors.email}</span>}
+          <Input
+            label="Email:"
+            name="email"
+            type="email"
+            placeholder="empresa@dominio.com.br"
+            value={formData.email}
+            onChange={handleChange}
+            errorMessage={errors.email}
+          />
 
-        <label>Telefone:</label>
-        <input
-          type="text"
-          name="telefone"
-          placeholder="(11) 98030-3049"
-          value={formData.telefone}
-          onChange={handleChange}
-        />
-        {errors.telefone && <span className="error">{errors.telefone}</span>}
+          <Input
+            label="Telefone:"
+            name="telefone"
+            placeholder="(00) 00000-0000"
+            value={formData.telefone}
+            onChange={handleChange}
+            mask={mascaraTelefone}
+            errorMessage={errors.telefone}
+          />
+        </div>
+
+        <div className="space-y-4">
+          <Input
+            label="CEP:"
+            name="cep"
+            placeholder="00000-000"
+            value={formData.cep}
+            onChange={handleChange}
+            mask={mascaraCEP}
+            errorMessage={errors.cep}
+          />
+
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="md:w-3/4 w-full">
+              <Input
+                label="Logradouro:"
+                name="logradouro"
+                placeholder="Ex: Rua das Flores"
+                value={formData.logradouro}
+                onChange={handleChange}
+                errorMessage={errors.logradouro}
+              />
+            </div>
+            <div className="md:w-1/4 w-full">
+              <Input
+                label="Número:"
+                name="numero"
+                placeholder="Ex: 123"
+                value={formData.numero}
+                onChange={handleChange}
+                errorMessage={errors.numero}
+              />
+            </div>
+          </div>
+
+          <Input
+            label="Bairro:"
+            name="bairro"
+            placeholder="Ex: Bela Vista"
+            value={formData.bairro}
+            onChange={handleChange}
+            errorMessage={errors.bairro}
+          />
+
+          <Input
+            label="Cidade:"
+            name="cidade"
+            placeholder="Ex: São Paulo"
+            value={formData.cidade}
+            onChange={handleChange}
+            errorMessage={errors.cidade}
+          />
+
+          <Input
+            label="Complemento:"
+            name="complemento"
+            placeholder="Ex: Sala 702, Bloco B"
+            value={formData.complemento}
+            onChange={handleChange}
+            errorMessage={errors.complemento}
+          />
+        </div>
       </div>
 
-      <div className="coluna">
-        <label>CEP:</label>
-        <input
-          type="text"
-          name="cep"
-          placeholder="00000-000"
-          value={formData.cep}
-          onChange={handleChange}
-        />
-        {errors.cep && <span className="error">{errors.cep}</span>}
-
-        <label>Logradouro:</label>
-        <input
-          type="text"
-          name="logradouro"
-          placeholder="Rua Exemplo"
-          value={formData.logradouro}
-          onChange={handleChange}
-        />
-        {errors.logradouro && <span className="error">{errors.logradouro}</span>}
-
-        <label>Bairro:</label>
-        <input
-          type="text"
-          name="bairro"
-          placeholder="Centro"
-          value={formData.bairro}
-          onChange={handleChange}
-        />
-        {errors.bairro && <span className="error">{errors.bairro}</span>}
-
-        <label>Cidade:</label>
-        <input
-          type="text"
-          name="cidade"
-          placeholder="Cidade"
-          value={formData.cidade}
-          onChange={handleChange}
-        />
-        {errors.cidade && <span className="error">{errors.cidade}</span>}
-
-        <label>Complemento:</label>
-        <input
-          type="text"
-          name="complemento"
-          placeholder="Apartamento, bloco, etc."
-          value={formData.complemento}
-          onChange={handleChange}
-        />
+      <div className="mt-8 flex justify-center w-full">
+        <Botao type="submit" largura="grande" tamanho="grande">
+          Cadastrar
+        </Botao>
       </div>
-
-      <div className="linha-centralizada">
-      <Botao tipo="submit" tamanho="pequeno" largura="medio" cor="contornoAzul">
-        CADASTRAR
-      </Botao>
-      <BarraTitulo
-      largura="grande"       
-      cor="claro"           
-      tamanho="medio"     
-      >
-        EDITAR DADOS
-      </BarraTitulo>
-      </div>
-      <BotaoAdicionar tamanho="grande" onClick={() => console.log('Clicou!')} />
     </form>
   );
 }

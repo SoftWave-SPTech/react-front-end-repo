@@ -1,5 +1,11 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { api } from '../../service/api.js';
+import { nanoid } from 'nanoid';
+
+import Botao from '../../components/Ui/Botao';
+import { Input } from '../Ui/Input';
+
+import { mascaraCNPJ, mascaraTelefone, mascaraCEP, mascaraOAB } from '../../Utils/mascaras';
 import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoJuridico } from '../../Utils/validacoes';
 import EnviarChaveAcesso from './EnvioEmail.jsx';
@@ -14,6 +20,7 @@ export default function AdvogadoJuridicoForm() {
     telefone: '',
     cep: '',
     logradouro: '',
+    numero: '', 
     bairro: '',
     cidade: '',
     complemento: '',
@@ -22,18 +29,7 @@ export default function AdvogadoJuridicoForm() {
 
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    // Máscaras
-    const telefoneMask = new Inputmask('(99) 99999-9999', { placeholder: '(__) _____-____' });
-    const cepMask = new Inputmask('99999-999', { placeholder: '_____-___' });
-    const cnpjMask = new Inputmask('99.999.999/9999-99', { placeholder: '__.___.___/____-__' });
-
-    telefoneMask.mask(document.querySelector('[name=telefone]'));
-    cepMask.mask(document.querySelector('[name=cep]'));
-    cnpjMask.mask(document.querySelector('[name=cnpj]'));
-  }, []);
-
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
 
     setFormData((prevData) => ({
@@ -64,14 +60,21 @@ export default function AdvogadoJuridicoForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
 
-    const novaSenha = uuidv4();
+    const errosEncontrados = validarAdvogadoJuridico(formData);
+
+    if (Object.keys(errosEncontrados).length > 0) {
+      setErrors(errosEncontrados);
+      return;
+    }
+
+    setErrors({});
+    const novaSenha = nanoid(8);
     const dadosParaEnviar = { ...formData, senha: novaSenha };
 
-    console.log('Dados do formulário:', dadosParaEnviar);
-    // TODO ESCREVER AUTORIZACAO PARA AS OUTRAS REQUESTS
-    axios.post('http://localhost:8080/advogados-juridicos', dadosParaEnviar, {
+    console.log("Dados enviados para o backend:", dadosParaEnviar);
+
+    api.post('/advogados-juridicos', dadosParaEnviar, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
@@ -184,60 +187,71 @@ export default function AdvogadoJuridicoForm() {
           />
         </div>
 
-      <div className="coluna">
+        <div className="space-y-4">
+          <Input
+            label="CEP:"
+            name="cep"
+            placeholder="00000-000"
+            value={formData.cep}
+            onChange={handleChange}
+            mask={mascaraCEP}
+            errorMessage={errors.cep}
+          />
 
-        <label>CEP:</label>
-        <input
-          type="text"
-          name="cep"
-          placeholder="00000-000"
-          value={formData.cep}
-          onChange={handleChange}
-        />
-        {errors.cep && <span className="error">{errors.cep}</span>}
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="md:w-3/4 w-full">
+              <Input
+                label="Logradouro:"
+                name="logradouro"
+                placeholder="Ex: Rua das Flores"
+                value={formData.logradouro}
+                onChange={handleChange}
+                errorMessage={errors.logradouro}
+              />
+            </div>
+            <div className="md:w-1/4 w-full">
+              <Input
+                label="Número:"
+                name="numero"
+                placeholder="Ex: 123"
+                value={formData.numero}
+                onChange={handleChange}
+                errorMessage={errors.numero}
+              />
+            </div>
+          </div>
 
-        <label>Logradouro:</label>
-        <input
-          type="text"
-          name="logradouro"
-          placeholder="Rua Exemplo"
-          value={formData.logradouro}
-          onChange={handleChange}
-        />
-        {errors.logradouro && <span className="error">{errors.logradouro}</span>}
-
-        <label>Bairro:</label>
-        <input
-          type="text"
-          name="bairro"
-          placeholder="Centro"
-          value={formData.bairro}
-          onChange={handleChange}
-        />
-        {errors.bairro && <span className="error">{errors.bairro}</span>}
-
-        <label>Cidade:</label>
-        <input
-          type="text"
-          name="cidade"
-          placeholder="Cidade"
-          value={formData.cidade}
-          onChange={handleChange}
-        />
-        {errors.cidade && <span className="error">{errors.cidade}</span>}
-
-        <label>Complemento:</label>
-        <input
-          type="text"
-          name="complemento"
-          placeholder="Apartamento, bloco, etc."
-          value={formData.complemento}
-          onChange={handleChange}
-        />
+          <Input
+            label="Bairro:"
+            name="bairro"
+            placeholder="Ex: Centro"
+            value={formData.bairro}
+            onChange={handleChange}
+            errorMessage={errors.bairro}
+          />
+          <Input
+            label="Cidade:"
+            name="cidade"
+            placeholder="Ex: Belo Horizonte"
+            value={formData.cidade}
+            onChange={handleChange}
+            errorMessage={errors.cidade}
+          />
+          <Input
+            label="Complemento:"
+            name="complemento"
+            placeholder="Ex: Sala 01, Ed. Omega"
+            value={formData.complemento}
+            onChange={handleChange}
+            errorMessage={errors.complemento}
+          />
+        </div>
       </div>
 
-      <div className="linha-centralizada">
-        <button type="submit" className="btn-cadastrar">CADASTRAR</button>
+      <div className="mt-8 flex justify-center w-full">
+        <Botao type="submit" largura="grande" tamanho="grande">
+          Cadastrar
+        </Botao>
       </div>
     </form>
   );

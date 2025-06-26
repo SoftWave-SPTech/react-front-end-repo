@@ -1,12 +1,16 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
+import { api } from '../../service/api.js';
+import { nanoid } from 'nanoid';
+
+import Botao from '../../components/Ui/Botao';
+import { Input } from '../Ui/Input';
+
 import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoFisico } from '../../Utils/validacoes';
 import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG,mascaraOAB } from '../../Utils/mascaras';
 import EnviarChaveAcesso from './EnvioEmail.jsx';
 
-export default function AdvogadoFisicoForm() 
-{
+export default function AdvogadoFisicoForm() {
   const [formData, setFormData] = useState({
     nome: '',
     cpf: '',
@@ -16,6 +20,7 @@ export default function AdvogadoFisicoForm()
     telefone: '',
     cep: '',
     logradouro: '',
+    numero: '',
     bairro: '',
     cidade: '',
     complemento: '',
@@ -23,20 +28,7 @@ export default function AdvogadoFisicoForm()
 
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    // Máscaras
-    const telefoneMask = new Inputmask('(99) 99999-9999', { placeholder: '(__) _____-____' });
-    const cepMask = new Inputmask('99999-999', { placeholder: '_____-___' });
-    const cpfMask = new Inputmask('999.999.999-99', { placeholder: '___.___.___-__' });
-    const rgMask = new Inputmask('99.999.999-9', { placeholder: '__.___.___-_' });
-
-    telefoneMask.mask(document.querySelector('[name=telefone]'));
-    cepMask.mask(document.querySelector('[name=cep]'));
-    cpfMask.mask(document.querySelector('[name=cpf]'));
-    rgMask.mask(document.querySelector('[name=rg]'));
-  }, []);
-
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
 
     setFormData((prevData) => ({
@@ -65,9 +57,16 @@ export default function AdvogadoFisicoForm()
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
 
-    const novaSenha = uuidv4();
+    const errosEncontrados = validarAdvogadoFisico(formData);
+
+    if (Object.keys(errosEncontrados).length > 0) {
+      setErrors(errosEncontrados);
+      return;
+    }
+
+    setErrors({});
+    const novaSenha = nanoid(8);
     const dadosParaEnviar = { ...formData, senha: novaSenha };
 
     console.log("Dados enviados para o backend:", dadosParaEnviar);
@@ -83,6 +82,20 @@ export default function AdvogadoFisicoForm()
         EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
         
         alert('Cadastro realizado com sucesso!');
+        setFormData({
+          nome: '',
+          cpf: '',
+          rg: '',
+          email: '',
+          oab: '',
+          telefone: '',
+          cep: '',
+          logradouro: '',
+          numero: '',
+          bairro: '',
+          cidade: '',
+          complemento: '',
+        });
       })
       .catch((err) => {
 
@@ -167,59 +180,71 @@ export default function AdvogadoFisicoForm()
           />
         </div>
 
-      <div className="coluna">
-        <label>CEP:</label>
-        <input
-          type="text"
-          name="cep"
-          placeholder="00000-000"
-          value={formData.cep}
-          onChange={handleChange}
-        />
-        {errors.cep && <span className="error">{errors.cep}</span>}
+        <div className="space-y-4">
+          <Input
+            label="CEP:"
+            name="cep"
+            placeholder="00000-000"
+            value={formData.cep}
+            onChange={handleChange}
+            mask={mascaraCEP}
+            errorMessage={errors.cep}
+          />
 
-        <label>Logradouro:</label>
-        <input
-          type="text"
-          name="logradouro"
-          placeholder="Rua Exemplo"
-          value={formData.logradouro}
-          onChange={handleChange}
-        />
-        {errors.logradouro && <span className="error">{errors.logradouro}</span>}
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="md:w-3/4 w-full">
+              <Input
+                label="Logradouro:"
+                name="logradouro"
+                placeholder="Ex: Rua das Flores"
+                value={formData.logradouro}
+                onChange={handleChange}
+                errorMessage={errors.logradouro}
+              />
+            </div>
+            <div className="md:w-1/4 w-full">
+              <Input
+                label="Número:"
+                name="numero"
+                placeholder="Ex: 123"
+                value={formData.numero}
+                onChange={handleChange}
+                errorMessage={errors.numero}
+              />
+            </div>
+          </div>
 
-        <label>Bairro:</label>
-        <input
-          type="text"
-          name="bairro"
-          placeholder="Centro"
-          value={formData.bairro}
-          onChange={handleChange}
-        />
-        {errors.bairro && <span className="error">{errors.bairro}</span>}
-
-        <label>Cidade:</label>
-        <input
-          type="text"
-          name="cidade"
-          placeholder="Cidade"
-          value={formData.cidade}
-          onChange={handleChange}
-        />
-        {errors.cidade && <span className="error">{errors.cidade}</span>}
-
-        <label>Complemento:</label>
-        <input
-          type="text"
-          name="complemento"
-          placeholder="Apartamento, bloco, etc."
-          value={formData.complemento}
-          onChange={handleChange}
-        />
+          <Input
+            label="Bairro:"
+            name="bairro"
+            placeholder="Ex: Centro"
+            value={formData.bairro}
+            onChange={handleChange}
+            errorMessage={errors.bairro}
+          />
+          <Input
+            label="Cidade:"
+            name="cidade"
+            placeholder="Ex: Rio de Janeiro"
+            value={formData.cidade}
+            onChange={handleChange}
+            errorMessage={errors.cidade}
+          />
+          <Input
+            label="Complemento:"
+            name="complemento"
+            placeholder="Ex: Apto 101"
+            value={formData.complemento}
+            onChange={handleChange}
+            errorMessage={errors.complemento}
+          />
+        </div>
       </div>
 
-      <div className="linha-centralizada">
-        <button type="submit" className="btn-cadastrar">CADASTRAR</button>
+      <div className="mt-8 flex justify-center w-full">
+        <Botao type="submit" largura="grande" tamanho="grande">
+          Cadastrar
+        </Botao>
       </div>
     </form>
   );

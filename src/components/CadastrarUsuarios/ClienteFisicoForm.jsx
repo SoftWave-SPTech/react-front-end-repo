@@ -1,5 +1,11 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
+import { api } from '../../service/api.js';
+import { nanoid } from 'nanoid';
+
+import { Input } from '../Ui/Input';
+import Botao from '../../components/Ui/Botao';
+
+import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG } from '../../Utils/mascaras';
 import { buscarCep } from '../../service/buscarCep';
 import { validarClienteFisico } from '../../Utils/validacoes';
 import EnviarChaveAcesso from './EnvioEmail.jsx';
@@ -13,6 +19,7 @@ export default function ClienteFisicoForm() {
     telefone: '',
     cep: '',
     logradouro: '',
+    numero: '',
     bairro: '',
     cidade: '',
     complemento: '',
@@ -20,19 +27,7 @@ export default function ClienteFisicoForm() {
 
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    const telefoneMask = new Inputmask('(99) 99999-9999', { placeholder: '(__) _____-____' });
-    const cepMask = new Inputmask('99999-999', { placeholder: '_____-___' });
-    const cpfMask = new Inputmask('999.999.999-99', { placeholder: '___.___.___-__' });
-    const rgMask = new Inputmask('99.999.999-9', { placeholder: '__.___.___-_' });
-
-    telefoneMask.mask(document.querySelector('[name=telefone]'));
-    cepMask.mask(document.querySelector('[name=cep]'));
-    cpfMask.mask(document.querySelector('[name=cpf]'));
-    rgMask.mask(document.querySelector('[name=rg]'));
-  }, []);
-
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
 
     setFormData((prevData) => ({
@@ -61,14 +56,19 @@ export default function ClienteFisicoForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
 
-    const novaSenha = uuidv4();
+    const errosEncontrados = validarClienteFisico(formData);
+
+    if (Object.keys(errosEncontrados).length > 0) {
+      setErrors(errosEncontrados);
+      return;
+    }
+
+    setErrors({});
+    const novaSenha = nanoid(8);
     const dadosParaEnviar = { ...formData, senha: novaSenha };
 
-    console.log('Dados do formulário:', dadosParaEnviar);
-    // TODO ESCREVER AUTORIZACAO PARA AS OUTRAS REQUESTS
-    axios.post('http://localhost:8080/usuarios-fisicos', dadosParaEnviar, {
+    api.post('/usuarios-fisicos', dadosParaEnviar, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
@@ -114,112 +114,118 @@ export default function ClienteFisicoForm() {
   };
 
   return (
-    <form className="formulario" onSubmit={handleSubmit}>
-      <div className="coluna">
-        <label>Nome:</label>
-        <input
-          type="text"
-          name="nome"
-          placeholder="Digite o nome completo"
-          value={formData.nome}
-          onChange={handleChange}
-        />
-        {errors.nome && <span className="error">{errors.nome}</span>}
+    <form className="bg-white p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <Input
+            label="Nome Completo:"
+            name="nome"
+            placeholder="Ex: João da Silva"
+            value={formData.nome}
+            onChange={handleChange}
+            errorMessage={errors.nome}
+          />
+          <Input
+            label="CPF:"
+            name="cpf"
+            placeholder="000.000.000-00"
+            value={formData.cpf}
+            onChange={handleChange}
+            mask={mascaraCPF}
+            errorMessage={errors.cpf}
+          />
+          <Input
+            label="RG:"
+            name="rg"
+            placeholder="00.000.000-0"
+            value={formData.rg}
+            onChange={handleChange}
+            mask={mascaraRG}
+            errorMessage={errors.rg}
+          />
+          <Input
+            label="Email:"
+            name="email"
+            type="email"
+            placeholder="joao@email.com"
+            value={formData.email}
+            onChange={handleChange}
+            errorMessage={errors.email}
+          />
+          <Input
+            label="Telefone:"
+            name="telefone"
+            placeholder="(00) 00000-0000"
+            value={formData.telefone}
+            onChange={handleChange}
+            mask={mascaraTelefone}
+            errorMessage={errors.telefone}
+          />
+        </div>
 
-        <label>CPF:</label>
-        <input
-          type="text"
-          name="cpf"
-          placeholder="000.000.000-00"
-          value={formData.cpf}
-          onChange={handleChange}
-        />
-        {errors.cpf && <span className="error">{errors.cpf}</span>}
-
-        <label>RG:</label>
-        <input
-          type="text"
-          name="rg"
-          placeholder="00.000.000-0"
-          value={formData.rg}
-          onChange={handleChange}
-        />
-        {errors.rg && <span className="error">{errors.rg}</span>}
-
-        <label>Email:</label>
-        <input
-          type="email"
-          name="email"
-          placeholder="exemplo@email.com"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        {errors.email && <span className="error">{errors.email}</span>}
-
-        <label>Telefone:</label>
-        <input
-          type="text"
-          name="telefone"
-          placeholder="(11) 98030-3049"
-          value={formData.telefone}
-          onChange={handleChange}
-        />
-        {errors.telefone && <span className="error">{errors.telefone}</span>}
+        <div className="space-y-4">
+          <Input
+            label="CEP:"
+            name="cep"
+            placeholder="00000-000"
+            value={formData.cep}
+            onChange={handleChange}
+            mask={mascaraCEP}
+            errorMessage={errors.cep}
+          />
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="md:w-3/4 w-full">
+              <Input
+                label="Logradouro:"
+                name="logradouro"
+                placeholder="Ex: Rua das Flores"
+                value={formData.logradouro}
+                onChange={handleChange}
+                errorMessage={errors.logradouro}
+              />
+            </div>
+            <div className="md:w-1/4 w-full">
+              <Input
+                label="Número:"
+                name="numero"
+                placeholder="Ex: 123"
+                value={formData.numero}
+                onChange={handleChange}
+                errorMessage={errors.numero}
+              />
+            </div>
+          </div>
+          <Input
+            label="Bairro:"
+            name="bairro"
+            placeholder="Ex: Centro"
+            value={formData.bairro}
+            onChange={handleChange}
+            errorMessage={errors.bairro}
+          />
+          <Input
+            label="Cidade:"
+            name="cidade"
+            placeholder="Ex: São Paulo"
+            value={formData.cidade}
+            onChange={handleChange}
+            errorMessage={errors.cidade}
+          />
+          <Input
+            label="Complemento:"
+            name="complemento"
+            placeholder="Ex: Apto 21"
+            value={formData.complemento}
+            onChange={handleChange}
+            errorMessage={errors.complemento}
+          />
+        </div>
       </div>
 
-      <div className="coluna">
-        <label>CEP:</label>
-        <input
-          type="text"
-          name="cep"
-          placeholder="00000-000"
-          value={formData.cep}
-          onChange={handleChange}
-        />
-        {errors.cep && <span className="error">{errors.cep}</span>}
-
-        <label>Logradouro:</label>
-        <input
-          type="text"
-          name="logradouro"
-          placeholder="Rua Exemplo"
-          value={formData.logradouro}
-          onChange={handleChange}
-        />
-        {errors.logradouro && <span className="error">{errors.logradouro}</span>}
-
-        <label>Bairro:</label>
-        <input
-          type="text"
-          name="bairro"
-          placeholder="Centro"
-          value={formData.bairro}
-          onChange={handleChange}
-        />
-        {errors.bairro && <span className="error">{errors.bairro}</span>}
-
-        <label>Cidade:</label>
-        <input
-          type="text"
-          name="cidade"
-          placeholder="Cidade"
-          value={formData.cidade}
-          onChange={handleChange}
-        />
-        {errors.cidade && <span className="error">{errors.cidade}</span>}
-
-        <label>Complemento:</label>
-        <input
-          type="text"
-          name="complemento"
-          placeholder="Apartamento, bloco, etc."
-          value={formData.complemento}
-          onChange={handleChange}
-        />
-      </div>
-
-      <div className="linha-centralizada">
-        <button type="submit" className="btn-cadastrar">CADASTRAR</button>
+      <div className="mt-8 flex justify-center w-full">
+        <Botao type="submit" largura="grande" tamanho="grande">
+          Cadastrar
+        </Botao>
       </div>
     </form>
   );

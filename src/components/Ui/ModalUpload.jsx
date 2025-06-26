@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import 'tailwindcss/tailwind.css';
+import Botao from "./Botao";
+import { Input } from './Input';
 
 export default function ModalUpload({ onClose, onUpload }) {
   const [arquivo, setArquivo] = useState(null);

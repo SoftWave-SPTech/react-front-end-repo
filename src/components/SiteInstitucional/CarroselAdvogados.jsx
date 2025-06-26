@@ -31,7 +31,7 @@ function CarroselAdvogados() {
             id: 3,
             name: "João Pedro Nogueira",
             cargo: "Consultor Jurídico",
-            image: "../src/assets/SiteInstitucional/advogado1.png",
+            image: "../src/assets/images/SiteInstitucional/advogado1.png",
             text1: "João Pedro Nogueira tem ampla experiência em consultoria jurídica para empresas, ajudando a mitigar riscos legais.",
             text2: "Ele é formado pela Mackenzie e possui MBA em Gestão Empresarial pela FGV.",
             text3: "João também é mentor de jovens advogados e participa de iniciativas de educação jurídica.",
@@ -68,18 +68,7 @@ function CarroselAdvogados() {
         },
     ];
 
-    const handlePrev = () => {
-        // Volta para os dois advogados anteriores
-        console.log("StartIndex antes de voltar:")
-        console.log(startIndex);
-        console.log("Advogados.length:")
-        console.log(advogados.length);
-        if (startIndex - 2 >= 0) {
-            setStartIndex(startIndex - 2);
-        }
-        console.log("StartIndex depois de voltar:")
-        console.log(startIndex);
-    };
+    const swiperRef = useRef(null);
 
     return (
     <div className="text-white w-screen h-full bg-gray flex items-center">
@@ -106,18 +95,21 @@ function CarroselAdvogados() {
                             <h3 className='text-xl font-semibold text-dourado'>{advogado.name}</h3>
                             <h4 className='text-md'>{advogado.cargo}</h4>
                         </div>
-                        <div className='advogado-texto'>
-                            <p>{advogado.text1}</p>
-                            <p>{advogado.text2}</p>
-                            <p>{advogado.text3}</p>
-                            <p>{advogado.text4}</p>
-                        </div>
                     </div>
-                ))
-            }
-            <button className={`button-right ${startIndex + 2 >= advogados.length ? "non-view" : ""}`} onClick={handleNext} disabled={startIndex + 2 >= advogados.length}>{"〉"}</button>
-        </div>
-    );
+                    <div className='flex flex-col justify-center w-[50vw] h-[50vh] gap-4 px-1'>
+                        <p>{advogado.text1}</p>
+                        <p>{advogado.text2}</p>
+                        <p>{advogado.text3}</p>
+                        <p>{advogado.text4}</p>
+                    </div>
+                </SwiperSlide>
+            ))}
+        </Swiper>
+        <button className="text-white w-60 mr-8 text-[65px]" onClick={() => swiperRef.current?.slideNext()}>
+            〉
+        </button>
+    </div>
+);
 }
 
 export default CarroselAdvogados;

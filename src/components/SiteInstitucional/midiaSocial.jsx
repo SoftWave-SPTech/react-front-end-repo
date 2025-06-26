@@ -1,5 +1,4 @@
 import React from 'react';
-import '../../estilos/midiaSocial.css'; // Opcional: para estilização
 
 const MidiaSocial = () => {
     const youtube = () => {
@@ -22,4 +21,4 @@ const MidiaSocial = () => {
     );
 };
 
-export default MidiaSocial
+export default MidiaSocial;

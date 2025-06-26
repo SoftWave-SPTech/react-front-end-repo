@@ -1,14 +1,12 @@
 import { useState } from 'react';
-import '../../estilos/Cadastro.css';
 import AdvogadoFisicoForm from './AdvogadoFisicoForm';
 import AdvogadoJuridicoForm from './AdvogadoJuridicoForm';
 import ClienteFisicoForm from './ClienteFisicoForm';
 import ClienteJuridicoForm from './ClienteJuridicoForm';
 
-
-export default function Cadastro() 
+export default function FormularioAbas() 
 {
-  const [aba, setAba] = useState('advogado');
+  const [aba, setAba] = useState('cliente');
   const [tipo, setTipo] = useState('fisica');
 
   const renderFormulario = () => 
@@ -24,10 +22,9 @@ export default function Cadastro()
   };
 
   return (
-
-    <div className='cadastrar'>
-      <div className="cadastro-container">
-        <div className="abas-principais">
+    <div className="w-full flex justify-center">
+      <div className="w-full max-w-[75%] mx-auto flex flex-col gap-0">
+        <div className="flex justify-end space-x-2 mt-0 mb-8">
           <button
             onClick={() => setAba('cliente')}
             className={`px-5 py-3 rounded-md text-sm font-semibold transition ${
@@ -38,7 +35,6 @@ export default function Cadastro()
           >
             Cliente
           </button>
-
           <button
             onClick={() => setAba('advogado')}
             className={`px-5 py-3 rounded-md text-sm font-semibold transition ${
@@ -74,9 +70,10 @@ export default function Cadastro()
           </button>
         </div>
 
+        <div className="bg-white p-6 rounded-b-lg shadow-lg mt-0">
           {renderFormulario()}
         </div>
       </div>
-    </div> 
+    </div>
   );
 }

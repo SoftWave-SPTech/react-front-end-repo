@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import '../estilos/SiteInstitucional.css';
 import CarroselAdvogados from '../components/SiteInstitucional/CarroselAdvogados.jsx';
 import PlayerVideo from '../components/SiteInstitucional/PlayerVideo.jsx';
 import MidiaSocial from '../components/SiteInstitucional/MidiaSocial.jsx';
@@ -9,7 +8,8 @@ import estatuaJustica from '../assets/images/SiteInstitucional/EstatuaJustica.pn
 import { useNavigate } from 'react-router-dom';
 
 function SiteInstitucional() {
-    const [selectedEspecialidade, setSelectedEspecialidade] = useState({});
+  const [selectedEspecialidade, setSelectedEspecialidade] = useState({});
+  const navigate = useNavigate();
 
   const especialidades = [
     { id: 1, name: "Direito Civil", icon: "./Scales.svg", text: "Nossa equipe assessora clientes em uma ampla gama de questões no Direito Civil, incluindo contratos e litígios. Trabalhamos de maneira próxima aos clientes para compreender suas necessidades específicas e oferecer soluções jurídicas que protejam seus interesses, sempre com uma abordagem estratégica e assertiva.", link: "" },
@@ -21,20 +21,17 @@ function SiteInstitucional() {
     { id: 7, name: "Consultoria Juridica", icon: "./Consultation.svg", text: "Consultoria Juridica", icon: "./Consultation.svg", text: "Nossa consultoria é voltada para pessoas físicas e jurídicas que buscam orientação sobre riscos e melhores práticas jurídicas. Nos empenhamos em entender o contexto e os objetivos de nossos clientes, oferecendo soluções personalizadas que atendam suas necessidades e promovam segurança jurídica em suas operações.", link: "" },
   ];
 
-    useEffect(() => {
-        const defaultEspecialidade = especialidades[0];
-        setSelectedEspecialidade(defaultEspecialidade);
-    }, []);
+  useEffect(() => {
+    setSelectedEspecialidade(especialidades[0]);
+  }, []);
 
+  const seletorEspecialidade = (especialidade) => {
+    setSelectedEspecialidade(especialidade);
+  };
 
-
-    const seletorEspecialidade = (especialidade) => {
-        setSelectedEspecialidade(especialidade);
-    }
-
-    const saibaMais = () => {
-        window.location.href = 
-    "https://api.whatsapp.com/send?phone=5511989833914&text=Ol%C3%A1%20Dr.%20Felipe,%20como%20vai?%20Pode%20me%20ajudar"};
+  const saibaMais = () => {
+    window.location.href = "https://api.whatsapp.com/send?phone=5511989833914&text=Ol%C3%A1%20Dr.%20Felipe,%20como%20vai?%20Pode%20me%20ajudar";
+  };
 
   return (
     <>

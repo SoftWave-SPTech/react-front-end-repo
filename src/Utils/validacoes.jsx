@@ -189,4 +189,3 @@ export const validarPerfilAdvogado = (dados) => {
 
   return erros;
 };
-
