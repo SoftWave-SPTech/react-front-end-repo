@@ -70,8 +70,8 @@ export default function ClienteJuridicoForm() {
 
     setErrors({});
 
-    const novaSenha = nanoid(8);
-    const dadosParaEnviar = { ...formData, senha: novaSenha };
+    const tokenPrimeiroAcesso = nanoid(8);
+    const dadosParaEnviar = { ...formData, tokenPrimeiroAcesso: tokenPrimeiroAcesso };
 
     console.log("Erros encontrados:", errosEncontrados);
 
@@ -80,7 +80,8 @@ export default function ClienteJuridicoForm() {
           Authorization: `Bearer ${sessionStorage.getItem('token')}`,
         },
       })
-      .then((response) => {
+      .then(() => {
+        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
         EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
 
         alert('Cadastro realizado com sucesso!');

@@ -65,8 +65,8 @@ export default function ClienteFisicoForm() {
     }
 
     setErrors({});
-    const novaSenha = nanoid(8);
-    const dadosParaEnviar = { ...formData, senha: novaSenha };
+    const tokenPrimeiroAcesso = nanoid(8);
+    const dadosParaEnviar = { ...formData, tokenPrimeiroAcesso: tokenPrimeiroAcesso };
 
     api.post('/usuarios-fisicos', dadosParaEnviar, {
       headers: {
@@ -75,7 +75,7 @@ export default function ClienteFisicoForm() {
     })
     .then(() => {
 
-        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
 
         alert('Cadastro realizado com sucesso!');
         setFormData({
