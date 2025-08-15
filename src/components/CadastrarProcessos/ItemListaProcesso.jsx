@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../../service/api';
 import ModalConfirmacao from '../Ui/ModalConfirmacao';
 import Botao from '../Ui/Botao';
+import Alert from '../Ui/AlertStyle';
 import 'tailwindcss/tailwind.css';
 
 export default function ItemListaProcesso() {
@@ -13,6 +14,7 @@ export default function ItemListaProcesso() {
     const [usuarioId, setUsuarioId] = useState("");
     const [role, setRole] = useState("");
     const [modalExcluir, setModalExcluir] = useState({ aberto: false, id: null });
+    const [alert, setAlert] = useState({ open: false, type: "info", message: "" });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,14 +31,12 @@ export default function ItemListaProcesso() {
             try {
                 let response;
                 if (role === 'ROLE_ADVOGADO') {
-                    // Se for advogado, busca apenas os processos do usuário
                     response = await api.get(`/processos/usuario-id/${usuarioId}`, {
                         headers: {
                             Authorization: `Bearer ${sessionStorage.getItem('token')}`
                         }
                     });
                 } else if (role === 'ROLE_ADMIN' || role === 'ROLE_DONO') {
-                    // Se for admin ou dono, busca todos os processos
                     response = await api.get('/processos', {
                         headers: {
                             Authorization: `Bearer ${sessionStorage.getItem('token')}`
@@ -48,6 +48,11 @@ export default function ItemListaProcesso() {
                     setProcessos(response.data);
                 }
             } catch (error) {
+                setAlert({
+                    open: true,
+                    type: "error",
+                    message: "Erro ao buscar processos."
+                });
                 console.error('Erro ao buscar processos:', error);
             }
         };
@@ -85,9 +90,18 @@ export default function ItemListaProcesso() {
                 }
             }
     
-            alert('Processo não vinculado a nenhum cliente encontrado.');
+            setAlert({
+                open: true,
+                type: "warning",
+                message: "Processo não vinculado a nenhum cliente encontrado."
+            });
     
         } catch (error) {
+            setAlert({
+                open: true,
+                type: "error",
+                message: "Erro ao buscar cliente do processo."
+            });
             console.error("Erro ao buscar cliente do processo:", error);
         }
     };
@@ -95,7 +109,11 @@ export default function ItemListaProcesso() {
     // Abrir modal de confirmação
     const confirmarExclusao = (id) => {
         if (role === 'ROLE_ADVOGADO') {
-            alert('Você não tem permissão para excluir processos.');
+            setAlert({
+                open: true,
+                type: "warning",
+                message: "Você não tem permissão para excluir processos."
+            });
             return;
         }
         setModalExcluir({ aberto: true, id });
@@ -116,15 +134,34 @@ export default function ItemListaProcesso() {
             });
             setProcessos(prev => prev.filter(proc => proc.id !== modalExcluir.id));
             setModalExcluir({ aberto: false, id: null });
-            alert('Processo excluído com sucesso!');
+            setAlert({
+                open: true,
+                type: "success",
+                message: "Processo excluído com sucesso!"
+            });
         } catch (error) {
-            alert('Erro ao excluir processo');
+            setAlert({
+                open: true,
+                type: "error",
+                message: "Erro ao excluir processo"
+            });
             setModalExcluir({ aberto: false, id: null });
         }
     };
 
+    const handleCloseAlert = () => {
+        setAlert({ ...alert, open: false });
+    };
+
     return (
         <div className="bg-AzulEscuro rounded-lg p-[2.5rem] font-sans w-full max-w-[56.25rem] mx-auto min-h-[45.8rem] flex flex-col" style={{ height: "70vh" }}>
+            {alert.open && (
+                <Alert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={handleCloseAlert}
+                />
+            )}
             <div className="flex items-center mb-6 pb-4">
                 <h2 className="text-3xl font-normal text-dourado flex-1">Processos</h2>
                 <div className="relative w-[16rem] max-w-full">
