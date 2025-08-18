@@ -259,7 +259,7 @@ const VisualizarProcessosAdvogado = () => {
                     borderRadius: '50%',
                     margin: '6px auto'
                   }}></div>
-                  <button onClick={() => gerarAnaliseIA(movimentacao.id, dadosProcesso.id)} style={{
+                  <button onClick={() => gerarAnaliseIA(dadosProcesso.id, movimentacao.id)} style={{
                     background: '#0A1F44',
                     color: '#fff',
                     border: 'none',
