@@ -69,8 +69,8 @@ export default function AdvogadoJuridicoForm() {
     }
 
     setErrors({});
-    const novaSenha = nanoid(8);
-    const dadosParaEnviar = { ...formData, senha: novaSenha };
+    const tokenPrimeiroAcesso = nanoid(8);
+    const dadosParaEnviar = { ...formData, tokenPrimeiroAcesso: tokenPrimeiroAcesso };
 
     console.log("Dados enviados para o backend:", dadosParaEnviar);
 
@@ -79,9 +79,9 @@ export default function AdvogadoJuridicoForm() {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
-    .then((response) => 
+    .then(() => 
     {
-      EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+      EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
 
       alert('Cadastro realizado com sucesso!');
       setFormData({

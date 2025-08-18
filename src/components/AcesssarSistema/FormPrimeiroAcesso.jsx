@@ -35,7 +35,7 @@ export default function FormPrimeiroAcesso() {
         try {
             const response = await api.post('/auth/primeiro-acesso', {
                 email: email,
-                senha: chave,
+                tokenPrimeiroAcesso: chave,
             });
 
             sessionStorage.setItem("email", response.data.email);
@@ -59,7 +59,9 @@ export default function FormPrimeiroAcesso() {
                 } else {
                     alert(mensagensErro || "Dados inválidos. Por favor, verifique as informações.");
                 }
-            } else {
+            } else if(error.response?.status === 403) {
+                alert("Este usuário já realizou o primeiro acesso. Por favor, faça login.");
+            }else {
                 alert("Ocorreu um erro ao tentar realizar o acesso. Por favor, tente novamente mais tarde.");
             }
         }
