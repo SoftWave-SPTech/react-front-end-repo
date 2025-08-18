@@ -47,7 +47,16 @@ export default function CardUsuario(props) {
                     {
                         props.token ? <p><b className="text-2xl text-black">🇹🇰</b> {props.token}</p> : ""
                     }
-                    <p><b className="text-2xl text-black">✉️</b> {props.email}</p>
+                    <p
+                        onClick={() => props.onClickEmail && props.onClickEmail(props.email)}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { props.onClickEmail && props.onClickEmail(props.email); } }}
+                        role="button"
+                        tabIndex={0}
+                        title="Clique para reenviar token para este e-mail"
+                        className="cursor-pointer hover:underline"
+                    >
+                        <b className="text-2xl text-black">✉️</b> {props.email}
+                    </p>
                     <p><b className="text-2xl text-black">📱</b> {props.telefone}</p>
                 </div>
             </div>

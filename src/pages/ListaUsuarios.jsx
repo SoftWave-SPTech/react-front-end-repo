@@ -4,11 +4,15 @@ import LayoutBase from "../layouts/LayoutBase";
 import CardUsuario from "../components/ListaUsuarios/CardUsuario";
 import { api } from "../service/api";
 import BarraTitulo from "../components/Ui/BarraTitulo";
+import ModalReenvioTokenPrimeiroAcesso from "../components/Ui/ModalReenvioTokenPrimeiroAcesso";
 
 export default function ListaUsuarios() {
     const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
     const [listaUsuarios, setListaUsuarios] = useState([]);
     const [filtro, setFiltro] = useState('');
+    const [isModalReenvioOpen, setIsModalReenvioOpen] = useState(false);
+    const [emailSelecionado, setEmailSelecionado] = useState("");
+    const [reenviando, setReenviando] = useState(false);
 
     useEffect(() => {
         api.get('/usuarios/listar-usarios-e-procesos',
@@ -32,6 +36,33 @@ export default function ListaUsuarios() {
         const nome = usuario.nome || usuario.nomeFantasia || '';
         return nome.toLowerCase().includes(filtro.toLowerCase());
     });
+
+    const abrirModalReenvio = (email) => {
+        setEmailSelecionado(email || "");
+        setIsModalReenvioOpen(true);
+    };
+
+    const fecharModalReenvio = () => {
+        setIsModalReenvioOpen(false);
+    };
+
+    const handleReenviar = async (novoEmail) => {
+        try {
+            setReenviando(true);
+            await api.put(`/usuarios/editar-email/${emailSelecionado}/${novoEmail}`,{
+                headers: {
+                    "Authorization": TOKEN
+                }
+            });
+            console.log('Reenviar token para:', novoEmail);
+            setIsModalReenvioOpen(false);
+        } catch (error) {
+            console.error('Erro ao reenviar token:', error);
+            alert(error.response.data.message);
+        } finally {
+            setReenviando(false);
+        }
+    };
 
     return (
         <LayoutBase backgroundClass="bg-cinzaAzulado">
@@ -69,6 +100,7 @@ export default function ListaUsuarios() {
                                 role={usuario.role}
                                 status={usuario.status}
                                 processos={usuario.procesos}
+                                onClickEmail={abrirModalReenvio}
                             />
                         ))
                     ) : (
@@ -76,6 +108,14 @@ export default function ListaUsuarios() {
                     )
                 }
             </div>
+
+            <ModalReenvioTokenPrimeiroAcesso
+                isOpen={isModalReenvioOpen}
+                onClose={fecharModalReenvio}
+                onReenviar={handleReenviar}
+                emailAtual={emailSelecionado}
+                loading={reenviando}
+            />
         </LayoutBase>
     );
 }
