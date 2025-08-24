@@ -7,7 +7,7 @@ const ModalAguardando = ({ loadingEnd = false, children }) => {
         <div style={styles.overlay}>
             <div style={styles.modal}>
                 <div style={styles.spinner}></div>
-                <p style={{color: "#000"}}>Aguarde enquanto a Analise é Gerada</p>
+                <p style={{color: "#000"}}>Aguarde enquanto a Análise IA é gerada</p>
                 {children}
             </div>
         </div>
