@@ -7,7 +7,8 @@ import logo from '../assets/images/SiteInstitucional/leaologo.png';
 import estatuaJustica from '../assets/images/SiteInstitucional/EstatuaJustica.png';
 import { useNavigate } from 'react-router-dom';
 
-function SiteInstitucional() {
+function SiteInstitucional() 
+{
   const [selectedEspecialidade, setSelectedEspecialidade] = useState({});
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -221,7 +222,7 @@ function SiteInstitucional() {
           </div>
         </section>
 
-        <section className="w-screen min-h-[90vh] flex flex-col items-center justify-center" style={{ background: 'linear-gradient(to bottom, #181e36 20%, rgba(7,17,43,0) 100%)' }} > 
+        <section className="w-full min-h-[90vh] flex flex-col items-center justify-center" style={{ background: 'linear-gradient(to bottom, #181e36 20%, rgba(7,17,43,0) 100%)' }} > 
           <h2 className="text-center text-3xl font-bold text-dourado mb-8" >Nossos Advogados</h2> 
           <CarroselAdvogados 
         /> </section>
