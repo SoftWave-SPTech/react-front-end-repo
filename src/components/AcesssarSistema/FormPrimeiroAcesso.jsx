@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { api } from '../../service/api';
 import Botao from "../Ui/Botao";
 import { Input } from "../Ui/Input";
+import Alert from "../Ui/AlertStyle"; // importação do Alert
 
 export default function FormPrimeiroAcesso() {
     const [email, setEmail] = useState("");
     const [chave, setChave] = useState("");
     const [errors, setErrors] = useState({});
+    const [alert, setAlert] = useState({ show: false, message: "", type: "info" }); // estado do alerta
 
     const validarFormulario = () => {
         const novosErros = {};
@@ -39,32 +41,47 @@ export default function FormPrimeiroAcesso() {
             });
 
             sessionStorage.setItem("email", response.data.email);
-            alert("Acesso realizado com sucesso!");
-            window.location.href = "/cadastrar-senha";
+            setAlert({ show: true, message: "Acesso realizado com sucesso!", type: "success" });
+            setTimeout(() => {
+                window.location.href = "/cadastrar-senha";
+            }, 1500);
         } catch (error) {
             console.error("Erro ao realizar o acesso:", error);
-            
-          //   if (error.response?.status === 401) {
-          //     alert("Chave de acesso inválida. Por favor, verifique a chave fornecida.");
-          // } else 
-          // TODO descomentar quando o token estiver funcionando no seu campo correto
+
             if (error.response?.status === 404) {
-                alert("Email ou chave de acesso inválidos. Por favor, verifique se o email e a chave estão corretos.");
+                setAlert({
+                    show: true,
+                    message: "Email ou chave de acesso inválidos. Por favor, verifique se o email e a chave estão corretos.",
+                    type: "error"
+                });
             } else if (error.response?.status === 400) {
                 const mensagensErro = error.response.data;
                 if (typeof mensagensErro === 'object') {
-                    Object.values(mensagensErro).forEach(mensagem => {
-                        alert(mensagem);
+                    // Mostra apenas a primeira mensagem, pode adaptar para mostrar todas se quiser
+                    const primeiraMensagem = Object.values(mensagensErro)[0];
+                    setAlert({
+                        show: true,
+                        message: primeiraMensagem,
+                        type: "error"
                     });
                 } else {
-                    alert(mensagensErro || "Dados inválidos. Por favor, verifique as informações.");
-                }
-            } else if(error.response?.status === 403) {
-                alert("Este usuário já realizou o primeiro acesso. Por favor, faça login.");
-            }else {
-                alert("Ocorreu um erro ao tentar realizar o acesso. Por favor, tente novamente mais tarde.");
+                    setAlert({
+                        show: true,
+                        message: mensagensErro || "Dados inválidos. Por favor, verifique as informações.",
+                        type: "error"
+                    });
+                } else {
+                setAlert({
+                    show: true,
+                    message: "Ocorreu um erro ao tentar realizar o acesso. Por favor, tente novamente mais tarde.",
+                    type: "error"
+                });
             }
         }
+    };
+
+    const handleCloseAlert = () => {
+        setAlert({ ...alert, show: false });
     };
 
     return (
@@ -81,6 +98,13 @@ export default function FormPrimeiroAcesso() {
                     />
                     <h2 className="text-2xl">PRIMEIRO ACESSO</h2>
                 </div>
+                {alert.show && (
+                    <Alert
+                        type={alert.type}
+                        message={alert.message}
+                        onClose={handleCloseAlert}
+                    />
+                )}
                 <Input
                     label="E-MAIL"
                     name="email"
