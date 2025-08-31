@@ -75,18 +75,18 @@ export default function ClienteJuridicoForm() {
 
     setErrors({});
 
-    const novaSenha = nanoid(8);
-    const dadosParaEnviar = { ...formData, senha: novaSenha };
+    const tokenPrimeiroAcesso = nanoid(8);
+    const dadosParaEnviar = { ...formData, tokenPrimeiroAcesso: tokenPrimeiroAcesso };
 
     console.log("Erros encontrados:", errosEncontrados);
 
-    api.post('/usuarios-juridicos', dadosParaEnviar, {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-      },
-    })
-      .then((response) => {
-        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+      api.post('/usuarios-juridicos', dadosParaEnviar, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+        },
+      })
+      .then(() => {
+        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
 
         setAlert({
           type: 'success',

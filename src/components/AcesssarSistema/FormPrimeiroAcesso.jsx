@@ -37,7 +37,7 @@ export default function FormPrimeiroAcesso() {
         try {
             const response = await api.post('/auth/primeiro-acesso', {
                 email: email,
-                senha: chave,
+                tokenPrimeiroAcesso: chave,
             });
 
             sessionStorage.setItem("email", response.data.email);
@@ -70,8 +70,7 @@ export default function FormPrimeiroAcesso() {
                         message: mensagensErro || "Dados inválidos. Por favor, verifique as informações.",
                         type: "error"
                     });
-                }
-            } else {
+                } else {
                 setAlert({
                     show: true,
                     message: "Ocorreu um erro ao tentar realizar o acesso. Por favor, tente novamente mais tarde.",

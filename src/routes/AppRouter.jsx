@@ -20,6 +20,7 @@ import Dashboard from "../pages/Dashboard";
 import PesquisarProcessos from "../pages/PesquisarProcessos";
 import RedefinirSenha from "../pages/RedefinirSenha";
 import EsqueciSenha from "../pages/EsqueciSenha";
+import RegistroPagamentos from "../pages/RegistroPagamentos";
 
 
 export const AppRouter = createBrowserRouter([
@@ -113,5 +114,9 @@ export const AppRouter = createBrowserRouter([
   {
     path:"/documentos-processo/:idProcesso", 
     element:<VisualizarDocumentosProcesso /> 
+  },
+  {
+    path: "/registro-pagamentos",
+    element: <RegistroPagamentos/>
   }
 ]);
