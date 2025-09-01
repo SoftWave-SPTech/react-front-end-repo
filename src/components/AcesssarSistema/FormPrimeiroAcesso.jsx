@@ -70,7 +70,8 @@ export default function FormPrimeiroAcesso() {
                         message: mensagensErro || "Dados inválidos. Por favor, verifique as informações.",
                         type: "error"
                     });
-                } else {
+                }
+             } else {
                 setAlert({
                     show: true,
                     message: "Ocorreu um erro ao tentar realizar o acesso. Por favor, tente novamente mais tarde.",
