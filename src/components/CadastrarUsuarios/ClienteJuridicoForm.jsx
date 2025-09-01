@@ -9,6 +9,7 @@ import { mascaraCNPJ, mascaraTelefone, mascaraCEP } from '../../Utils/mascaras';
 import { buscarCep } from '../../service/buscarCep';
 import { validarClienteJuridico } from '../../Utils/validacoes';
 import EnviarChaveAcesso from './EnvioEmail.jsx';
+import Alert from '../Ui/AlertStyle'; // Importa o AlertStyle
 
 export default function ClienteJuridicoForm() {
   const [formData, setFormData] = useState({
@@ -27,6 +28,7 @@ export default function ClienteJuridicoForm() {
   });
 
   const [errors, setErrors] = useState({});
+  const [alert, setAlert] = useState(null); // Estado para o Alert
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -51,7 +53,10 @@ export default function ClienteJuridicoForm() {
           }));
         } catch (error) {
           console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
-          alert('CEP inválido ou não encontrado.');
+          setAlert({
+            type: 'error',
+            message: 'CEP inválido ou não encontrado.',
+          });
         }
       }
     }
@@ -70,8 +75,8 @@ export default function ClienteJuridicoForm() {
 
     setErrors({});
 
-    const novaSenha = nanoid(8);
-    const dadosParaEnviar = { ...formData, senha: novaSenha };
+    const tokenPrimeiroAcesso = nanoid(8);
+    const dadosParaEnviar = { ...formData, tokenPrimeiroAcesso: tokenPrimeiroAcesso };
 
     console.log("Erros encontrados:", errosEncontrados);
 
@@ -80,10 +85,13 @@ export default function ClienteJuridicoForm() {
           Authorization: `Bearer ${sessionStorage.getItem('token')}`,
         },
       })
-      .then((response) => {
-        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+      .then(() => {
+        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
 
-        alert('Cadastro realizado com sucesso!');
+        setAlert({
+          type: 'success',
+          message: 'Cadastro realizado com sucesso!',
+        });
         setFormData({
           nomeFantasia: '',
           razaoSocial: '',
@@ -105,17 +113,23 @@ export default function ClienteJuridicoForm() {
           const erros = err.response.data;
           let mensagem = "";
           Object.keys(erros).forEach(campo => {
-            if(campo === "message" && campo) {
-                mensagem = erros[campo] ;
-              } else if (campo === "status") {
-                if (erros[campo] === 500){
-                  mensagem = "Já existe um cliente cadastrado com esses dados. Por favor, verifique os dados e tente novamente.";
-                }
+            if (campo === "message" && campo) {
+              mensagem = erros[campo];
+            } else if (campo === "status") {
+              if (erros[campo] === 500) {
+                mensagem = "Já existe um cliente cadastrado com esses dados. Por favor, verifique os dados e tente novamente.";
               }
+            }
           });
-          alert(mensagem)
+          setAlert({
+            type: 'error',
+            message: mensagem || 'Erro ao cadastrar cliente. Por favor, tente novamente.',
+          });
         } else {
-          alert('Erro ao cadastrar cliente. Por favor, tente novamente.');
+          setAlert({
+            type: 'error',
+            message: 'Erro ao cadastrar cliente. Por favor, tente novamente.',
+          });
         }
       });
 
@@ -123,6 +137,13 @@ export default function ClienteJuridicoForm() {
 
   return (
     <form className="bg-white p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <Input

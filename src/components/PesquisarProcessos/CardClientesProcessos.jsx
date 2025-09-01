@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FiMail, FiPhone, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
-import { api } from '../../service/api'; // ajuste o caminho se necessário
+import { api } from '../../service/api'; 
 
 export default function CardClientesProcessos({ cliente }) {
   const navigate = useNavigate();

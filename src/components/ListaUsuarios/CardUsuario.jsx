@@ -4,13 +4,16 @@ import 'tailwindcss/tailwind.css';
 import Toggle from "../Ui/Toggle";
 import MenuLista from "../Ui/MenuLista";
 import CardProcesso from "../ListaUsuarios/CardProcesso";
-import { FiSmile } from "react-icons/fi";
-import { FaSadTear } from "react-icons/fa";
+import { FiSmile, FiFrown, FiMail, FiPhone } from "react-icons/fi";
 
 export default function CardUsuario(props) {
-    const [processos, setProcessos] = useState(props.processos || []);
+    const [processos] = useState(props.processos || []);
+ 
+    const mostrarScroll = processos.length > 2;
+    const processosVisiveis = mostrarScroll ? processos : processos.slice(0, 2);
 
     return (
+      
         <div className="flex w-[98%] bg-white rounded-lg shadow-md p-4 gap-6">
 
             {/* 🔸 Lado esquerdo (30%) */}
@@ -59,37 +62,74 @@ export default function CardUsuario(props) {
                     </p>
                     <p><b className="text-2xl text-black">📱</b> {props.telefone}</p>
                 </div>
+        <div className="relative flex flex-col md:flex-row w-full bg-white rounded-lg shadow-md p-4 gap-4">
+            {/* Versão Desktop */}
+            <div className="hidden md:flex absolute top-4 right-4 items-center gap-3">
+                {props.role !== "ROLE_USUARIO" && (
+                    <MenuLista idUsuario={props.idUsuario} role={props.role} />
+                )}
+                <Toggle idUsuario={props.idUsuario} status={props.status} className="w-12 h-6 md:w-14 md:h-7" />
             </div>
 
-            {/* 🔸 Lado direito (70%) */}
-            <div className="w-[70%] flex flex-col gap-4 relative">
-
-                {/* 🔝 Toggle no canto superior direito */}
-                <div className="absolute top-0 right-0">
-                    <Toggle idUsuario={props.idUsuario} status={props.status} />
+            <div className="flex flex-col gap-4 w-full md:w-1/3">
+                <div className="flex gap-4 items-center">
+                    <div className="flex items-center justify-center w-14 h-14 md:w-20 md:h-20 rounded-full overflow-hidden bg-gray-100 shrink-0">
+                        <img
+                            src={props.imageUser ? `http://localhost:8080/${props.imageUser}` : boneco}
+                            alt="Foto do usuário"
+                            className="object-cover w-full h-full"
+                        />
+                    </div>
+                    <div className="flex flex-col justify-center w-full">
+                        <span className="font-bold text-base md:text-xl text-gray-800">{props.nomeUser}</span>
+                        {props.identificadorUser && (
+                            <p className="text-xs md:text-sm text-gray-600">
+                                <b>OAB</b> {props.identificadorUser}
+                            </p>
+                        )}
+                    </div>
                 </div>
 
-                {/* 📋 Menu centralizado */}
-                <div className="flex justify-center items-center h-[20%]">
-                    {props.role != "ROLE_USUARIO" && (
-                        <MenuLista idUsuario={props.idUsuario} role={props.role} />
+                <div className="flex flex-col gap-1 text-xs md:text-sm text-gray-700 w-full">
+                    {props.usuarioPrimeiroAcesso ? (
+                        <p className="flex items-center gap-2">
+                            <FiSmile className="text-base md:text-lg text-black shrink-0" /> Usuário Ativo em Sistema
+                        </p>
+                    ) : (
+                        <p className="flex items-center gap-2">
+                            <FiFrown className="text-base md:text-lg text-black shrink-0" /> Ainda Não Realizou Primeiro Acesso
+                        </p>
                     )}
-                </div>
-
-                {/* 📑 Lista de processos com scroll se ultrapassar 2 */}
-                <div className="flex flex-col gap-4 overflow-y-auto max-h-[180px] pr-2">
-
-                    {
-                        processos.map((processo) => (
-                            <CardProcesso
-                                idProcesso={processo.id}
-                                numeroProcesso={processo.numeroProcesso}
-                                idUsuario={props.idUsuario} />
-                        ))
-                    }
+                    <p className="flex items-center gap-2 w-full whitespace-normal break-all">
+                        <FiMail className="text-base md:text-lg text-black shrink-0" /> {props.email}
+                    </p>
+                    <p className="flex items-center gap-2">
+                        <FiPhone className="text-base md:text-lg text-black shrink-0" /> {props.telefone}
+                    </p>
                 </div>
             </div>
 
+            {/* Versão Mobile */}
+            <div className="flex md:hidden flex-col items-center gap-2 mt-2">
+                {props.role !== "ROLE_USUARIO" && (
+                    <MenuLista idUsuario={props.idUsuario} role={props.role} />
+                )}
+                <Toggle idUsuario={props.idUsuario} status={props.status} className="w-12 h-6" />
+            </div>
+
+        
+            <div className="flex flex-col gap-4 w-full md:w-2/3 pr-2 mt-12">
+                <div className={`${mostrarScroll ? "max-h-40 overflow-y-auto" : ""} flex flex-col gap-2`}>
+                    {(mostrarScroll ? processos : processosVisiveis).map((processo, index) => (
+                        <CardProcesso
+                            key={processo.id}
+                            idProcesso={processo.id}
+                            numeroProcesso={processo.numeroProcesso}
+                            idUsuario={props.idUsuario}
+                        />
+                    ))}
+                </div>
+            </div>
         </div>
     );
 }

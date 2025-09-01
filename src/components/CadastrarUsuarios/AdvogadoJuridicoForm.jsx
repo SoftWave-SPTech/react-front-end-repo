@@ -9,6 +9,7 @@ import { mascaraCNPJ, mascaraTelefone, mascaraCEP, mascaraOAB } from '../../Util
 import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoJuridico } from '../../Utils/validacoes';
 import EnviarChaveAcesso from './EnvioEmail.jsx';
+import Alert from '../Ui/AlertStyle';
 
 export default function AdvogadoJuridicoForm() {
   const [formData, setFormData] = useState({
@@ -28,6 +29,11 @@ export default function AdvogadoJuridicoForm() {
   });
 
   const [errors, setErrors] = useState({});
+  const [alert, setAlert] = useState({ show: false, type: 'info', message: '' });
+
+  const showAlert = (type, message) => {
+    setAlert({ show: true, type, message });
+  };
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -52,7 +58,7 @@ export default function AdvogadoJuridicoForm() {
           }));
         } catch (error) {
           console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
-          alert('CEP inválido ou não encontrado.');
+          showAlert('error', 'CEP inválido ou não encontrado.');
         }
       }
     }
@@ -69,8 +75,8 @@ export default function AdvogadoJuridicoForm() {
     }
 
     setErrors({});
-    const novaSenha = nanoid(8);
-    const dadosParaEnviar = { ...formData, senha: novaSenha };
+    const tokenPrimeiroAcesso = nanoid(8);
+    const dadosParaEnviar = { ...formData, tokenPrimeiroAcesso: tokenPrimeiroAcesso };
 
     console.log("Dados enviados para o backend:", dadosParaEnviar);
 
@@ -79,11 +85,11 @@ export default function AdvogadoJuridicoForm() {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
-    .then((response) => 
+    .then(() => 
     {
-      EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
+      EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
 
-      alert('Cadastro realizado com sucesso!');
+      showAlert('success', 'Cadastro realizado com sucesso!');
       setFormData({
         nomeFantasia: '',
         razaoSocial: '',
@@ -114,15 +120,22 @@ export default function AdvogadoJuridicoForm() {
                 }
               }
           });
-          alert(mensagem)
+          showAlert('error', mensagem);
       } else {
-        alert('Erro ao cadastrar advogado. Por favor, tente novamente.');
+        showAlert('error', 'Erro ao cadastrar advogado. Por favor, tente novamente.');
       }
     });
   };
 
   return (
     <form className="bg-white p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
+      {alert.show && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert({ ...alert, show: false })}
+        />
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <Input

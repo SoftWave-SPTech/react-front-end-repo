@@ -12,6 +12,14 @@ import {
   FiUser,
   FiSearch,
 } from "react-icons/fi";
+import { jwtDecode } from "jwt-decode";
+
+const token = sessionStorage.getItem("token") || ""
+console.log("Token:", token);
+let decoded = "";
+if (token) {
+ decoded = jwtDecode(token);
+}
 
 const MenuLateral = () => {
   const [fechado, setFechado] = useState(() => {
@@ -25,7 +33,6 @@ const MenuLateral = () => {
     const largura = novoEstado ? 70 : window.innerWidth * 0.22;
     sessionStorage.setItem("larguraMenu", largura.toString());
   };
-
   const usuario = {
     id: sessionStorage.getItem("id"),
     email: sessionStorage.getItem("email"),
@@ -33,7 +40,7 @@ const MenuLateral = () => {
     tipoUsuario: sessionStorage.getItem("tipoUsuario"),
     token: sessionStorage.getItem("token"),
     fotoPerfil: sessionStorage.getItem("fotoPerfil"),
-    nome: sessionStorage.getItem("nome"),
+    nome: decoded?.nome || "Usuário Padrão",
   };
 
   const role = (usuario?.role || "").toUpperCase();

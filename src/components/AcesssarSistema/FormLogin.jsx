@@ -3,11 +3,13 @@ import { api } from '../../service/api';
 import Botao from '../Ui/Botao';
 import { Input } from '../Ui/Input';
 import { Link } from 'react-router-dom';
+import AlertStyle from '../Ui/AlertStyle';
 
 export default function FormLogin() {
     const [email, setEmail] = useState("");
     const [senha, setsenha] = useState("");
     const [errors, setErrors] = useState({});
+    const [alert, setAlert] = useState({ show: false, message: '', type: 'error' }); // Novo estado para alertas
 
     const validarFormulario = () => {
         const novosErros = {};
@@ -44,7 +46,7 @@ export default function FormLogin() {
             console.log("Resposta da API:", response.data);
 
             if (response.status === 200) {
-                alert("Login realizado com sucesso!");
+                setAlert({ show: true, message: "Login realizado com sucesso!", type: "success" });
                 sessionStorage.setItem("id", response.data.id);
                 sessionStorage.setItem("email", response.data.email);
                 sessionStorage.setItem("token", response.data.token);
@@ -53,37 +55,33 @@ export default function FormLogin() {
                 sessionStorage.setItem("nome", response.data.nome);
 
                 sessionStorage.setItem("fotoPerfil", "http://localhost:8080/" + response.data.foto);
-                
-                if (response.data.role == "ROLE_USUARIO") 
-                {
-                    window.location.href = "/perfil-cliente";
-                } 
-                else if(response.data.role == "ROLE_ADMIN")
-                {
-                    window.location.href = "/dashboard";
-                }
-                else
-                {
-                    window.location.href = "/perfil-advogado";
-                }
+
+                setTimeout(() => {
+                    if (response.data.role == "ROLE_USUARIO") {
+                        window.location.href = "/perfil-cliente";
+                    } else if(response.data.role == "ROLE_ADMIN") {
+                        window.location.href = "/dashboard";
+                    } else {
+                        window.location.href = "/perfil-advogado";
+                    }
+                }, 1200); 
             }
         } catch (error) {
             console.error("Erro ao fazer login:", error);
-            
+
             if (error.response?.status === 401) {
-                console.log(error.response.data);
-                alert("Email ou senha incorretos. Por favor, verifique suas credenciais.");
+                setAlert({ show: true, message: "Email ou senha incorretos. Por favor, verifique suas credenciais.", type: "error" });
             } else if (error.response?.status === 400) {
                 const mensagensErro = error.response.data;
                 if (typeof mensagensErro === 'object') {
-                    Object.values(mensagensErro).forEach(mensagem => {
-                        alert(mensagem);
-                    });
+                    // Mostra o primeiro erro encontrado
+                    const primeiraMensagem = Object.values(mensagensErro)[0];
+                    setAlert({ show: true, message: primeiraMensagem, type: "error" });
                 } else {
-                    alert(mensagensErro || "Dados inválidos. Por favor, verifique as informações.");
+                    setAlert({ show: true, message: mensagensErro || "Dados inválidos. Por favor, verifique as informações.", type: "error" });
                 }
             } else {
-                alert("Ocorreu um erro ao tentar fazer login. Por favor, tente novamente mais tarde.");
+                setAlert({ show: true, message: "Ocorreu um erro ao tentar fazer login. Por favor, tente novamente mais tarde.", type: "error" });
             }
         }
     };
@@ -98,6 +96,15 @@ export default function FormLogin() {
                     <img src="src/assets/images/boneco.png" alt="" className="w-32 h-32 mx-auto mb-2" />
                     <h2 className="text-2xl">LOGIN</h2>
                 </div>
+
+                {alert.show && (
+                    <AlertStyle
+                        type={alert.type}
+                        message={alert.message}
+                        onClose={() => setAlert({ ...alert, show: false })}
+                        className="mb-4"
+                    />
+                )}
 
                 <Input
                     label="E-MAIL"

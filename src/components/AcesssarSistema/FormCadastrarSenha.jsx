@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { api } from '../../service/api';
 import Botao from "../Ui/Botao";
 import { Input } from "../Ui/Input";
+import Alert from "../Ui/AlertStyle";
 
 export default function FormCadastrarSenha() {
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [errors, setErrors] = useState({});
+  const [alert, setAlert] = useState(null);
 
   const validarFormulario = () => {
     const novosErros = {};
@@ -29,7 +31,6 @@ export default function FormCadastrarSenha() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(senha, confirmarSenha);
     if (!validarFormulario()) {
       return;
     }
@@ -41,8 +42,10 @@ export default function FormCadastrarSenha() {
         senha: senha,
         confirmaSenha: confirmarSenha,
       });
-      console.log(response);
-      alert("Senha cadastrada com sucesso!");
+      setAlert({
+        type: "success",
+        message: "Senha cadastrada com sucesso!"
+      });
 
       try {
         const loginResponse = await api.post('/auth/login', {
@@ -59,40 +62,49 @@ export default function FormCadastrarSenha() {
           sessionStorage.setItem("nome", loginResponse.data.nome);
           sessionStorage.setItem("fotoPerfil", "http://localhost:8080/" + loginResponse.data.foto);
 
-          if (loginResponse.data.tipoUsuario === 'UsuarioFisico' || loginResponse.data.tipoUsuario === 'UsuarioJuridico') {
-            window.location.href = "/perfil-cliente";
-          } else {
-            window.location.href = "/perfil-advogado";
-          }
+          setTimeout(() => {
+            if (loginResponse.data.tipoUsuario === 'UsuarioFisico' || loginResponse.data.tipoUsuario === 'UsuarioJuridico') {
+              window.location.href = "/perfil-cliente";
+            } else {
+              window.location.href = "/perfil-advogado";
+            }
+          }, 1500);
         }
       } catch (loginError) {
-        console.error("Erro ao fazer login:", loginError);
-        alert("Senha cadastrada, mas houve um erro ao fazer login. Por favor, tente fazer login manualmente.");
-        window.location.href = "/login";
+        setAlert({
+          type: "warning",
+          message: "Senha cadastrada, mas houve um erro ao fazer login. Por favor, tente fazer login manualmente."
+        });
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 2000);
       }
     } catch (error) {
-      console.error("Erro ao cadastrar senha:", error);
       if (error.response?.status === 400) {
         const mensagensErro = error.response.data;
-        console.log(mensagensErro);
         if (typeof mensagensErro === 'object') {
           Object.keys(mensagensErro).forEach(mensagem => {
-            console.error(mensagem);
-            if (mensagem == "novaSenha"){
-              console.log("Entrei aqui krai")
-              setErrors({ ...errors, senha: mensagensErro.novaSenha });
-            } else if (mensagem.novaSenhaConfirma) {
-              setErrors({ ...errors, confirmarSenha: mensagensErro.novaSenhaConfirma });
-          }
-        });  
+            if (mensagem === "novaSenha") {
+              setErrors(prev => ({ ...prev, senha: mensagensErro.novaSenha }));
+            } else if (mensagem === "novaSenhaConfirma") {
+              setErrors(prev => ({ ...prev, confirmarSenha: mensagensErro.novaSenhaConfirma }));
+            }
+          });
         } else {
-          console.error(mensagensErro || "Dados inválidos. Por favor, verifique as informações.");
+          setAlert({
+            type: "error",
+            message: mensagensErro || "Dados inválidos. Por favor, verifique as informações."
+          });
         }
       } else {
-        alert("Ocorreu um erro ao tentar cadastrar a senha. Por favor, tente novamente mais tarde.");
+        setAlert({
+          type: "error",
+          message: "Ocorreu um erro ao tentar cadastrar a senha. Por favor, tente novamente mais tarde."
+        });
       }
     }
   };
+
   return (
     <div className="flex items-center justify-center min-h-screen">
       <form
@@ -107,15 +119,21 @@ export default function FormCadastrarSenha() {
           />
           <h2 className="text-2xl">CADASTRAR SENHA</h2>
         </div>
+
+        {alert && (
+          <Alert
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert(null)}
+          />
+        )}
+
         <Input
           type="password"
           label="SENHA"
           name="senha"
           value={senha}
-          onChange={(e) => {
-            setSenha(e.target.value);
-            console.log(e.target.value);
-          }}
+          onChange={(e) => setSenha(e.target.value)}
           placeholder="*********"
           largura="cheia"
           errorMessage={errors.senha}
@@ -125,7 +143,7 @@ export default function FormCadastrarSenha() {
           label="CONFIRMAR SENHA"
           name="confirmarSenha"
           value={confirmarSenha}
-          onChange={(e) => setConfirmarSenha(e.target.value) && console.log(confirmarSenha)}
+          onChange={(e) => setConfirmarSenha(e.target.value)}
           placeholder="*********"
           largura="cheia"
           errorMessage={errors.confirmarSenha}

@@ -66,15 +66,19 @@ export default function ListaUsuarios() {
 
     return (
         <LayoutBase backgroundClass="bg-cinzaAzulado">
-            <div className="flex items-center justify-between mb-6">
-                <BarraTitulo largura="medio2">Pesquisar Usuários</BarraTitulo>
-                <div className="relative w-64 mt-2">
+            {/* Barra de título responsiva */}
+            <div className="w-full mb-2 px-2">
+                <BarraTitulo largura="full">Pesquisar Usuários</BarraTitulo>
+            </div>
+            {/* Input de busca centralizado e responsivo */}
+            <div className="flex justify-end mb-6 px-2">
+                <div className="relative w-full max-w-xs ">
                     <input
                         type="text"
                         placeholder="Buscar..."
                         value={filtro}
                         onChange={(e) => setFiltro(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D9BB62]"
+                        className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D9BB62] text-base sm:text-lg"
                     />
                     <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lg text-gray-500">
                         🔍︎
@@ -82,8 +86,8 @@ export default function ListaUsuarios() {
                 </div>
             </div>
 
-            {/* Conteúdo dos cards */}
-            <div className="w-[75%] overflow-auto max-h-[600px] flex flex-col gap-2 mt-4">
+            {/* Cards responsivos */}
+            <div className="w-full flex flex-col gap-2 mt-4 px-2">
                 {
                     usuariosFiltrados.length > 0 ? (
                         usuariosFiltrados.map((usuario) => (
