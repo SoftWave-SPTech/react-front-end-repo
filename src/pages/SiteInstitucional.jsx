@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from "react-router-dom";
 import CarroselAdvogados from '../components/SiteInstitucional/CarroselAdvogados.jsx';
 import PlayerVideo from '../components/SiteInstitucional/PlayerVideo.jsx';
 import MidiaSocial from '../components/SiteInstitucional/MidiaSocial.jsx';
 import CatalogoVideos from '../components/SiteInstitucional/CatalogoVideos.jsx';
 import logo from '../assets/images/SiteInstitucional/leaologo.png';
 import estatuaJustica from '../assets/images/SiteInstitucional/EstatuaJustica.png';
-import { useNavigate } from 'react-router-dom';
+import { GiScales, GiBriefcase, GiFamilyHouse, GiShoppingBag, GiHouseKeys, GiQuillInk, GiTalk } from "react-icons/gi";
+
 
 function SiteInstitucional() {
   const [selectedEspecialidade, setSelectedEspecialidade] = useState({});
@@ -16,13 +18,55 @@ function SiteInstitucional() {
   const navigate = useNavigate();
 
   const especialidades = [
-    { id: 1, name: "Direito Civil", icon: "./Scales.svg", text: "Nossa equipe assessora clientes em uma ampla gama de questões no Direito Civil, incluindo contratos e litígios. Trabalhamos de maneira próxima aos clientes para compreender suas necessidades específicas e oferecer soluções jurídicas que protejam seus interesses, sempre com uma abordagem estratégica e assertiva.", link: "" },
-    { id: 2, name: "Direito do Trabalho", icon: "./Briefcase.svg", text: "Prestamos orientação a empregadores e empregados sobre direitos e deveres trabalhistas, com atenção às particularidades de cada caso. Atuamos em rescisões contratuais, assédio, jornada de trabalho e demais questões do ambiente laboral, oferecendo suporte técnico e personalizado.", link: "" },
-    { id: 3, name: "Direito da Familia", icon: "./FullFamily.svg", text: "Com sensibilidade e precisão, nossa equipe acompanha processos relacionados a divórcios, guarda de filhos, pensão alimentícia, além de questões de planejamento sucessório e inventário. Entendemos a importância de um atendimento cuidadoso em momentos delicados, sempre buscando a melhor solução para nossos clientes.", link: "" },
-    { id: 4, name: "Direito do Consumidor", icon: "./ShoppingBag.svg", text: "Auxiliamos tanto consumidores quanto empresas em questões que envolvem relações de consumo, como cobranças indevidas, práticas abusivas e litígios. Nossa equipe adota uma abordagem detalhada e técnica para assegurar que os direitos dos nossos clientes sejam respeitados e defendidos.", link: "" },
-    { id: 5, name: "Direito Imobiliario", icon: "./LawCourt.svg", text: "Com vasta experiência no setor imobiliário, atuamos em contratos de compra e venda, locações, regularização de imóveis, usucapião, entre outros. Nossa equipe compreende as particularidades do mercado e busca sempre soluções rápidas e eficientes para nossos clientes, com uma atuação estratégica e assertiva.", link: "" },
-    { id: 6, name: "Marcas e patentes", icon: "./Quail.svg", text: "A proteção da propriedade intelectual é fundamental, e nosso escritório oferece um suporte completo para o registro, monitoramento e defesa de marcas e patentes. Acompanhamos cada etapa do processo, garantindo que os direitos de nossos clientes sobre suas criações e inovações estejam sempre resguardados.", link: "" },
-    { id: 7, name: "Consultoria Juridica", icon: "./Consultation.svg", text: "Nossa consultoria é voltada para pessoas físicas e jurídicas que buscam orientação sobre riscos e melhores práticas jurídicas. Nos empenhamos em entender o contexto e os objetivos de nossos clientes, oferecendo soluções personalizadas que atendam suas necessidades e promovam segurança jurídica em suas operações.", link: "" },
+    {
+      id: 1,
+      name: "Direito Civil",
+      icon: <GiScales />,
+      text: "Nossa equipe assessora clientes em uma ampla gama de questões no Direito Civil, incluindo contratos e litígios. Trabalhamos de maneira próxima aos clientes para compreender suas necessidades específicas e oferecer soluções jurídicas que protejam seus interesses, sempre com uma abordagem estratégica e assertiva.",
+      link: ""
+    },
+    {
+      id: 2,
+      name: "Direito do Trabalho",
+      icon: <GiBriefcase />,
+      text: "Prestamos orientação a empregadores e empregados sobre direitos e deveres trabalhistas, com atenção às particularidades de cada caso. Atuamos em rescisões contratuais, assédio, jornada de trabalho e demais questões do ambiente laboral, oferecendo suporte técnico e personalizado.",
+      link: ""
+    },
+    {
+      id: 3,
+      name: "Direito da Familia",
+      icon: <GiFamilyHouse />,
+      text: "Com sensibilidade e precisão, nossa equipe acompanha processos relacionados a divórcios, guarda de filhos, pensão alimentícia, além de questões de planejamento sucessório e inventário. Entendemos a importância de um atendimento cuidadoso em momentos delicados, sempre buscando a melhor solução para nossos clientes.",
+      link: ""
+    },
+    {
+      id: 4,
+      name: "Direito do Consumidor",
+      icon: <GiShoppingBag />,
+      text: "Auxiliamos tanto consumidores quanto empresas em questões que envolvem relações de consumo, como cobranças indevidas, práticas abusivas e litígios. Nossa equipe adota uma abordagem detalhada e técnica para assegurar que os direitos dos nossos clientes sejam respeitados e defendidos.",
+      link: ""
+    },
+    {
+      id: 5,
+      name: "Direito Imobiliario",
+      icon: <GiHouseKeys />,
+      text: "Com vasta experiência no setor imobiliário, atuamos em contratos de compra e venda, locações, regularização de imóveis, usucapião, entre outros. Nossa equipe compreende as particularidades do mercado e busca sempre soluções rápidas e eficientes para nossos clientes, com uma atuação estratégica e assertiva.",
+      link: ""
+    },
+    {
+      id: 6,
+      name: "Marcas e patentes",
+      icon: <GiQuillInk />,
+      text: "A proteção da propriedade intelectual é fundamental, e nosso escritório oferece um suporte completo para o registro, monitoramento e defesa de marcas e patentes. Acompanhamos cada etapa do processo, garantindo que os direitos de nossos clientes sobre suas criações e inovações estejam sempre resguardados.",
+      link: ""
+    },
+    {
+      id: 7,
+      name: "Consultoria Juridica",
+      icon: <GiTalk />,
+      text: "Nossa consultoria é voltada para pessoas físicas e jurídicas que buscam orientação sobre riscos e melhores práticas jurídicas. Nos empenhamos em entender o contexto e os objetivos de nossos clientes, oferecendo soluções personalizadas que atendam suas necessidades e promovam segurança jurídica em suas operações.",
+      link: ""
+    },
   ];
 
   useEffect(() => {
@@ -194,10 +238,15 @@ function SiteInstitucional() {
 
                 <div className="flex flex-col items-center justify-center text-center flex-1 max-w-[28rem] min-w-0 mx-auto">
                   <div className="flex flex-col items-center justify-center flex-1 w-full">
-                    <img src={selectedEspecialidade.icon} alt="icone de especialidade" className="w-12 h-12 lg:w-16 lg:h-16 mb-4 lg:mb-6" />
-                    <div className="text-white mb-4 h-[12rem] lg:h-[15rem] w-full overflow-y-auto break-words flex items-center justify-center px-2">
-                      <p className="text-sm lg:text-base leading-relaxed text-center">{selectedEspecialidade.text}</p>
+                    <div className="flex flex-col items-center justify-center h-[15rem] lg:h-[18rem] w-full px-2">
+                      <div className="text-dourado text-4xl lg:text-5xl mb-4 lg:mb-6">
+                        {selectedEspecialidade.icon}
+                      </div>
+                      <p className="text-white text-xs lg:text-sm leading-relaxed text-center overflow-y-auto">
+                        {selectedEspecialidade.text}
+                      </p>
                     </div>
+
                     <button className="border border-dourado text-dourado bg-transparent rounded-md px-4 py-2 w-[8rem] lg:w-[10rem] text-sm lg:text-base font-bold transition hover:bg-dourado hover:text-azulEscuroForte mt-4 lg:mt-12" onClick={saibaMais}>
                       Saiba Mais
                     </button>
@@ -221,10 +270,10 @@ function SiteInstitucional() {
           </div>
         </section>
 
-        <section className="w-screen min-h-[90vh] flex flex-col items-center justify-center" style={{ background: 'linear-gradient(to bottom, #181e36 20%, rgba(7,17,43,0) 100%)' }} > 
-          <h2 className="text-center text-3xl font-bold text-dourado mb-8" >Nossos Advogados</h2> 
-          <CarroselAdvogados 
-        /> </section>
+        <section className="w-full min-h-[90vh] flex flex-col items-center justify-center" style={{ background: 'linear-gradient(to bottom, #181e36 20%, rgba(7,17,43,0) 100%)' }} >
+          <h2 className="text-center text-3xl font-bold text-dourado mb-8" >Nossos Advogados</h2>
+          <CarroselAdvogados
+          /> </section>
 
         <section
           id="podcast"

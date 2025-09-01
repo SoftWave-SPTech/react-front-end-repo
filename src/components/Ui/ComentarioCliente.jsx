@@ -1,46 +1,41 @@
 import React, { useState } from 'react';
+import Alert from './AlertStyle';
 
-const ComentarioCliente = () => {
-  const [comentario, setComentario] = useState('');
+const AtualizarProcessoBtn = () => {
+  const [showAlert, setShowAlert] = useState(false);
 
-  const enviarComentario = () => {
-    if (comentario.trim()) {
-      alert(`Comentário enviado: ${comentario}`);
-      setComentario('');
-    }
+  const handleClick = () => {
+    setShowAlert(true);
+  };
+
+  const handleClose = () => {
+    setShowAlert(false);
   };
 
   return (
-    <div style={{
-      marginTop: '30px',
-      background: '#f9f9f9',
-      padding: '20px',
-      borderRadius: '8px'
-    }}>
-      <h3>💬 Comentário ao Cliente</h3>
-      <textarea
-        rows="4"
-        value={comentario}
-        onChange={e => setComentario(e.target.value)}
-        placeholder="Escreva um comentário para o cliente..."
-        style={{ width: '100%', padding: '10px', borderRadius: '5px' }}
-      />
+    <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+      {showAlert && (
+        <Alert
+          type="info"
+          message="Atualizar processo..."
+          onClose={handleClose}
+        />
+      )}
       <button
-        onClick={enviarComentario}
         style={{
-          marginTop: '10px',
-          padding: '10px 20px',
-          background: '#007bff',
-          color: '#fff',
+          background: '#ffc107',
+          color: '#000',
           border: 'none',
           borderRadius: '5px',
+          padding: '10px 20px',
           cursor: 'pointer'
         }}
+        onClick={handleClick}
       >
-        Enviar
+        🔄 Atualize seu Processo
       </button>
     </div>
   );
 };
 
-export default ComentarioCliente;
+export default AtualizarProcessoBtn;

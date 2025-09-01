@@ -9,6 +9,7 @@ import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoFisico } from '../../Utils/validacoes';
 import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG,mascaraOAB } from '../../Utils/mascaras';
 import EnviarChaveAcesso from './EnvioEmail.jsx';
+import Alert from '../Ui/AlertStyle'; // Importa o AlertStyle
 
 export default function AdvogadoFisicoForm() {
   const [formData, setFormData] = useState({
@@ -27,6 +28,7 @@ export default function AdvogadoFisicoForm() {
   });
 
   const [errors, setErrors] = useState({});
+  const [alert, setAlert] = useState(null); // Estado para o Alert
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -49,7 +51,10 @@ export default function AdvogadoFisicoForm() {
           }));
         } catch (error) {
           console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
-          alert('CEP inválido ou não encontrado.');
+          setAlert({
+            type: 'error',
+            message: 'CEP inválido ou não encontrado.',
+          });
         }
       }
     }
@@ -80,8 +85,12 @@ export default function AdvogadoFisicoForm() {
       .then(() => {
 
         EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
-        
-        alert('Cadastro realizado com sucesso!');
+
+        setAlert({
+          type: 'success',
+          message: 'Cadastro realizado com sucesso!',
+        });
+       
         setFormData({
           nome: '',
           cpf: '',
@@ -112,9 +121,15 @@ export default function AdvogadoFisicoForm() {
                 }
               }
           });
-          alert(mensagem)
+          setAlert({
+            type: 'error',
+            message: mensagem
+          });
         } else {
-          alert('Erro ao cadastrar advogado. Por favor, tente novamente.');
+          setAlert({
+            type: 'error',
+            message: 'Erro ao cadastrar advogado. Por favor, tente novamente.'
+          });
         }
         //alert(err.response?.data?.message || 'Erro ao cadastrar');
 
@@ -123,6 +138,13 @@ export default function AdvogadoFisicoForm() {
 
   return (
     <form className="bg-white p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <Input

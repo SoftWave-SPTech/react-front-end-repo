@@ -1,4 +1,5 @@
 body 
 {
-  font-family: 'Quicksand', sans-serif; /* Define Quicksand como a fonte padrão */
+  font-family: 'Quicksand', sans-serif; 
+  overflow-x: hidden;
 }

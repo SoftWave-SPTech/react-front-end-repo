@@ -8,6 +8,7 @@ import ModalAguardando from "../components/Ui/ModalAguardando";
 import { api } from "../service/api";
 import { FiSmile, FiFrown, FiMail, FiPhone } from "react-icons/fi";
 import { FaBalanceScale } from "react-icons/fa";
+import Alert from '../components/Ui/AlertStyle'; 
 
 const VisualizarProcessosAdvogado = () => {
   const { idUsuario, idProcesso } = useParams();
@@ -17,60 +18,57 @@ const VisualizarProcessosAdvogado = () => {
   const [dadosUsuario, setDadosUsuario] = useState({});
   const [loading, setLoading] = useState(false);
   const [fotoPerfil, setFotoPerfil] = useState("/src/assets/images/boneco.png");
+  const [alert, setAlert] = useState(null); // alert state
   const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
 
-    
-    useEffect(() => {
-      api.get(`/processos/visualizar-processo/${idProcesso}`, 
-                  // {
-                  // headers: {
-                  //   "Authorization":  TOKEN
-                  // }
-                  // }
-              )
-                  .then(response => {
-                  console.log("Consulta com sucesso:", response.data);
-                  setDadosProcesso(response.data)
-                  })
-                  .catch(error => {
-                  console.error("Erro ao enviar o arquivo:", error);
-                });
-                
-                api.get(`/usuarios/usuario-documentos/${idUsuario}`, 
-                            // {
-                            // headers: {
-                            //   "Authorization":  TOKEN
-                            // }
-                            // }
-                        )
-                            .then(response => {
-                            console.log("Consulta com sucesso:", response.data);
-                            console.log(response.data.foto)
-                            if (response.data.foto != null) {
-                              setFotoPerfil("http://localhost:8080/" + response.data.foto);
-                            }
-                            setDadosUsuario(response.data)
-                            })
-                            .catch(error => {
-                            console.error("Erro ao enviar o arquivo:", error);
-                          });
+  useEffect(() => {
+    api.get(`/processos/visualizar-processo/${idProcesso}`)
+      .then(response => {
+        console.log("Consulta com sucesso:", response.data);
+        setDadosProcesso(response.data)
+      })
+      .catch(error => {
+        console.error("Erro ao enviar o arquivo:", error);
+        setAlert({
+          type: "error",
+          message: "Erro ao buscar dados do processo."
+        });
+      });
+
+    api.get(`/usuarios/usuario-documentos/${idUsuario}`)
+      .then(response => {
+        console.log("Consulta com sucesso:", response.data);
+        if (response.data.foto != null) {
+          setFotoPerfil("http://localhost:8080/" + response.data.foto);
+        }
+        setDadosUsuario(response.data)
+      })
+      .catch(error => {
+        console.error("Erro ao enviar o arquivo:", error);
+        setAlert({
+          type: "error",
+          message: "Erro ao buscar dados do usuário."
+        });
+      });
   }, []);
 
   const handleAtualizar = () => {
-    api.get(`/api/processo/numero/${dadosProcesso.numeroProcesso}`, 
-      // {
-      //   headers: {
-      //     "Authorization": TOKEN
-      //   }
-      // }
-    )
-    .then(response => {
-      console.log("Atualizado com sucesso")
-      window.location.reload()
-    })
-    .catch(error => {
-      console.error("Erro ao tentar atualizar processo:", error);
-    });
+    api.get(`/api/processo/numero/${dadosProcesso.numeroProcesso}`)
+      .then(response => {
+        console.log("Atualizado com sucesso")
+        setAlert({
+          type: "success",
+          message: "Processo atualizado com sucesso!"
+        });
+        setTimeout(() => window.location.reload(), 1000);
+      })
+      .catch(error => {
+        console.error("Erro ao tentar atualizar processo:", error);
+        setAlert({
+          type: "error",
+          message: "Erro ao tentar atualizar processo."
+        });
+      });
   };
 
   const handleDocumentos = () => {
@@ -82,51 +80,68 @@ const VisualizarProcessosAdvogado = () => {
   };
 
   function gerarAnaliseIA(processoId, movimentacaoId) {
-      setLoading(true);
-      api.post(`/analise-processo/${movimentacaoId}`)
-        .then((res) =>{ 
-          console.log("Análise IA gerada com sucesso:", res.data);
-          alert("Análise IA gerada com sucesso:", res.data);
-          setLoading(false);
-          navigate(`/analise-ia/${processoId}/${movimentacaoId}`)
-        })
-        .catch((res) => {
-          console.error("Erro ao gerar análise IA");
-          alert("Análise IA gerada com sucesso:", res.data);
-          setLoading(false);
-          navigate(`/analise-ia/${processoId}/${movimentacaoId}`)
+    setLoading(true);
+    api.post(`/analise-processo/${movimentacaoId}`)
+      .then((res) => {
+        console.log("Análise IA gerada com sucesso:", res.data);
+        setAlert({
+          type: "success",
+          message: "Análise IA gerada com sucesso!"
         });
+        setLoading(false);
+        setTimeout(() => {
+          setAlert(null);
+          navigate(`/analise-ia/${processoId}/${movimentacaoId}`);
+        }, 1000);
+      })
+      .catch((error) => {
+        console.error("Erro ao gerar análise IA", error);
+        setAlert({
+          type: "error",
+          message: "Erro ao gerar análise IA."
+        });
+        setLoading(false);
+      });
+  }
 
-    }
   const cadastrarComentario = (idProcesso) => {
-    api.post(`/comentarios-processos/processo`, 
+    api.post(`/comentarios-processos/processo`,
       {
         comentario: comentario,
         dataCriacao: new Date().toISOString(),
         usuarioID: sessionStorage.getItem("id"),
         ultimaMovimentacaoID: null,
         processoID: idProcesso,
-      },
-      // {
-      //   headers: {
-      //     "Authorization": TOKEN
-      //   }
-      // }
+      }
     )
-    .then(response => {
-      console.log("Comentário enviado com sucesso:", response.data);
-      setComentario(''); // Limpa o input após envio
-      window.location.reload()
-    })
-    .catch(error => {
-      console.error("Erro ao enviar o comentário:", error);
-    });
+      .then(response => {
+        console.log("Comentário enviado com sucesso:", response.data);
+        setComentario('');
+        setAlert({
+          type: "success",
+          message: "Comentário enviado com sucesso!"
+        });
+        setTimeout(() => window.location.reload(), 1000);
+      })
+      .catch(error => {
+        console.error("Erro ao enviar o comentário:", error);
+        setAlert({
+          type: "error",
+          message: "Erro ao enviar o comentário."
+        });
+      });
   };
-
   return (
     <LayoutBase backgroundClass="bg-cinzaAzulado">
       <div className="p-2 md:p-5 font-sans text-[#2f2f2f] min-h-screen w-full">
         <ModalAguardando loadingEnd={!loading} />
+        {alert && (
+          <Alert
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert(null)}
+          />
+        )}
         {/* Top Bar */}
         <div className="flex flex-col mb-6">
           <BarraTitulo className="w-full text-lg md:text-3xl py-3 md:py-4">Visualizar Processo</BarraTitulo>

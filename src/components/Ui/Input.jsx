@@ -1,4 +1,5 @@
 import { FiAlertCircle } from "react-icons/fi";
+import Alert from "./AlertStyle";
 
 export const Input = (
 {
@@ -99,9 +100,10 @@ export const Input = (
       </div>
 
       {errorMessage && (
-        <span className="text-red-500 text-sm font-semibold mt-3">
-          {errorMessage}
-        </span>
+        <Alert
+          type="error"
+          message={errorMessage}
+        />
       )}
     </div>
   );
