@@ -13,55 +13,6 @@ export default function CardUsuario(props) {
     const processosVisiveis = mostrarScroll ? processos : processos.slice(0, 2);
 
     return (
-      
-        <div className="flex w-[98%] bg-white rounded-lg shadow-md p-4 gap-6">
-
-            {/* 🔸 Lado esquerdo (30%) */}
-            <div className="w-[30%] flex flex-col gap-4">
-
-                {/* Parte superior (40%) */}
-                <div className="flex h-[40%] gap-4">
-
-                    {/* Foto */}
-                    <div className="flex items-center justify-center w-[88px] h-[88px] rounded-full overflow-hidden bg-gray-100 shrink-0">
-    <img
-        src={props.imageUser != null ? `http://localhost:8080/${props.imageUser}` : boneco}
-        alt="Foto do usuário"
-        className="object-cover w-[88px] h-[88px]"
-    />
-</div>
-
-
-
-                    {/* Infos básicas */}
-                    <div className="flex flex-col justify-center">
-                        <span className=" text-4xl font-bold text-lg text-gray-800">{props.nomeUser}</span>
-                        {
-                            props.identificadorUser ? <p className=" text-2xl text-sm text-gray-600"><b>OAB</b> {props.identificadorUser}</p> : ""
-                        }
-                    </div>
-                </div>
-
-                {/* Parte inferior (60%) */}
-                <div className="flex flex-col gap-1 text-sm text-gray-700">
-                    {
-                        props.usuarioPrimeiroAcesso ? <p className="whitespace-nowrap"><b className="text-2xl text-black whitespace-nowrap">😊</b> Usuário Ativo em Sistema</p> : <p className="whitespace-nowrap"><b className="text-2xl text-black">😞</b> Ainda Não Realizou Primeiro Acesso</p>
-                    }
-                    {
-                        props.token ? <p><b className="text-2xl text-black">🇹🇰</b> {props.token}</p> : ""
-                    }
-                    <p
-                        onClick={() => props.onClickEmail && props.onClickEmail(props.email)}
-                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { props.onClickEmail && props.onClickEmail(props.email); } }}
-                        role="button"
-                        tabIndex={0}
-                        title="Clique para reenviar token para este e-mail"
-                        className="cursor-pointer hover:underline"
-                    >
-                        <b className="text-2xl text-black">✉️</b> {props.email}
-                    </p>
-                    <p><b className="text-2xl text-black">📱</b> {props.telefone}</p>
-                </div>
         <div className="relative flex flex-col md:flex-row w-full bg-white rounded-lg shadow-md p-4 gap-4">
             {/* Versão Desktop */}
             <div className="hidden md:flex absolute top-4 right-4 items-center gap-3">
