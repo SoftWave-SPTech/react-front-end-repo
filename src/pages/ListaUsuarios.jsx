@@ -33,6 +33,8 @@ export default function ListaUsuarios() {
         return nome.toLowerCase().includes(filtro.toLowerCase());
     });
 
+    console.log("Usuários filtrados:", usuariosFiltrados);
+
     return (
         <LayoutBase backgroundClass="bg-cinzaAzulado">
             <div className="flex items-center justify-between mb-6">
@@ -52,6 +54,7 @@ export default function ListaUsuarios() {
             </div>
 
             {/* Conteúdo dos cards */}
+
             <div className="w-[75%] overflow-auto max-h-[600px] flex flex-col gap-2 mt-4">
                 {
                     usuariosFiltrados.length > 0 ? (
@@ -67,7 +70,7 @@ export default function ListaUsuarios() {
                                 email={usuario.email}
                                 telefone={usuario.telefone}
                                 role={usuario.role}
-                                status={usuario.status}
+                                ativo={usuario.ativo}
                                 processos={usuario.procesos}
                             />
                         ))

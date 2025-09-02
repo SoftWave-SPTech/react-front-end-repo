@@ -4,9 +4,10 @@ import { api } from "../../service/api";
 
 
 export default function Toggle(props) {
-    const [ligado, setLigado] = useState(props.status);
+    const [ligado, setLigado] = useState(props.ativo);
 
     const idUsuario = props.idUsuario;
+    console.log("Id do usuario:"+ idUsuario + props.ativo + "Usuario está Ativou ou Inativo")
 
     function mudarStatusUsuario(){
         setLigado(!ligado)

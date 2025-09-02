@@ -57,7 +57,7 @@ export default function CardUsuario(props) {
 
                 {/* 🔝 Toggle no canto superior direito */}
                 <div className="absolute top-0 right-0">
-                    <Toggle idUsuario={props.idUsuario} status={props.status} />
+                    <Toggle idUsuario={props.idUsuario} ativo={props.ativo} />
                 </div>
 
                 {/* 📋 Menu centralizado */}
