@@ -95,12 +95,17 @@ const VisualizarProcessosAdvogado = () => {
         }, 1000);
       })
       .catch((error) => {
-        console.error("Erro ao gerar análise IA", error);
-        setAlert({
-          type: "error",
-          message: "Erro ao gerar análise IA."
-        });
-        setLoading(false);
+        if(error.status == 409){
+          setLoading(false);
+          navigate(`/analise-ia/${processoId}/${movimentacaoId}`);
+        }else{
+          console.error("Erro ao gerar análise IA", error);
+          setAlert({
+            type: "error",
+            message: "Erro ao gerar análise IA."
+          });
+          setLoading(false);
+        }
       });
   }
 
@@ -256,7 +261,7 @@ const VisualizarProcessosAdvogado = () => {
                      {/* <div className="w-10 h-10 bg-preto rounded-full mb-2"></div> */}
                     <FaBalanceScale className="text-3xl text-AzulEscuro mb-2" />
                     <button
-                      onClick={() => gerarAnaliseIA(movimentacao.id, dadosProcesso.id)}
+                      onClick={() => gerarAnaliseIA(dadosProcesso.id, movimentacao.id)}
                       className="bg-AzulEscuro text-branco px-2 py-1 rounded text-xs hover:bg-AzulPodcast transition"
                     >
                       Ver análise
