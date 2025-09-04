@@ -112,10 +112,6 @@ const FormRedefinirSenha = () => {
                     ENVIAR TOKEN
                 </Botao>
 
-                <Botao largura="cheia" cor="padrao" type="submit" className="mt-6">
-                    ENVIAR TOKEN
-                </Botao>
-
                 <Botao
                     tamanho="pequeno"
                     cor="contornoAzul"

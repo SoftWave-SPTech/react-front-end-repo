@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import Alert from '../Ui/AlertStyle';
 
 const FormEsqueciSenha = () => {
-
     const navigate = useNavigate();
     const [chave, setChave] = useState("");
     const [senha, setSenha] = useState("");
@@ -94,22 +93,21 @@ const FormEsqueciSenha = () => {
         }
     };
 
-    
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-azulEscuroForte px-4 sm:px-6 py-8">
-      <form
-        className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg w-full max-w-sm"
-        onSubmit={handleSubmit}
-      >
-        <div className="text-center mb-3">
-          <img
-            src="src/assets/images/boneco.png"
-            alt="Ilustração"
-            className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto mb-2 object-contain"
-          />
-          <h2 className="text-xl sm:text-2xl font-semibold">ESQUECI A SENHA</h2>
-          <p className="text-sm sm:text-base mt-1 mb-1">Informe o Token que recebeu e a nova senha.</p>
-        </div>
+    return (
+        <div className="flex items-center justify-center min-h-screen bg-azulEscuroForte px-4 sm:px-6 py-8">
+            <form
+                className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg w-full max-w-sm"
+                onSubmit={handleSubmit}
+            >
+                <div className="text-center mb-3">
+                    <img
+                        src="src/assets/images/boneco.png"
+                        alt="Ilustração"
+                        className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto mb-2 object-contain"
+                    />
+                    <h2 className="text-xl sm:text-2xl font-semibold">ESQUECI A SENHA</h2>
+                    <p className="text-sm sm:text-base mt-1 mb-1">Informe o Token que recebeu e a nova senha.</p>
+                </div>
 
                 {alert && (
                     <Alert
@@ -127,6 +125,7 @@ const FormEsqueciSenha = () => {
                     placeholder="NICN4L85"
                     largura="cheia"
                     errorMessage={errors.chave}
+                    autoComplete="one-time-code"
                 />
                 <Input
                     type="password"
@@ -134,9 +133,10 @@ const FormEsqueciSenha = () => {
                     name="senha"
                     value={senha}
                     onChange={(e) => setSenha(e.target.value)}
-                    placeholder="*********"
+                    placeholder="********"
                     largura="cheia"
                     errorMessage={errors.senha}
+                    autoComplete="new-password"
                 />
                 <Input
                     type="password"
@@ -144,66 +144,28 @@ const FormEsqueciSenha = () => {
                     name="confirmarSenha"
                     value={confirmarSenha}
                     onChange={(e) => setConfirmarSenha(e.target.value)}
-                    placeholder="*********"
+                    placeholder="********"
                     largura="cheia"
                     errorMessage={errors.confirmarSenha}
+                    autoComplete="new-password"
                 />
 
                 <Botao largura="cheia" cor="padrao" type="submit" className="mt-5">
                     REDEFINIR SENHA
                 </Botao>
 
-        <div className="space-y-3">
-          <Input
-            label="TOKEN DE SENHA"
-            name="chave"
-            value={chave}
-            onChange={(e) => setChave(e.target.value)}
-            placeholder="NICN4L85"
-            largura="cheia"
-            errorMessage={errors.chave}
-            autoComplete="one-time-code"
-          />
-          <Input
-            type="password"
-            label="NOVA SENHA"
-            name="senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            placeholder="********"
-            largura="cheia"
-            errorMessage={errors.senha}
-            autoComplete="new-password"
-          />
-          <Input
-            type="password"
-            label="CONFIRMAR SENHA"
-            name="confirmarSenha"
-            value={confirmarSenha}
-            onChange={(e) => setConfirmarSenha(e.target.value)}
-            placeholder="********"
-            largura="cheia"
-            errorMessage={errors.confirmarSenha}
-            autoComplete="new-password"
-          />
+                <Botao
+                    tamanho="pequeno"
+                    cor="contornoAzul"
+                    type="button"
+                    className="block mx-auto mt-5"
+                    onClick={() => window.history.back()}
+                >
+                    VOLTAR
+                </Botao>
+            </form>
         </div>
-
-        <Botao largura="cheia" cor="padrao" type="submit" className="mt-5">
-          REDEFINIR SENHA
-        </Botao>
-
-        <Botao
-          tamanho="pequeno"
-          cor="contornoAzul"
-          type="button"
-          className="block mx-auto mt-5"
-          onClick={() => window.history.back()}
-        >
-          VOLTAR
-        </Botao>
-      </form>
-    </div>
-  );
+    );
 };
 
 export default FormEsqueciSenha;
