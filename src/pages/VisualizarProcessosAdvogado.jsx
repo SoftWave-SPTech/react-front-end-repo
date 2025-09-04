@@ -13,6 +13,7 @@ import Alert from '../components/Ui/AlertStyle';
 const VisualizarProcessosAdvogado = () => {
   const { idUsuario, idProcesso } = useParams();
   const navigate = useNavigate();
+  const [comentario, setComentario] = useState('');
   const [dadosProcesso, setDadosProcesso] = useState({});
   const [dadosUsuario, setDadosUsuario] = useState({});
   const [loading, setLoading] = useState(false);
@@ -62,7 +63,7 @@ const VisualizarProcessosAdvogado = () => {
 
   const handleAtualizar = () => {
     api.get(`/api/processo/numero/${dadosProcesso.numeroProcesso}`)
-      .then(response => {
+      .then(() => {
         console.log("Atualizado com sucesso")
         setAlert({
           type: "success",
@@ -116,6 +117,47 @@ const VisualizarProcessosAdvogado = () => {
         }
       });
   }
+
+  
+    const cadastrarComentario = (idProcesso) => {
+    api.post(`/comentarios-processos/processo`, 
+      {
+        comentario: comentario,
+        dataCriacao: new Date().toISOString(),
+        usuarioID: sessionStorage.getItem("id"),
+        ultimaMovimentacaoID: null,
+        processoID: idProcesso,
+      },
+      // {
+      //   headers: {
+      //     "Authorization": TOKEN
+      //   }
+      // }
+    )
+    .then(response => {
+      console.log("Comentário enviado com sucesso:", response.data);
+      setComentario(''); // Limpa o input após envio
+      window.location.reload()
+    })
+    .catch(error => {
+      console.error("Erro ao enviar o comentário:", error);
+    });
+  };
+
+    const blocoStyle = {
+    background: '#FFFFFF',
+    borderRadius: '8px',
+    padding: '16px',
+    boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
+    marginBottom: '20px'
+  };
+
+  const tituloBlocoStyle = {
+    fontSize: '18px',
+    fontWeight: 'bold',
+    marginBottom: '10px'
+
+  };
 
   return (
     <LayoutBase backgroundClass="bg-cinzaAzulado">
@@ -281,6 +323,29 @@ const VisualizarProcessosAdvogado = () => {
               </style>
             </div>
             {/* Comentário removido */}
+            <div style={blocoStyle}>
+              <div style={tituloBlocoStyle}>Resumo do Processo</div>
+              <p>
+                {dadosProcesso.comentario?.comentario || "Não há registro de resumo do processo anteriores a este!"}
+              </p>
+
+              <input
+                type="text"
+                placeholder="Adicione um resumo do processo para o Cliente..."
+                value={comentario}
+                onChange={(e) => setComentario(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  marginTop: '8px'
+                }}
+              />
+            <Botao onClick={() => cadastrarComentario(dadosProcesso.id)} tamanho="pequeno" largura="pequeno">
+              ENVIAR
+            </Botao>
+            </div>
           </div>
         </div>
 
