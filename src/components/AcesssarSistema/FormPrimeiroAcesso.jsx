@@ -10,30 +10,47 @@ export default function FormPrimeiroAcesso() {
     const [errors, setErrors] = useState({});
     const [alert, setAlert] = useState({ show: false, message: "", type: "info" }); // estado do alerta
 
-    const validarFormulario = () => {
-        const novosErros = {};
-        
-        if (!email) {
-            novosErros.email = "Email é obrigatório";
-        } else if (!/\S+@\S+\.\S+/.test(email)) {
-            novosErros.email = "Email inválido";
+  const validarFormulario = () => {
+    const novosErros = {};
+    if (!email) {
+      novosErros.email = "Email é obrigatório";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      novosErros.email = "Email inválido";
+    }
+    if (!chave) {
+      novosErros.chave = "Chave de acesso é obrigatória";
+    }
+    setErrors(novosErros);
+    return Object.keys(novosErros).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validarFormulario()) return;
+
+    try {
+      const response = await api.post('/auth/primeiro-acesso', {
+        email: email,
+        senha: chave,
+      });
+      sessionStorage.setItem("email", response.data.email);
+      alert("Acesso realizado com sucesso!");
+      window.location.href = "/cadastrar-senha";
+    } catch (error) {
+      if (error.response?.status === 404) {
+        alert("Email ou chave de acesso inválidos. Verifique se estão corretos.");
+      } else if (error.response?.status === 400) {
+        const mensagensErro = error.response.data;
+        if (typeof mensagensErro === 'object') {
+          Object.values(mensagensErro).forEach(mensagem => alert(mensagem));
+        } else {
+          alert(mensagensErro || "Dados inválidos. Por favor, verifique as informações.");
         }
-        
-        if (!chave) {
-            novosErros.chave = "Chave de acesso é obrigatória";
-        }
-
-        setErrors(novosErros);
-        return Object.keys(novosErros).length === 0;
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (!validarFormulario()) {
-            return;
-        }
-
+      } else {
+        alert("Ocorreu um erro ao tentar realizar o acesso. Tente novamente mais tarde.");
+      }
+    }
+  };
         try {
             const response = await api.post('/auth/primeiro-acesso', {
                 email: email,
@@ -86,18 +103,18 @@ export default function FormPrimeiroAcesso() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
-            <form
-                className="bg-white p-6 rounded-lg shadow-lg w-96 max-w-sm"
-                onSubmit={handleSubmit}
-            >
-                <div className="text-center mb-4">
-                    <img
-                        src="src/assets/images/boneco.png"
-                        alt=""
-                        className="w-32 h-32 mx-auto mb-2"
-                    />
-                    <h2 className="text-2xl">PRIMEIRO ACESSO</h2>
+    <div className="flex items-center justify-center min-h-screen bg-azulEscuroForte/5 px-4 sm:px-6 py-8">
+      <form
+        className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg w-full max-w-sm"
+        onSubmit={handleSubmit}
+      >
+        <div className="text-center mb-3">
+          <img
+            src="src/assets/images/boneco.png"
+            alt="Ilustração"
+            className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto mb-2 object-contain"
+          />
+          <h2 className="text-xl sm:text-2xl font-semibold">PRIMEIRO ACESSO</h2
                 </div>
                 {alert.show && (
                     <Alert
@@ -106,24 +123,29 @@ export default function FormPrimeiroAcesso() {
                         onClose={handleCloseAlert}
                     />
                 )}
-                <Input
-                    label="E-MAIL"
-                    name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="leonardo@email.com"
-                    largura="cheia"
-                    errorMessage={errors.email}
-                />
-                <Input
-                    label="CHAVE DE ACESSO"
-                    name="chave"
-                    value={chave}
-                    onChange={(e) => setChave(e.target.value)}
-                    placeholder="NICN4L85"
-                    largura="cheia"
-                    errorMessage={errors.chave}
-                />
+                 <div className="space-y-3">
+          <Input
+            label="E-MAIL"
+            name="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="seu@email.com"
+            largura="cheia"
+            errorMessage={errors.email}
+            autoComplete="email"
+          />
+          <Input
+            label="CHAVE DE ACESSO"
+            name="chave"
+            value={chave}
+            onChange={(e) => setChave(e.target.value)}
+            placeholder="NICN4L85"
+            largura="cheia"
+            errorMessage={errors.chave}
+            autoComplete="one-time-code"
+          />
+              </div>
                 <Botao largura="cheia" cor="padrao" type="submit" className="mt-7">
                     ENTRAR
                 </Botao>
@@ -144,5 +166,28 @@ export default function FormPrimeiroAcesso() {
                 </Botao>
             </form>
         </div>
-    );
+
+        <Botao largura="cheia" cor="padrao" type="submit" className="mt-6">
+          ENTRAR
+        </Botao>
+
+        <p className="mt-4 text-center text-black text-sm">
+          JÁ ACESSOU O SITE ANTES?{" "}
+          <a href="/login" className="font-bold text-azulEscuroForte hover:underline hover:text-dourado">
+            ENTRE AQUI.
+          </a>
+        </p>
+
+        <Botao
+          tamanho="pequeno"
+          cor="contornoAzul"
+          type="button"
+          className="block mx-auto mt-4"
+          onClick={() => window.history.back()}
+        >
+          VOLTAR
+        </Botao>
+      </form>
+    </div>
+  );
 }

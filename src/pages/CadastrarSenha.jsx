@@ -11,3 +11,4 @@ const CadastrarSenha = () =>
 };
 
 export default CadastrarSenha;
+
