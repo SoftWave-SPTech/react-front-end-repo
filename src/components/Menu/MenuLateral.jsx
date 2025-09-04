@@ -12,6 +12,14 @@ import {
   FiUser,
   FiSearch,
 } from "react-icons/fi";
+import { jwtDecode } from "jwt-decode";
+
+const token = sessionStorage.getItem("token") || ""
+console.log("Token:", token);
+let decoded = "";
+if (token) {
+ decoded = jwtDecode(token);
+}
 
 const MenuLateral = () => {
   const [fechado, setFechado] = useState(() => {
@@ -25,7 +33,6 @@ const MenuLateral = () => {
     const largura = novoEstado ? 70 : window.innerWidth * 0.22;
     sessionStorage.setItem("larguraMenu", largura.toString());
   };
-
   const usuario = {
     id: sessionStorage.getItem("id"),
     email: sessionStorage.getItem("email"),
@@ -33,7 +40,7 @@ const MenuLateral = () => {
     tipoUsuario: sessionStorage.getItem("tipoUsuario"),
     token: sessionStorage.getItem("token"),
     fotoPerfil: sessionStorage.getItem("fotoPerfil"),
-    nome: sessionStorage.getItem("nome"),
+    nome: decoded?.nome || "Usuário Padrão",
   };
 
   const role = (usuario?.role || "").toUpperCase();
@@ -58,9 +65,9 @@ const MenuLateral = () => {
     { rotulo: "Dashboard", icone: <FiBarChart2 />, rota: "/dashboard", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Meus processos", icone: <FiCalendar />, rota: "/processos-cliente", roles: ["ROLE_USUARIO"] },
     { rotulo: "Pesquisar processos", icone: <FiSearch />, rota: "/pesquisar-processos", roles: ["ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Cadastrar Processos", icone: <FiFileText />, rota: "/cadastrar-processos", roles: ["ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
+    { rotulo: "Cadastrar processos", icone: <FiFileText />, rota: "/cadastrar-processos", roles: ["ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Pesquisar usuários", icone: <FiUser />, rota: "/lista-usuarios", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Cadastrar Usuário", icone: <FiUserPlus />, rota: "/cadastrar-usuario", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
+    { rotulo: "Cadastrar usuários", icone: <FiUserPlus />, rota: "/cadastrar-usuario", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Documentos pessoais", icone: <FiFileText />, rota: "/documentos-pessoais", roles: ["ROLE_USUARIO"] },
     // { rotulo: "Área financeira", icone: <FiDollarSign />, rota: "/area-financeira", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Podcast", icone: <FiMic />, rota: "/podcast", roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },

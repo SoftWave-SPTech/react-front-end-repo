@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { api } from '../../service/api';
 import Botao from "../Ui/Botao";
 import { Input } from "../Ui/Input";
+import Alert from "../Ui/AlertStyle"; // importação do Alert
 
 export default function FormPrimeiroAcesso() {
-  const [email, setEmail] = useState("");
-  const [chave, setChave] = useState("");
-  const [errors, setErrors] = useState({});
+    const [email, setEmail] = useState("");
+    const [chave, setChave] = useState("");
+    const [errors, setErrors] = useState({});
+    const [alert, setAlert] = useState({ show: false, message: "", type: "info" }); // estado do alerta
 
   const validarFormulario = () => {
     const novosErros = {};
@@ -49,8 +51,58 @@ export default function FormPrimeiroAcesso() {
       }
     }
   };
+        try {
+            const response = await api.post('/auth/primeiro-acesso', {
+                email: email,
+                tokenPrimeiroAcesso: chave,
+            });
 
-  return (
+            sessionStorage.setItem("email", response.data.email);
+            setAlert({ show: true, message: "Acesso realizado com sucesso!", type: "success" });
+            setTimeout(() => {
+                window.location.href = "/cadastrar-senha";
+            }, 1500);
+        } catch (error) {
+            console.error("Erro ao realizar o acesso:", error);
+
+            if (error.response?.status === 404) {
+                setAlert({
+                    show: true,
+                    message: "Email ou chave de acesso inválidos. Por favor, verifique se o email e a chave estão corretos.",
+                    type: "error"
+                });
+            } else if (error.response?.status === 400) {
+                const mensagensErro = error.response.data;
+                if (typeof mensagensErro === 'object') {
+                    // Mostra apenas a primeira mensagem, pode adaptar para mostrar todas se quiser
+                    const primeiraMensagem = Object.values(mensagensErro)[0];
+                    setAlert({
+                        show: true,
+                        message: primeiraMensagem,
+                        type: "error"
+                    });
+                } else {
+                    setAlert({
+                        show: true,
+                        message: mensagensErro || "Dados inválidos. Por favor, verifique as informações.",
+                        type: "error"
+                    });
+                }
+             } else {
+                setAlert({
+                    show: true,
+                    message: "Ocorreu um erro ao tentar realizar o acesso. Por favor, tente novamente mais tarde.",
+                    type: "error"
+                });
+            }
+        }
+    };
+
+    const handleCloseAlert = () => {
+        setAlert({ ...alert, show: false });
+    };
+
+    return (
     <div className="flex items-center justify-center min-h-screen bg-azulEscuroForte/5 px-4 sm:px-6 py-8">
       <form
         className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg w-full max-w-sm"
@@ -62,10 +114,16 @@ export default function FormPrimeiroAcesso() {
             alt="Ilustração"
             className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto mb-2 object-contain"
           />
-          <h2 className="text-xl sm:text-2xl font-semibold">PRIMEIRO ACESSO</h2>
-        </div>
-
-        <div className="space-y-3">
+          <h2 className="text-xl sm:text-2xl font-semibold">PRIMEIRO ACESSO</h2
+                </div>
+                {alert.show && (
+                    <Alert
+                        type={alert.type}
+                        message={alert.message}
+                        onClose={handleCloseAlert}
+                    />
+                )}
+                 <div className="space-y-3">
           <Input
             label="E-MAIL"
             name="email"
@@ -87,6 +145,26 @@ export default function FormPrimeiroAcesso() {
             errorMessage={errors.chave}
             autoComplete="one-time-code"
           />
+              </div>
+                <Botao largura="cheia" cor="padrao" type="submit" className="mt-7">
+                    ENTRAR
+                </Botao>
+                <p className="mt-4 text-center mb-4 text-black">
+                    JÁ ACESSOU O SITE ANTES?{" "}
+                    <a href="/login" className="font-bold text-azulEscuroForte hover:underline hover:text-dourado">
+                        ENTRE AQUI.
+                    </a>
+                </p>
+                <Botao
+                    tamanho="pequeno"
+                    cor="contornoAzul"
+                    type="button"
+                    className="block mx-auto"
+                    onClick={() => window.history.back()}
+                >
+                    VOLTAR
+                </Botao>
+            </form>
         </div>
 
         <Botao largura="cheia" cor="padrao" type="submit" className="mt-6">

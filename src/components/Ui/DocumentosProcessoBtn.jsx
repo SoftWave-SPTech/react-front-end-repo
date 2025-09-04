@@ -1,21 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Alert from './AlertStyle';
 
 const DocumentosProcessoBtn = () => {
+  const [showAlert, setShowAlert] = useState(false);
+
   return (
-    <button
-      style={{
-        height: 'fit-content',
-        padding: '10px 15px',
-        background: '#28a745',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '5px',
-        cursor: 'pointer'
-      }}
-      onClick={() => alert('Abrir documentos do processo...')}
-    >
-      📁 Documentos do Processo
-    </button>
+    <div>
+      <button
+        style={{
+          height: 'fit-content',
+          padding: '10px 15px',
+          background: '#28a745',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer'
+        }}
+        onClick={() => setShowAlert(true)}
+      >
+        📁 Documentos do Processo
+      </button>
+      {showAlert && (
+        <Alert
+          type="info"
+          message="Abrir documentos do processo..."
+          onClose={() => setShowAlert(false)}
+        />
+      )}
+    </div>
   );
 };
 

@@ -65,12 +65,13 @@ export default function AnaliseMovimentacao() {
     const novoComentario = {
       id : comentarioSelecionado?.id || null,
       nomeUsuario: sessionStorage.getItem("nome"),
-      dataComentario: new Date().toISOString(),
+      dataComentario: getISOComFusoBrasil(),
       comentario: texto,
       fotoUsuario: sessionStorage.getItem("fotoPerfil"),
       idUsuario: sessionStorage.getItem("id"),
     };
 
+    console.log("Novo comentário:", novoComentario);
     const salvarComentario = {
       comentario: novoComentario.comentario,
       dataCriacao: novoComentario.dataComentario,
@@ -82,28 +83,32 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
     api.post(`/comentarios-processos/movimentacao`,  salvarComentario, {
       headers: { Authorization: TOKEN }
     }).then((response) => {
-      setComentarios([...comentarios, { ...novoComentario, id: response.data.id }]);
+      api.get(`/comentarios-processos/buscar-por-ultima-movimentacao/${movimentacaoId}`, {
+        headers: { Authorization: TOKEN }
+      }).then((response) => {
+        setComentarios(Array.isArray(response.data) ? response.data : []);
+      });
     }).catch((error) => {
       console.error("Erro ao salvar comentário:", error);
     });
   }else{
-
     api.put(`/comentarios-processos/${comentarioSelecionado.id}`,  salvarComentario, {
       headers: { Authorization: TOKEN }
     }).then((response) => {
       console.info("Comentário atualizado com sucesso:", response.data);
+      api.get(`/comentarios-processos/buscar-por-ultima-movimentacao/${movimentacaoId}`, {
+        headers: { Authorization: TOKEN }
+      }).then((response) => {
+        setComentarios(Array.isArray(response.data) ? response.data : []);
+      });
     }).catch((error) => {
       console.error("Erro ao atualizar comentário:", error);
     });
-    const atualizados = [...comentarios];
-      atualizados[comentarioSelecionado.index] = { ...novoComentario, id: comentarioSelecionado.id };
-      setComentarios(atualizados);
-  }
+  };
     setModalAberto(false);
     setComentarioSelecionado(null);
     setModoEdicao(false);
-  };
-
+}
   const handleExcluir = (id , index) => {
     if (id !== null) {
 
@@ -125,6 +130,13 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
       setModoEdicao(false);
     }
   };
+
+  function getISOComFusoBrasil() {
+  const data = new Date();
+  const offsetMs = -3 * 60 * 60 * 1000; // UTC-3 em milissegundos
+  const dataComOffset = new Date(data.getTime() + offsetMs);
+  return dataComOffset.toISOString();
+}
   return (
     <div className="w-full min-h-screen px-5">
       <div className="max-w-7xl mx-auto space-y-10">
@@ -146,14 +158,20 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
                   data={formatarData(coment.dataComentario)}
                   texto={coment.comentario}
                   // Precisa mudar para uma constante que armazena o prefixo no caminho da foto do perfil do comentario
-                  imagem={typeof coment.fotoUsuario === "string" && coment.fotoUsuario.includes("http") ? coment.fotoUsuario : `http://localhost:8080/${coment.fotoUsuario}`}
-                  onClick={() => {
+                  imagem={typeof coment?.fotoUsuario === "string" &&
+                    coment.fotoUsuario.trim() !== "" &&
+                    coment.fotoUsuario !== "null"
+                      ? coment.fotoUsuario.includes("http")
+                        ? coment.fotoUsuario
+                        : `http://localhost:8080/${coment.fotoUsuario}`
+                      : "/src/assets/images/boneco.png"}
+                    onClick={() => {
                     setComentarioSelecionado({
                       id: coment.id,
                       nomeUsuario: coment.nomeUsuario,
                       dataComentario: coment.dataComentario,
                       comentario: coment.comentario,
-                      fotoUsuario: coment.fotoUsuario,
+                      fotoUsuario: coment.fotoUsuario || sessionStorage.getItem("fotoPerfil"),
                       idUsuario: coment.idUsuario,
                       index
                     });
@@ -171,7 +189,7 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
                   onClick={() => {
                     setComentarioSelecionado({
                       nomeUsuario: sessionStorage.getItem("nome"),
-                      dataComentario: new Date().toISOString(),
+                      dataComentario: getISOComFusoBrasil(),
                       comentario: "",
                       fotoUsuario: sessionStorage.getItem("fotoPerfil"),
                       idUsuario: sessionStorage.getItem("id"),

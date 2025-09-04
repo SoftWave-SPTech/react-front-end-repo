@@ -1,6 +1,6 @@
 import React from 'react';
 import LayoutBase from '../layouts/LayoutBase';
-import AnaliseMovimentacao from "../Components/AnaliseDeIa/AnaliseMovimentacao";
+import AnaliseMovimentacao from "../components/AnaliseDeIa/AnaliseMovimentacao";
 
 const VisualizarDocumentosProcesso = () => 
 {
