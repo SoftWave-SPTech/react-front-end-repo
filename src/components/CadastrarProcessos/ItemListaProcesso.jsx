@@ -180,52 +180,53 @@ export default function ItemListaProcesso() {
                     </span>
                 </div>
             </div>
-            <div
-              key={processo.id}
-              className="bg-azulClaro rounded-lg flex justify-between items-center px-6 py-4"
-            >
-              <div className="flex flex-col min-w-0">
-                <p className="font-sans text-branco text-2xl truncate">{processo.numeroProcesso}</p>
-                <p className="text-branco text-base truncate">{processo.descricao}</p>
-              </div>
-
-              <div className="flex space-x-6">
-                {/* Editar */}
-                {podeEditar && (
-                  <button
-                    onClick={() => onEdit && onEdit(processo)}
-                    className="text-branco hover:text-dourado transition-colors"
-                    title="Editar processo"
-                  >
-                    <FiEdit2 size={24} className="md:w-6 md:h-6" />
-                  </button>
-                )}
-
-                {/* Visualizar */}
-                <button
-                  onClick={() => parametrosVisualizarProcesso(processo)}
-                  className="text-branco hover:text-dourado transition-colors"
-                  title="Visualizar processo"
-                >
-                  <FiFileText size={24} className="md:w-6 md:h-6" />
-                </button>
-
-                {/* Excluir */}
-                {podeEditar && (
-                  <button
-                    onClick={() => confirmarExclusao(processo.id)}
-                    className="text-branco hover:text-dourado transition-colors"
-                    title="Excluir processo"
-                  >
-                    <FiTrash size={24} className="md:w-6 md:h-6" />
-                  </button>
-                )}
-              </div>
+        {processosFiltrados.map((processo) => (
+          <div
+            key={processo.id}
+            className="bg-azulClaro rounded-lg flex justify-between items-center px-6 py-4"
+          >
+            <div className="flex flex-col min-w-0">
+              <p className="font-sans text-branco text-2xl truncate">{processo.numeroProcesso}</p>
+              <p className="text-branco text-base truncate">{processo.descricao}</p>
             </div>
-          ))}
-          {processosFiltrados.length === 0 && (
-            <div className="text-branco text-center py-8 opacity-70">Nenhum processo encontrado.</div>
-          )}
+
+            <div className="flex space-x-6">
+              {/* Editar */}
+              {podeEditar && (
+                <button
+                  onClick={() => onEdit && onEdit(processo)}
+                  className="text-branco hover:text-dourado transition-colors"
+                  title="Editar processo"
+                >
+                  <FiEdit2 size={24} className="md:w-6 md:h-6" />
+                </button>
+              )}
+
+              {/* Visualizar */}
+              <button
+                onClick={() => parametrosVisualizarProcesso(processo)}
+                className="text-branco hover:text-dourado transition-colors"
+                title="Visualizar processo"
+              >
+                <FiFileText size={24} className="md:w-6 md:h-6" />
+              </button>
+
+              {/* Excluir */}
+              {podeEditar && (
+                <button
+                  onClick={() => confirmarExclusao(processo.id)}
+                  className="text-branco hover:text-dourado transition-colors"
+                  title="Excluir processo"
+                >
+                  <FiTrash size={24} className="md:w-6 md:h-6" />
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+        {processosFiltrados.length === 0 && (
+          <div className="text-branco text-center py-8 opacity-70">Nenhum processo encontrado.</div>
+        )}
         </div>
     );
 }
