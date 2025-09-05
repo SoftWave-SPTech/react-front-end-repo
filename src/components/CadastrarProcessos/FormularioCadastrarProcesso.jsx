@@ -50,10 +50,23 @@ export default function FormularioCadastrarProcesso() {
             });
             console.error('Erro ao buscar clientes:', error);
         });
-        const proc = det.data || {};
+    }, []);
 
-        let advIds = [];
-        let cliIds = [];
+    const handleAdvogadoChange = (id) => {
+        setAdvogadosSelecionados((prev) =>
+            prev.includes(id)
+                ? prev.filter((n) => n !== id)
+                : [...prev, id]
+        );
+    };
+
+    const handleClienteChange = (id) => {
+        setClientesSelecionados((prev) =>
+            prev.includes(id)
+                ? prev.filter((n) => n !== id)
+                : [...prev, id]
+        );
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -109,34 +122,14 @@ export default function FormularioCadastrarProcesso() {
         }
     };
 
-    preencher();
-  }, [processoEditando]);
-
-  const handleAdvogadoChange = (id) => {
-    id = Number(id);
-    setAdvogadosSelecionados((prev) =>
-      prev.includes(id) ? prev.filter((n) => n !== id) : [...prev, id]
+    const advogadosFiltrados = advogados.filter((adv) =>
+        adv?.nomeFantasia?.toLowerCase().includes(buscaAdvogado.toLowerCase()) || ''
     );
 
     const clientesFiltrados = clientes.filter((cliente) =>
         cliente?.nome?.toLowerCase().includes(buscaCliente.toLowerCase()) || ''
     );
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // validação do número
-    const numeroRegex = /^\d+-\d+\.\d+\.\d+\.\d+\.\d+$/;
-    if (!numeroRegex.test(numero)) {
-      alert('O número do processo deve seguir o formato: 0000005-27.2025.8.26.0008');
-      return;
-    }
-
-    if (!numero || !descricao) {
-      alert('Preencha número e descrição.');
-      return;
-    }
     return (
         <div
             className="bg-white rounded-md w-full max-w-[80rem] min-w-[28rem] px-[4rem] sm:px-[5rem] md:px-[6rem] pt-[2.5rem] pb-[2.5rem] shadow-[0.375rem_0.375rem_0_0_rgb(1,13,38)]"
