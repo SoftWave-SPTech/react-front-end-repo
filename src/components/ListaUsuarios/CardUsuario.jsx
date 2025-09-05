@@ -19,7 +19,7 @@ export default function CardUsuario(props) {
                 {props.role !== "ROLE_USUARIO" && (
                     <MenuLista idUsuario={props.idUsuario} role={props.role} />
                 )}
-                <Toggle idUsuario={props.idUsuario} status={props.status} className="w-12 h-6 md:w-14 md:h-7" />
+                <Toggle idUsuario={props.idUsuario} ativo={props.ativo} className="w-12 h-6 md:w-14 md:h-7" />
             </div>
 
             <div className="flex flex-col gap-4 w-full md:w-1/3">

@@ -102,7 +102,7 @@ export default function ListaUsuarios() {
                                 email={usuario.email}
                                 telefone={usuario.telefone}
                                 role={usuario.role}
-                                status={usuario.status}
+                                ativo={usuario.ativo}
                                 processos={usuario.procesos}
                                 onClickEmail={abrirModalReenvio}
                             />
