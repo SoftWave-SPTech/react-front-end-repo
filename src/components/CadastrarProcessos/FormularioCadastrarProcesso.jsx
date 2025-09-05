@@ -50,29 +50,10 @@ export default function FormularioCadastrarProcesso() {
             });
             console.error('Erro ao buscar clientes:', error);
         });
-    }, []);
+        const proc = det.data || {};
 
-    const advogadosFiltrados = advogados.filter((adv) =>
-        adv?.nomeFantasia?.toLowerCase().includes(buscaAdvogado.toLowerCase())
-    );
-
-    const clientesFiltrados = clientes.filter((cli) =>
-        cli?.nome?.toLowerCase().includes(buscaCliente.toLowerCase())
-    );
-
-    const handleAdvogadoChange = (id) => {
-        id = Number(id);
-        setAdvogadosSelecionados((prev) =>
-            prev.includes(id) ? prev.filter((n) => n !== id) : [...prev, id]
-        );
-    };
-
-    const handleClienteChange = (id) => {
-        id = Number(id);
-        setClientesSelecionados((prev) =>
-            prev.includes(id) ? prev.filter((n) => n !== id) : [...prev, id]
-        );
-    };
+        let advIds = [];
+        let cliIds = [];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -128,6 +109,34 @@ export default function FormularioCadastrarProcesso() {
         }
     };
 
+    preencher();
+  }, [processoEditando]);
+
+  const handleAdvogadoChange = (id) => {
+    id = Number(id);
+    setAdvogadosSelecionados((prev) =>
+      prev.includes(id) ? prev.filter((n) => n !== id) : [...prev, id]
+    );
+
+    const clientesFiltrados = clientes.filter((cliente) =>
+        cliente?.nome?.toLowerCase().includes(buscaCliente.toLowerCase()) || ''
+    );
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // validação do número
+    const numeroRegex = /^\d+-\d+\.\d+\.\d+\.\d+\.\d+$/;
+    if (!numeroRegex.test(numero)) {
+      alert('O número do processo deve seguir o formato: 0000005-27.2025.8.26.0008');
+      return;
+    }
+
+    if (!numero || !descricao) {
+      alert('Preencha número e descrição.');
+      return;
+    }
     return (
         <div
             className="bg-white rounded-md w-full max-w-[80rem] min-w-[28rem] px-[4rem] sm:px-[5rem] md:px-[6rem] pt-[2.5rem] pb-[2.5rem] shadow-[0.375rem_0.375rem_0_0_rgb(1,13,38)]"
@@ -220,8 +229,7 @@ export default function FormularioCadastrarProcesso() {
                         placeholder="Digite para pesquisar cliente..."
                         value={buscaCliente}
                         onChange={e => setBuscaCliente(e.target.value)}
-                        className="border border-preto rounded-lg w-full py-[0.5rem] px-[0.75rem] text-preto text-base md:text-lg
-                                                focus:outline-none mb-2"
+                        className="border border-preto rounded-lg w-full py-[0.5rem] px-[0.75rem] text-preto text-base md:text-lg focus:outline-none mb-2"
                     />
                     <div className="border border-preto rounded-lg bg-branco max-h-[8rem] min-h-[2.5rem] overflow-y-auto px-[0.5rem] py-[0.25rem] flex items-center">
                         {clientesFiltrados.length > 0 ? (

@@ -5,7 +5,7 @@ import { api } from '../../service/api';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../Ui/AlertStyle';
 
-const FormEsqueciSenha = () => {
+const FormRedefinirSenha = () => {
 
     const navigate = useNavigate();
     const [chave, setChave] = useState("");
