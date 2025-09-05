@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FiFileText, FiTrash, FiEdit2 } from "react-icons/fi";
+import { FiFileText, FiTrash } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../service/api';
 import ModalConfirmacao from '../Ui/ModalConfirmacao';
@@ -181,51 +181,83 @@ export default function ItemListaProcesso() {
                 </div>
             </div>
             <div
-              key={processo.id}
-              className="bg-azulClaro rounded-lg flex justify-between items-center px-6 py-4"
+                className="overflow-y-auto custom-scrollbar flex-1 pr-6"
+                style={{
+                    minHeight: 0,
+                    maxHeight: "100rem",
+                }}
             >
-              <div className="flex flex-col min-w-0">
-                <p className="font-sans text-branco text-2xl truncate">{processo.numeroProcesso}</p>
-                <p className="text-branco text-base truncate">{processo.descricao}</p>
-              </div>
-
-              <div className="flex space-x-6">
-                {/* Editar */}
-                {podeEditar && (
-                  <button
-                    onClick={() => onEdit && onEdit(processo)}
-                    className="text-branco hover:text-dourado transition-colors"
-                    title="Editar processo"
-                  >
-                    <FiEdit2 size={24} className="md:w-6 md:h-6" />
-                  </button>
-                )}
-
-                {/* Visualizar */}
-                <button
-                  onClick={() => parametrosVisualizarProcesso(processo)}
-                  className="text-branco hover:text-dourado transition-colors"
-                  title="Visualizar processo"
-                >
-                  <FiFileText size={24} className="md:w-6 md:h-6" />
-                </button>
-
-                {/* Excluir */}
-                {podeEditar && (
-                  <button
-                    onClick={() => confirmarExclusao(processo.id)}
-                    className="text-branco hover:text-dourado transition-colors"
-                    title="Excluir processo"
-                  >
-                    <FiTrash size={24} className="md:w-6 md:h-6" />
-                  </button>
-                )}
-              </div>
+                <style>
+                    {`
+                    .custom-scrollbar {
+                        scrollbar-color: #0F2A5E ;
+                    }
+                    .custom-scrollbar::-webkit-scrollbar {
+                        width: 1.25rem;
+                        background: #F4F4F4;
+                        border-radius: 0.75rem;
+                    }
+                    .custom-scrollbar::-webkit-scrollbar-thumb {
+                        background: #0F2A5E;
+                        border-radius: 1.25rem;
+                        border: 0.25rem solid #F4F4F4;
+                    }
+                    .custom-scrollbar::-webkit-scrollbar-button {
+                        display: none;
+                        width: 0;
+                        height: 0;
+                    }
+                    `}
+                </style>
+                <div className="flex flex-col gap-4 h-full">
+                    {processosFiltrados.map((processo) => (
+                        <div
+                            key={processo.id}
+                            className="bg-azulClaro rounded-lg flex justify-between items-center"
+                            style={{
+                                paddingLeft: "1.5rem",
+                                paddingRight: "1.5rem",
+                                paddingTop: "1rem",
+                                paddingBottom: "1rem"
+                            }}
+                        >
+                            <div className="flex flex-col min-w-0">
+                                <p className="font-sans text-branco text-2xl truncate">{processo.numeroProcesso}</p>
+                                <p className="text-branco text-base truncate">{processo.descricao}</p>
+                            </div>
+                            <div className="flex space-x-6">
+                                <button 
+                                    onClick={() => parametrosVisualizarProcesso(processo)}
+                                    className="text-branco hover:text-dourado transition-colors" 
+                                    title="Visualizar processo"
+                                >
+                                    <FiFileText size={24} className="md:w-6 md:h-6" />
+                                </button>
+                                    {(role === 'ROLE_ADMIN' || role === 'ROLE_DONO') && (
+                                    <button 
+                                        onClick={() => confirmarExclusao(processo.id)}
+                                        className="text-branco hover:text-dourado transition-colors" 
+                                        title="Excluir processo"
+                                    >
+                                        <FiTrash size={24} className="md:w-6 md:h-6" />
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                    {processosFiltrados.length === 0 && (
+                        <div className="text-branco text-center py-8 opacity-70">Nenhum processo encontrado.</div>
+                    )}
+                </div>
             </div>
-          ))}
-          {processosFiltrados.length === 0 && (
-            <div className="text-branco text-center py-8 opacity-70">Nenhum processo encontrado.</div>
-          )}
+            {modalExcluir.aberto && (
+                <ModalConfirmacao
+                    titulo="Confirmar exclusão"
+                    mensagem="Tem certeza que deseja excluir este processo?"
+                    onConfirmar={excluirProcesso}
+                    onCancelar={cancelarExclusao}
+                />
+            )}
         </div>
     );
 }
