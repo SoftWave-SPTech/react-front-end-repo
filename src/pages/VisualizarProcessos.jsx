@@ -30,20 +30,6 @@ export default function VisualizarProcessos() {
       });
   }, []);
 
-  // const abrirExclusao = (processo) => {
-  //   setProcessoSelecionado(processo);
-  //   setModalConfirma(true);
-  // };
-
-  // const excluirProcesso = () => {
-  //   setProcessos(processos.filter(p => p.id !== processoSelecionado.id));
-  //   setModalConfirma(false);
-  // };
-
-  // const processosFiltrados = processos.filter(p =>
-  //   p.numero.includes(busca) || p.cliente.toLowerCase().includes(busca.toLowerCase())
-  // );
-
   const toggleExpandido = (id) => {
     setExpandido(expandido === id ? null : id);
 
@@ -63,10 +49,10 @@ export default function VisualizarProcessos() {
 
   return (
   <LayoutBase backgroundClass="bg-cinzaAzulado">
-      <div className="flex-1 sm:p-8 overflow-auto">
+      <div className="flex-1 p-2 sm:p-8 overflow-auto">
         {/* Barra de pesquisa acima do título */}
         <div className="flex justify-end mb-4">
-          <div className="max-w-xl w-full sm:w-96">
+          <div className="w-full max-w-full sm:max-w-xl">
             <div className="relative">
               <div className='flex items-center flex-row gap-2'>
               <Input
@@ -74,11 +60,11 @@ export default function VisualizarProcessos() {
                 type="text"
                 valor={busca}
                 onChange={(e) => setBusca(e.target.value)}
-                className="pl-10"
+                className="pl-10 w-full"
                 placeholder="Buscar por número do processo"
                 />
-                <div className='cursor-pointer bg-azulEscuroForte w-12 h-11 flex items-center rounded-r-md justify-center'>
-                  <FiSearch className="w-7 h-6 text-white" />
+                <div className='cursor-pointer bg-azulEscuroForte w-10 h-10 sm:w-12 sm:h-11 flex items-center rounded-r-md justify-center'>
+                  <FiSearch className="w-6 h-6 sm:w-7 sm:h-6 text-white" />
                 </div>
               </div>
             </div>
@@ -89,7 +75,7 @@ export default function VisualizarProcessos() {
             Olá, {sessionStorage.getItem("nome")}!
           </BarraTitulo>
           <div className="flex justify-center">
-            <BarraTitulo tamanho="medio" largura="medio" cor="claro" className="flex justify-center">
+            <BarraTitulo tamanho="medio" largura="medio" cor="claro" className="flex justify-center text-center">
               Visualize seus processos e o respectivo andamento.
             </BarraTitulo>
           </div>
@@ -103,8 +89,8 @@ export default function VisualizarProcessos() {
                     className="border-b hover:bg-gray-50 cursor-pointer"
                     onClick={() => toggleExpandido(p.id)}
                   >
-                    <td className="px-4 py-2 font-semibold mb-4" style={{ paddingBottom: '1rem' }} colSpan={10}>
-                      Processo nº {p.numeroProcesso}
+                    <td className="px-2 sm:px-4 py-2 font-semibold mb-4" style={{ paddingBottom: '1rem' }} colSpan={10}>
+                      <span className="block sm:inline">Processo nº {p.numeroProcesso}</span>
                       <span className="float-right text-gray-400">
                         {expandido === p.id ? '▲' : '▼'}
                       </span>
@@ -112,7 +98,7 @@ export default function VisualizarProcessos() {
                   </tr>
                   {expandido === p.id && (
                     <tr className="bg-gray-50 mb-4">
-                      <td colSpan={10} className="px-4 py-2">
+                      <td colSpan={10} className="px-2 sm:px-4 py-2">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
                           {processoDaVez.advogados?.map((nome, index) => (
                             <div key={index}><b>Advogado:</b> {nome}</div>

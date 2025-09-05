@@ -9,53 +9,63 @@ export default function MenuLista(props) {
     const idUsuario = props.idUsuario;
     
     useEffect(() => {
-        if(role == "ROLE_ADVOGADO"){
+        if(role === "ROLE_ADVOGADO"){
             setTitulo("Advogado")
         }else{
             setTitulo("Administrador")
         }  
-    }, []);
+    }, [role]);
 
     function atualizarRole(role){
-        if(role == 2){
+        if(role === 2){
             setTitulo("Administrador")
         }else{
             setTitulo("Advogado")
         }
 
-        api.put(`/usuarios/atualizar-role/${idUsuario}/${role}`,
-            // {
-            // headers: {
-            //   "Authorization":  TOKEN
-            // }
-            // }
-        )
-                .then((res) => {
-                    console.log(res)
-                })
-                .catch((error) =>{
-                    console.log(error);
-                })
+        api.put(`/usuarios/atualizar-role/${idUsuario}/${role}`)
+            .then((res) => {
+                console.log(res)
+            })
+            .catch((error) =>{
+                console.log(error);
+            })
     }
 
     return (
-        <div className="w-64 p-4 bg-white rounded font-sans">
-        {/* Cabeçalho do menu */}
-        <button
-            onClick={() => setAberto(!aberto)}
-            className="flex items-center justify-center w-full text-xl font-medium text-gray-800 space-x-8"
-        >
-            {titulo}
-            {aberto ? "▲" : "▼"}
-        </button>
+        <div className="relative inline-block text-sm">
+            {/* Botão principal */}
+            <button
+                onClick={() => setAberto(!aberto)}
+                className="flex items-center justify-between px-2 py-1 text-branco bg-[#050e26] backdrop-blur-md rounded-md shadow-sm hover:bg-dourado/80 hover:text-black transition w-32"
+            >
+                <span className="truncate">{titulo}</span>
+                {aberto ? "▲" : "▼"}
+            </button>
 
-        {/* Lista de opções */}
-        {aberto && (
-            <ul className="mt-4 space-y-2 text-gray-700 text-base">
-            <li onClick={() => atualizarRole(2)} className="hover:bg-azulMenu hover:rounded text-center cursor-pointer">Administrador</li>
-            <li onClick={() => atualizarRole(1)} className="hover:bg-azulMenu hover:rounded text-center cursor-pointer">Advogado</li>
-            </ul>
-        )}
+            {/* Dropdown */}
+            {aberto && (
+                <ul className="absolute mt-1 w-32 bg-white/70 backdrop-blur-md rounded-md shadow-lg z-50 text-gray-800 text-xs">
+                    <li 
+                        onClick={() => {
+                            atualizarRole(2);
+                            setAberto(false);
+                        }} 
+                        className="px-3 py-2 hover:bg-dourado/80 hover:text-white rounded cursor-pointer text-center transition"
+                    >
+                        Administrador
+                    </li>
+                    <li 
+                        onClick={() => {
+                            atualizarRole(1);
+                            setAberto(false);
+                        }} 
+                        className="px-3 py-2 hover:bg-dourado/80 hover:text-white rounded cursor-pointer text-center transition"
+                    >
+                        Advogado
+                    </li>
+                </ul>
+            )}
         </div>
     );
 }

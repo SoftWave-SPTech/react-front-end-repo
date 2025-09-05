@@ -19,6 +19,8 @@
     "instead": "^1.0.3",
     "jquery": "^3.7.1",
     "jquery-inputmask": "^1.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "nanoid": "^5.1.5",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
