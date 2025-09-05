@@ -32,7 +32,7 @@ const FormRedefinirSenha = () => {
         }
 
         try {
-            const response = await api.post(`/auth/solicitar-reset-senha?email=${email}`);
+            await api.post(`/auth/solicitar-reset-senha?email=${email}`);
             setAlert({
                 type: "success",
                 message: "E-mail com Token enviado com sucesso!",
@@ -41,6 +41,10 @@ const FormRedefinirSenha = () => {
                     navigate("/esqueci-senha");
                 }
             });
+            setTimeout(() => {
+                setAlert(null);
+                navigate("/esqueci-senha");
+            }, 2000);
         } catch (error) {
             console.error("Erro ao solicitar redefinição de senha:", error);
 

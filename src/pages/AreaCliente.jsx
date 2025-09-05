@@ -16,15 +16,24 @@ const AreaCliente = () => {
     useEffect(() => {
         // Para usar a API real, descomente abaixo e remova os mocks acima
         api.get(`/documentos-processos/processo/${processoId}`)
-            .then(res => setDocumentos(Array.isArray(res.data) ? res.data : []))
+            .then(res => {
+                setDocumentos(Array.isArray(res.data) ? res.data : []);
+                console.log("Documentos:", res.data);   
+            })
             .catch(() => setDocumentos([]));
 
         api.get(`/ultimas-movimentacoes/processo/${processoId}/ordenadas`)
-            .then(res => setAndamentos(Array.isArray(res.data) ? res.data : []))
+            .then(res => {
+                setAndamentos(Array.isArray(res.data) ? res.data : []);
+                console.log("Andamentos:", res.data);
+            })
             .catch(() => setAndamentos([]));
 
         api.get(`/comentarios-processos/buscar-por-proceso/${processoId}`)
-            .then(res => setComentarios(Array.isArray(res.data) ? res.data : []))
+            .then(res => {
+                setComentarios(Array.isArray(res.data) ? res.data : []);
+                console.log("Comentários:", res.data);
+            })
             .catch(() => setComentarios([]));
     }, [processoId]);
 
@@ -35,7 +44,7 @@ const AreaCliente = () => {
 
     return (
         <LayoutBase backgroundClass="bg-cinzaAzulado">
-            <BarraTitulo>Contratos e petições</BarraTitulo>
+            <BarraTitulo>Andamento do Processo</BarraTitulo>
             <div className="flex flex-col min-h-[60vh] rounded-2xl p-8">
                 <div className="flex flex-row flex-wrap gap-8 justify-center items-start w-full">
                     {/* Documentos */}
@@ -52,7 +61,10 @@ const AreaCliente = () => {
                         </div>
                         {/* Comentários */}
                         <div className="bg-[#020E29] rounded-2xl shadow-lg p-4 text-white flex flex-col">
-                            <h2 className="text-white text-xl font-bold mb-3 tracking-wide">Comentários</h2>
+                            <div className="flex items-center mb-3">
+                                <h2 className="text-white text-xl font-bold tracking-wide mr-4">Resumo Processo</h2>
+                                <span className="text-white text-base font-semibold">Whatsapp</span>
+                            </div>
                             <ComentariosList comentarios={comentarios} />
                         </div>
                     </div>
