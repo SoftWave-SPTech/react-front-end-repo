@@ -345,8 +345,7 @@ const VisualizarProcessosAdvogado = () => {
                 </Botao>
               </div>
             </div>
-<<<<<<< HEAD
-=======
+
             {/* Comentário removido */}
             <div style={blocoStyle}>
               <div style={tituloBlocoStyle}>Resumo do Processo</div>
@@ -371,7 +370,7 @@ const VisualizarProcessosAdvogado = () => {
               ENVIAR
             </Botao>
             </div>
->>>>>>> 8bf661f72936c854127dadff759d219ee02c09cb
+
           </div>
         </div>
         </div>
