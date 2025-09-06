@@ -17,7 +17,7 @@ const LayoutBase = ({ children, backgroundClass }) => {
   return (
     <div className={`flex min-h-screen ${backgroundClass}`}>
       <MenuLateral />
-      <main className="flex-1 transition-all duration-300 ease-in-out overflow-y-auto p-6">
+      <main className="flex-1 transition-all duration-300 ease-in-out overflow-y-auto p-4 lg:p-8">
         {children}
       </main>
     </div>
