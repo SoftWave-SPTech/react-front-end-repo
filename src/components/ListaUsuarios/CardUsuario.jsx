@@ -5,10 +5,11 @@ import Toggle from "../Ui/Toggle";
 import MenuLista from "../Ui/MenuLista";
 import CardProcesso from "../ListaUsuarios/CardProcesso";
 import { FiSmile, FiFrown, FiMail, FiPhone } from "react-icons/fi";
+import Botao from "../Ui/Botao";
 
 export default function CardUsuario(props) {
     const [processos] = useState(props.processos || []);
- 
+
     const mostrarScroll = processos.length > 2;
     const processosVisiveis = mostrarScroll ? processos : processos.slice(0, 2);
 
@@ -16,6 +17,18 @@ export default function CardUsuario(props) {
         <div className="relative flex flex-col md:flex-row w-full bg-white rounded-lg shadow-md p-4 gap-4">
             {/* Versão Desktop */}
             <div className="hidden md:flex absolute top-4 right-4 items-center gap-3">
+                <Botao
+                    onClick={() => props.onClickEmail && props.onClickEmail(props.email)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { props.onClickEmail && props.onClickEmail(props.email); } }}
+                    role="button"
+                    tabIndex={0}
+                    title="Clique para reenviar token para este e-mail"
+                    className="cursor-pointer hover:underline"
+                    tamanho="pequeno"
+                    largura="auto"
+                >
+                    Reenviar Token
+                </Botao>
                 {props.role !== "ROLE_USUARIO" && (
                     <MenuLista idUsuario={props.idUsuario} role={props.role} />
                 )}
@@ -62,13 +75,26 @@ export default function CardUsuario(props) {
 
             {/* Versão Mobile */}
             <div className="flex md:hidden flex-col items-center gap-2 mt-2">
+                
+
+                <Botao
+                    onClick={() => props.onClickEmail && props.onClickEmail(props.email)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { props.onClickEmail && props.onClickEmail(props.email); } }}
+                    role="button"
+                    tabIndex={0}
+                    title="Clique para reenviar token para este e-mail"
+                    className="cursor-pointer hover:underline"
+                    tamanho="pequeno"
+                >
+                    Reenviar Token
+                </Botao>
                 {props.role !== "ROLE_USUARIO" && (
                     <MenuLista idUsuario={props.idUsuario} role={props.role} />
                 )}
                 <Toggle idUsuario={props.idUsuario} status={props.status} className="w-12 h-6" />
             </div>
 
-        
+
             <div className="flex flex-col gap-4 w-full md:w-2/3 pr-2 mt-12">
                 <div className={`${mostrarScroll ? "max-h-40 overflow-y-auto" : ""} flex flex-col gap-2`}>
                     {(mostrarScroll ? processos : processosVisiveis).map((processo, index) => (
