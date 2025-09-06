@@ -193,7 +193,7 @@ export default function FormularioCadastrarProcesso({
 
   return (
     <div
-      className="bg-white rounded-md w-full max-w-[80rem] min-w-[28rem] px-[4rem] sm:px-[5rem] md:px-[6rem] pt-[2.5rem] pb-[2.5rem] shadow-[0.375rem_0.375rem_0_0_rgb(1,13,38)]"
+      className="bg-white rounded-md w-full max-w-[500px] min-w-[28rem] px-[4rem] sm:px-[5rem] md:px-[6rem] pt-[2.5rem] pb-[2.5rem] shadow-[0.375rem_0.375rem_0_0_rgb(1,13,38)] ml-4 lg:ml-8"
       style={{ minHeight: "25rem", boxSizing: "border-box" }}
     >
       <h1 className="text-2xl md:text-3xl text-dourado text-center mb-6 font-normal">
