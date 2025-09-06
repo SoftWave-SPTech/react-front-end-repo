@@ -13,6 +13,8 @@ const AreaCliente = () => {
     const [documentos, setDocumentos] = useState([]);
     const [andamentos, setAndamentos] = useState([]);
     const [comentarios, setComentarios] = useState([]);
+    const [advogado, setAdvogado] = useState(null);
+    let idAdvogado = 1; // Substitua pelo ID real do advogado associado ao processo
 
     useEffect(() => {
         // Para usar a API real, descomente abaixo e remova os mocks acima
@@ -34,12 +36,35 @@ const AreaCliente = () => {
             .then(res => {
                 setComentarios(Array.isArray(res.data) ? res.data : []);
                 console.log("Comentários:", res.data);
+                idAdvogado = res.data[res.data.length - 1].idUsuario;
+                console.log("ID Advogado:", idAdvogado);
             })
             .catch(() => setComentarios([]));
-    }, [processoId]);
+
+        api.get(`/usuarios-fisicos/${idAdvogado}`)
+            .then(res => {
+                setAdvogado(res.data);
+                console.log("Advogado:", res.data);
+            })
+            .catch(() => setAdvogado(null));
+
+        if (advogado == null){
+            api.get(`/usuarios-juridicos/${idAdvogado}`)
+                .then(res => {
+                    setAdvogado(res.data);
+                    console.log("Advogado:", res.data);
+                })
+                .catch(() => setAdvogado(null));
+        }  
+    }, [processoId, advogado]);
 
     // Número do WhatsApp para contato
-    const whatsappNumber = "5599999999999"; // coloque o número desejado
+    let telefone = "11989833914"; // número padrão caso advogado não esteja definido
+    if (advogado) {
+        console.log("Telefone Advogado:", advogado.telefone);
+        telefone = advogado.telefone;
+    }
+    const whatsappNumber = "55" + telefone;
     const whatsappMessage = encodeURIComponent("Olá, gostaria de conversar sobre meu processo.");
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
