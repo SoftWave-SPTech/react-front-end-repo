@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
-import axios from 'axios';
+import { api } from '../../service/api';
 
 const METODOS = [
   { id: 1, label: 'Cartão de Crédito' },
@@ -56,12 +56,15 @@ export default function ModalNovoPagamento({ open, onClose, onSave, initialData 
   useEffect(() => {
     if (!open) return;
 
-    axios.get('/clientes')
-      .then(res => {
-        const data = Array.isArray(res.data) ? res.data : [];
-        setClientes(data);
-      })
-      .catch(err => console.error('Erro ao buscar clientes:', err));
+   
+       api.get('/usuarios/listar-clientes', {
+         headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+       })
+       .then(res => {
+         const data = Array.isArray(res.data) ? res.data : res.data.content || [];
+         setClientes(data);
+       })
+       .catch(err => console.error('Erro ao buscar clientes:', err));
   }, [open]);
 
   // Preencher formulário ao abrir modal
