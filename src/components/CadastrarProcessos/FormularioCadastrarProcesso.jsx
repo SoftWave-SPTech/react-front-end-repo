@@ -307,7 +307,8 @@ export default function FormularioCadastrarProcesso({
         <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
           <button
             type="submit"
-            className="w-full sm:w-auto bg-AzulEscuro text-branco text-lg md:text-xl font-sans font-semibold rounded-lg py-[0.75rem] px-6 hover:bg-azulClaro transition-colors"
+            className="w-full sm:w-auto bg-AzulEscuro text-branco text-base md:text-lg font-sans font-semibold rounded-lg py-2 px-4 hover:bg-azulClaro transition-colors"
+
           >
             {emEdicao ? 'SALVAR ALTERAÇÕES' : 'CADASTRAR'}
           </button>
@@ -316,7 +317,7 @@ export default function FormularioCadastrarProcesso({
             <button
               type="button"
               onClick={onCancelarEdicao}
-              className="w-full sm:w-auto border border-AzulEscuro text-AzulEscuro text-lg md:text-xl font-sans font-semibold rounded-lg py-[0.75rem] px-6 hover:bg-AzulEscuro hover:text-white transition-colors"
+              className="w-full sm:w-auto border border-AzulEscuro text-AzulEscuro text-base md:text-lg font-sans font-semibold rounded-lg py-2 px-4 hover:bg-AzulEscuro hover:text-white transition-colors"
             >
               CANCELAR EDIÇÃO
             </button>
