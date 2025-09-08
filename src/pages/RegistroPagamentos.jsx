@@ -4,6 +4,7 @@ import SelectFiltro from '../components/Ui/SelectFiltro';
 import TabelaPagamentos from '../components/Ui/TabelaPagamentos';
 import ResumoValores from '../components/Ui/ResumoValores';
 import ModalNovoPagamento from '../components/Ui/ModalNovoPagamento';
+import BarraTitulo from '../components/Ui/BarraTitulo';
 import axios from 'axios';
 
 export default function RegistroPagamentos() {
@@ -30,7 +31,9 @@ export default function RegistroPagamentos() {
     const fetchPagamentos = async () => {
       try {
         const res = await axios.get('http://localhost:8080/registros-financeiros', {
-          headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+          },
         });
 
         const dadosFormatados = res.data.map((item) => ({
@@ -70,7 +73,9 @@ export default function RegistroPagamentos() {
     const fetchClientesComProcessos = async () => {
       try {
         const res = await axios.get('http://localhost:8080/clientes/com-processos', {
-          headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+          },
         });
 
         const clientesData = Array.isArray(res.data) ? res.data : res.data.content || [];
@@ -79,7 +84,6 @@ export default function RegistroPagamentos() {
         // Extrai todos os processos dos clientes
         const processosExtraidos = clientesData.flatMap((c) => c.processos || []);
         const processosUnicos = Array.from(new Map(processosExtraidos.map((p) => [p.id, p])).values());
-
         setProcessos(processosUnicos);
       } catch (err) {
         console.error('Erro ao buscar clientes com processos:', err);
@@ -91,9 +95,11 @@ export default function RegistroPagamentos() {
 
   // Helper para criar opções de SelectFiltro
   const mkOptions = (arr, labelKey = 'label', valueKey = 'value') =>
-    Array.from(new Set(arr)).filter(Boolean).map((v) =>
-      typeof v === 'string' ? { label: v, value: v } : { label: v[labelKey], value: v[valueKey] }
-    );
+    Array.from(new Set(arr))
+      .filter(Boolean)
+      .map((v) =>
+        typeof v === 'string' ? { label: v, value: v } : { label: v[labelKey], value: v[valueKey] }
+      );
 
   const optionsClientes = useMemo(() => mkOptions(clientes, 'nome', 'id'), [clientes]);
   const optionsProcessos = useMemo(() => mkOptions(processos, 'numero', 'id'), [processos]);
@@ -108,7 +114,9 @@ export default function RegistroPagamentos() {
   ];
 
   const listaFiltrada = useMemo(() => {
-    const strIn = (a = '', b = '') => String(a).toLowerCase().includes(String(b).toLowerCase());
+    const strIn = (a = '', b = '') =>
+      String(a).toLowerCase().includes(String(b).toLowerCase());
+
     return pagamentos.filter((p) => {
       if (filtros.cliente && !strIn(p.cliente, filtros.cliente)) return false;
       if (filtros.processo && !strIn(p.processo, filtros.processo)) return false;
@@ -121,27 +129,36 @@ export default function RegistroPagamentos() {
     });
   }, [pagamentos, filtros]);
 
-  const totalPago = useMemo(() => listaFiltrada.reduce((acc, p) => acc + (p.valorPago || 0), 0), [listaFiltrada]);
-  const totalPagar = useMemo(() => listaFiltrada.reduce((acc, p) => acc + (p.valorPagar || 0), 0), [listaFiltrada]);
+  const totalPago = useMemo(
+    () => listaFiltrada.reduce((acc, p) => acc + (p.valorPago || 0), 0),
+    [listaFiltrada]
+  );
+  const totalPagar = useMemo(
+    () => listaFiltrada.reduce((acc, p) => acc + (p.valorPagar || 0), 0),
+    [listaFiltrada]
+  );
 
   const selectedItemCodigo = useMemo(
     () => (selectedIndex != null ? listaFiltrada[selectedIndex]?.codigo : null),
     [selectedIndex, listaFiltrada]
   );
 
-  const selectedItem = useMemo(() => pagamentos.find((p) => p.codigo === selectedItemCodigo) || null, [
-    pagamentos,
-    selectedItemCodigo,
-  ]);
+  const selectedItem = useMemo(
+    () => pagamentos.find((p) => p.codigo === selectedItemCodigo) || null,
+    [pagamentos, selectedItemCodigo]
+  );
 
   const resumoSelecionado = useMemo(() => {
-    if (!selectedItem) return { valorCaso: 0, honorarioSucumbencia: 0, valorProcesso: 0, totalReceber: 0 };
+    if (!selectedItem)
+      return { valorCaso: 0, honorarioSucumbencia: 0, valorProcesso: 0, totalReceber: 0 };
 
     const valorCaso = (selectedItem.valorPago || 0) + (selectedItem.valorPagar || 0);
     const honorarioPercent = selectedItem.honorarioSucumbencia ?? 0;
     const honorario = valorCaso * honorarioPercent;
     const valorProcesso = valorCaso;
-    const totalReceber = (selectedItem.valorPagar || 0) + (selectedItem.resultado === 'vitoria' ? honorario : 0);
+    const totalReceber =
+      (selectedItem.valorPagar || 0) +
+      (selectedItem.resultado === 'vitoria' ? honorario : 0);
 
     return { valorCaso, honorarioSucumbencia: honorario, valorProcesso, totalReceber };
   }, [selectedItem]);
@@ -199,8 +216,13 @@ export default function RegistroPagamentos() {
         'http://localhost:8080/registros-financeiros/status',
         null,
         {
-          params: { id: registroAlvo, status: resultado === 'vitoria' ? 'DEFERIDO' : 'INDEFERIDO' },
-          headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+          params: {
+            id: registroAlvo,
+            status: resultado === 'vitoria' ? 'DEFERIDO' : 'INDEFERIDO',
+          },
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+          },
         }
       )
       .catch((err) => console.error('Erro ao atualizar status financeiro:', err));
@@ -208,28 +230,32 @@ export default function RegistroPagamentos() {
 
   return (
     <LayoutBase backgroundClass="bg-cinzaAzulado">
-      <div className="w-full min-h-screen px-[5%] py-8 flex flex-col items-center justify-center">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 w-full text-center">REGISTROS DE PAGAMENTOS</h1>
+      <div className="w-full min-h-screen px-[5%] flex flex-col items-center justify-center">
+         
+        <BarraTitulo className="mb-6 text-lg sm:text-xl md:text-2xl">Registros de Pagamentos</BarraTitulo>
 
         {/* Resumo + Deferido/Indeferido */}
-        <div className="flex flex-col md:flex-row items-center rounded-lg p-6 gap-6 md:gap-8 w-full max-w-[75rem] mb-6 bg-[#1B3B8B]">
+        <div className="flex flex-col md:flex-row items-center rounded-lg p-6 gap-6 md:gap-8 w-full max-w-[75rem] mb-6 bg-AzulEscuro">
           <div className="flex gap-4">
             <button
               onClick={() => setResultadoSelecionado('vitoria')}
               disabled={!selectedItem}
-              className={`w-10 h-10 rounded-full font-bold text-white flex items-center justify-center transition
-                ${selectedItem?.resultado === 'vitoria' ? 'bg-green-600 ring-2 ring-white' : 'bg-green-500 opacity-90'}
-                ${!selectedItem ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`w-10 h-10 rounded-full font-bold text-white flex items-center justify-center transition ${
+                selectedItem?.resultado === 'vitoria'
+                  ? 'bg-green-600 ring-2 ring-white'
+                  : 'bg-green-500 opacity-90'
+              } ${!selectedItem ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               D
             </button>
-
             <button
               onClick={() => setResultadoSelecionado('derrota')}
               disabled={!selectedItem}
-              className={`w-10 h-10 rounded-full font-bold text-white flex items-center justify-center transition
-                ${selectedItem?.resultado === 'derrota' ? 'bg-red-600 ring-2 ring-white' : 'bg-red-500 opacity-90'}
-                ${!selectedItem ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`w-10 h-10 rounded-full font-bold text-white flex items-center justify-center transition ${
+                selectedItem?.resultado === 'derrota'
+                  ? 'bg-red-600 ring-2 ring-white'
+                  : 'bg-red-500 opacity-90'
+              } ${!selectedItem ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               I
             </button>
@@ -237,14 +263,23 @@ export default function RegistroPagamentos() {
 
           <div className="flex flex-wrap gap-6 justify-center">
             <ResumoValores titulo="Valor total do Caso" valor={resumoSelecionado.valorCaso} />
-            <ResumoValores titulo="Honorário de sucumbência" valor={resumoSelecionado.honorarioSucumbencia} />
-            <ResumoValores titulo="Valor total do Processo" valor={resumoSelecionado.valorProcesso} />
-            <ResumoValores titulo="Valor Total a Receber" valor={resumoSelecionado.totalReceber} />
+            <ResumoValores
+              titulo="Honorário de sucumbência"
+              valor={resumoSelecionado.honorarioSucumbencia}
+            />
+            <ResumoValores
+              titulo="Valor total do Processo"
+              valor={resumoSelecionado.valorProcesso}
+            />
+            <ResumoValores
+              titulo="Valor Total a Receber"
+              valor={resumoSelecionado.totalReceber}
+            />
           </div>
         </div>
 
         {/* Filtros */}
-        <div className="rounded-lg p-6 w-full max-w-[75rem] mb-6 bg-[#1B3B8B]">
+        <div className="rounded-lg p-6 w-full max-w-[75rem] mb-6 bg-AzulEscuro">
           <div className="flex items-center justify-between gap-4">
             <span className="text-white font-bold text-lg">Filtro</span>
             <button
@@ -255,19 +290,67 @@ export default function RegistroPagamentos() {
             </button>
           </div>
 
-          <div className={`${mostrarFiltros ? 'grid' : 'hidden'} md:grid mt-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4`}>
-            <SelectFiltro mode="combobox" label="Cliente" options={optionsClientes} value={filtros.cliente} onChange={handleFiltroChange('cliente')} placeholder="Digite ou selecione" />
-            <SelectFiltro mode="combobox" label="Processo" options={optionsProcessos} value={filtros.processo} onChange={handleFiltroChange('processo')} placeholder="Digite ou selecione" />
-            <SelectFiltro label="Método" options={optionsMetodos} value={filtros.metodo} onChange={handleFiltroChange('metodo')} placeholder="Todos os métodos" />
-            <SelectFiltro label="Tipo" options={optionsTipos} value={filtros.tipo} onChange={handleFiltroChange('tipo')} placeholder="Todos os tipos" />
-            <SelectFiltro label="Mês" options={optionsMeses} value={filtros.mes} onChange={handleFiltroChange('mes')} placeholder="Todos os meses" />
-            <SelectFiltro label="Ano" options={optionsAnos} value={filtros.ano} onChange={handleFiltroChange('ano')} placeholder="Todos os anos" />
-            <SelectFiltro label="Resultado" options={optionsResultado} value={filtros.resultado} onChange={handleFiltroChange('resultado')} placeholder="Todos" />
+          <div
+            className={`${mostrarFiltros ? 'grid' : 'hidden'} md:grid mt-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4`}
+          >
+            <SelectFiltro
+              mode="combobox"
+              label="Cliente"
+              options={optionsClientes}
+              value={filtros.cliente}
+              onChange={handleFiltroChange('cliente')}
+              placeholder="Digite ou selecione"
+            />
+            <SelectFiltro
+              mode="combobox"
+              label="Processo"
+              options={optionsProcessos}
+              value={filtros.processo}
+              onChange={handleFiltroChange('processo')}
+              placeholder="Digite ou selecione"
+            />
+            <SelectFiltro
+              label="Método"
+              options={optionsMetodos}
+              value={filtros.metodo}
+              onChange={handleFiltroChange('metodo')}
+              placeholder="Todos os métodos"
+            />
+            <SelectFiltro
+              label="Tipo"
+              options={optionsTipos}
+              value={filtros.tipo}
+              onChange={handleFiltroChange('tipo')}
+              placeholder="Todos os tipos"
+            />
+            <SelectFiltro
+              label="Mês"
+              options={optionsMeses}
+              value={filtros.mes}
+              onChange={handleFiltroChange('mes')}
+              placeholder="Todos os meses"
+            />
+            <SelectFiltro
+              label="Ano"
+              options={optionsAnos}
+              value={filtros.ano}
+              onChange={handleFiltroChange('ano')}
+              placeholder="Todos os anos"
+            />
+            <SelectFiltro
+              label="Resultado"
+              options={optionsResultado}
+              value={filtros.resultado}
+              onChange={handleFiltroChange('resultado')}
+              placeholder="Todos"
+            />
           </div>
         </div>
 
         {/* Tabela com scroll */}
-        <div className="w-full max-w-[75rem] mb-6" style={{ maxHeight: '20rem', overflowY: 'auto' }}>
+        <div
+          className="w-full max-w-[75rem] mb-6"
+        >
           <TabelaPagamentos
             pagamentos={listaFiltrada}
             selectedIndex={selectedIndex}
