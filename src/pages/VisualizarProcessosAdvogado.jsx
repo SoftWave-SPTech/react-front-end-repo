@@ -321,30 +321,6 @@ const VisualizarProcessosAdvogado = () => {
                   }
                 `}
               </style>
-                          {/* Comentário */}
-            <div className="bg-white rounded-lg p-3 md:p-4 shadow w-full">
-              <div className="text-base md:text-lg font-bold mb-2">Comentário</div>
-              <p className="break-words">
-                {dadosProcesso.comentario?.comentario || "Não há comentários anteriores a este!"}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-2 items-center w-full">
-                <input
-                  type="text"
-                  placeholder="Adicione um comentário para o Cliente..."
-                  value={comentario}
-                  onChange={(e) => setComentario(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded mt-2 mb-2"
-                />
-                <Botao
-                  onClick={() => cadastrarComentario(dadosProcesso.id)}
-                  tamanho="pequeno"
-                  largura="pequeno"
-                  className="w-full sm:w-auto"
-                >
-                  ENVIAR
-                </Botao>
-              </div>
-            </div>
 
             {/* Comentário removido */}
             <div style={blocoStyle}>
