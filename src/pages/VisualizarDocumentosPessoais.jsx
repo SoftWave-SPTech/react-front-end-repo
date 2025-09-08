@@ -6,6 +6,8 @@ import ModalUpload from '../components/Ui/ModalUpload';
 import CardDocumento from '../components/Ui/CardDocumento';
 import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
 import { api } from '../service/api';
+import AlertStyle from '../components/Ui/AlertStyle';
+
 
 export default function VisualizarDocumentosPessoais() {
   const [documentos, setDocumentos] = useState([]);
@@ -14,6 +16,7 @@ export default function VisualizarDocumentosPessoais() {
   const [modalExcluir, setModalExcluir] = useState({ aberto: false, index: null });
   const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
   const idUsuario = sessionStorage.getItem('id');
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
 
   const abrirModal = () => setModalAberto(true);
@@ -30,7 +33,12 @@ export default function VisualizarDocumentosPessoais() {
         setDocumentos(response.data)
         })
         .catch(error => {
-        console.error("Erro ao enviar o arquivo:", error);
+        console.error("Erro ao buscar o arquivo:", error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       });
   
     }, []);
@@ -53,7 +61,12 @@ export default function VisualizarDocumentosPessoais() {
               window.location.reload()
               })
               .catch(error => {
-              console.error("Erro ao enviar o arquivo:", error);
+              console.error("Erro ao enviar o arquivo:", error.status);
+              if(error.status >= 500){
+                setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+              }else{
+                setAlert({ show: true, message: error.response.data.message, type: "error" })
+              }
               });
   
       fecharModal();
@@ -72,7 +85,12 @@ export default function VisualizarDocumentosPessoais() {
         console.log("Documento Deletado com sucesso");
       })
       .catch(error => {
-        console.error("Erro ao enviar o arquivo:", error);
+        console.error("Erro ao excluir o arquivo:", error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       });
   
       setModalExcluir({ aberto: false, index: null, id: null });
@@ -96,6 +114,14 @@ export default function VisualizarDocumentosPessoais() {
     <LayoutBase backgroundClass="bg-cinzaAzulado">
       <div className="p-2 relative">
         <BarraTitulo className="mb-6">Meus documentos</BarraTitulo>
+
+        {alert && (
+                <AlertStyle
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
+            )}
 
         <div className="flex justify-end mb-6">
           <div className="relative w-full max-w-xs">

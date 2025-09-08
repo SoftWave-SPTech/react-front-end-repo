@@ -23,11 +23,12 @@ const EnviarChaveAcesso = (nome, chaveAcesso, email) => {
             message: "E-mail enviado com sucesso!"
         });
     }).catch((error) => {
-        console.error('Erro ao enviar e-mail:', error);
-        setAlert({
-            type: "error",
-            message: "Erro ao enviar e-mail. Verifique os dados e tente novamente."
-        });
+        console.error('Erro ao enviar e-mail:', error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
     });
 
     return (

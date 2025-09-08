@@ -6,6 +6,7 @@ import DocumentosList from '../components/Ui/DocumentosList';
 import ProcessoAndamento from '../components/Ui/ProcessoAndamento';
 import ComentariosList from '../components/Ui/ComentariosList';
 import BarraTitulo from '../components/Ui/BarraTitulo';
+import AlertStyle from '../components/Ui/AlertStyle';
 
 const AreaCliente = () => {
     const { processoId } = useParams();
@@ -13,25 +14,60 @@ const AreaCliente = () => {
     const [documentos, setDocumentos] = useState([]);
     const [andamentos, setAndamentos] = useState([]);
     const [comentarios, setComentarios] = useState([]);
+    const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
     useEffect(() => {
         api.get(`/documentos-processos/processo/${processoId}`)
             .then(res => setDocumentos(Array.isArray(res.data) ? res.data : []))
-            .catch(() => setDocumentos([]));
+            .catch((error) => {
+                setDocumentos([])
+                console.error("Erro ao buscar documentos do processo:", error.status);
+                if(error.status >= 500){
+                    setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                }else{
+                    setAlert({ show: true, message: error.response.data.message, type: "error" })
+                }
+            }
+            );
 
         api.get(`/ultimas-movimentacoes/processo/${processoId}/ordenadas`)
             .then(res => setAndamentos(Array.isArray(res.data) ? res.data : []))
-            .catch(() => setAndamentos([]));
+            .catch((error) => {
+                setAndamentos([])
+                console.error("Erro ao buscar ultimas movimentações do processo:", error.status);
+                if(error.status >= 500){
+                    setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                }else{
+                    setAlert({ show: true, message: error.response.data.message, type: "error" })
+                }
+            });
 
         api.get(`/comentarios-processos/buscar-por-proceso/${processoId}`)
             .then(res => setComentarios(Array.isArray(res.data) ? res.data : []))
-            .catch(() => setComentarios([]));
+            .catch((error) => {
+                setComentarios([])
+                console.error("Erro ao buscar análise e movimentação:", error.status);
+                if(error.status >= 500){
+                    setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                }else{
+                    setAlert({ show: true, message: error.response.data.message, type: "error" })
+                }
+            } );
     }, [processoId]);
 
     return (
         <LayoutBase backgroundClass="bg-cinzaAzulado">
             <BarraTitulo>Contratos e petições</BarraTitulo>
             <div className="flex flex-col min-h-[60vh] rounded-2xl p-8">
+
+                {alert && (
+                <AlertStyle
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
+            )}
+
                 <div className="flex flex-row flex-wrap gap-8 justify-center items-start w-full">
                     {/* Documentos */}
                     <div className="flex-1 min-w-[320px] max-w-[350px] bg-[#020E29] rounded-2xl shadow-lg p-4 flex flex-col h-full max-h-[500px] overflow-y-auto order-1">

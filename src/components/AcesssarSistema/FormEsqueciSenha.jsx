@@ -60,7 +60,7 @@ const FormEsqueciSenha = () => {
                 navigate("/login");
             }, 2000);
         } catch (error) {
-            console.error("Erro ao redefinir senha:", error);
+            console.error("Erro ao redefinir senha:", error.status);
             if (error.response?.status === 400) {
                 const mensagensErro = error.response.data;
                 if (typeof mensagensErro === 'object') {

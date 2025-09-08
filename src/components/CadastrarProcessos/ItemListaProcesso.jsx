@@ -48,12 +48,12 @@ export default function ItemListaProcesso() {
                     setProcessos(response.data);
                 }
             } catch (error) {
-                setAlert({
-                    open: true,
-                    type: "error",
-                    message: "Erro ao buscar processos."
-                });
-                console.error('Erro ao buscar processos:', error);
+                console.error("Erro ao buscar processos para este usuário:", error.status);
+                if(error.status >= 500){
+                    setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                }else{
+                    setAlert({ show: true, message: error.response.data.message, type: "error" })
+                }
             }
         };
 
@@ -97,12 +97,12 @@ export default function ItemListaProcesso() {
             });
     
         } catch (error) {
-            setAlert({
-                open: true,
-                type: "error",
-                message: "Erro ao buscar cliente do processo."
-            });
-            console.error("Erro ao buscar cliente do processo:", error);
+            console.error("Erro ao buscar processos por cliente:", error.status);
+            if(error.status >= 500){
+                setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+            }else{
+                setAlert({ show: true, message: error.response.data.message, type: "error" })
+            }
         }
     };
     
@@ -140,11 +140,14 @@ export default function ItemListaProcesso() {
                 message: "Processo excluído com sucesso!"
             });
         } catch (error) {
-            setAlert({
-                open: true,
-                type: "error",
-                message: "Erro ao excluir processo"
-            });
+            console.error("Erro ao excluir este processo:", error.status);
+        
+            if(error.status >= 500){
+                setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+            }else{
+                setAlert({ show: true, message: error.response.data.message, type: "error" })
+            }
+        
             setModalExcluir({ aberto: false, id: null });
         }
     };
@@ -222,7 +225,7 @@ export default function ItemListaProcesso() {
                 )}
               </div>
             </div>
-          ))}
+          
           {processosFiltrados.length === 0 && (
             <div className="text-branco text-center py-8 opacity-70">Nenhum processo encontrado.</div>
           )}

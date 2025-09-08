@@ -5,6 +5,7 @@ import CardUsuario from "../components/ListaUsuarios/CardUsuario";
 import { api } from "../service/api";
 import BarraTitulo from "../components/Ui/BarraTitulo";
 import ModalReenvioTokenPrimeiroAcesso from "../components/Ui/ModalReenvioTokenPrimeiroAcesso";
+import AlertStyle from '../components/Ui/AlertStyle';
 
 export default function ListaUsuarios() {
     const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
@@ -13,6 +14,8 @@ export default function ListaUsuarios() {
     const [isModalReenvioOpen, setIsModalReenvioOpen] = useState(false);
     const [emailSelecionado, setEmailSelecionado] = useState("");
     const [reenviando, setReenviando] = useState(false);
+    const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+    
 
     useEffect(() => {
         api.get('/usuarios/listar-usarios-e-procesos',
@@ -27,7 +30,12 @@ export default function ListaUsuarios() {
                 setListaUsuarios(response.data);
             })
             .catch(error => {
-                console.error("Erro ao enviar o arquivo:", error);
+                console.error("Erro ao buscar usuários e processos:", error.status);
+                if(error.status >= 500){
+                    setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                }else{
+                    setAlert({ show: true, message: error.response.data.message, type: "error" })
+                }
             });
     }, []);
 
@@ -58,7 +66,11 @@ export default function ListaUsuarios() {
             setIsModalReenvioOpen(false);
         } catch (error) {
             console.error('Erro ao reenviar token:', error);
-            alert(error.response.data.message);
+            if(error.status >= 500){
+                setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+            }else{
+                setAlert({ show: true, message: error.response.data.message, type: "error" })
+            }
         } finally {
             setReenviando(false);
         }
@@ -71,6 +83,15 @@ export default function ListaUsuarios() {
                 <BarraTitulo largura="full">Pesquisar Usuários</BarraTitulo>
             </div>
             {/* Input de busca centralizado e responsivo */}
+
+            {alert && (
+                <AlertStyle
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
+            )}
+
             <div className="flex justify-end mb-6 px-2">
                 <div className="relative w-full max-w-xs ">
                     <input

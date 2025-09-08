@@ -13,7 +13,7 @@ export default function FormularioCadastrarProcesso() {
     const [buscaCliente, setBuscaCliente] = useState("");
     const [advogados, setAdvogados] = useState([]);
     const [clientes, setClientes] = useState([]);
-    const [alert, setAlert] = useState(null);
+    const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -27,11 +27,12 @@ export default function FormularioCadastrarProcesso() {
             setAdvogados(advogadosData);
         })
         .catch(error => {
-            setAlert({
-                type: "error",
-                message: "Erro ao buscar advogados."
-            });
-            console.error('Erro ao buscar advogados:', error);
+            console.error('Erro ao buscar advogados:', error.status);
+            if(error.status >= 500){
+                setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+            }else{
+                setAlert({ show: true, message: error.response.data.message, type: "error" })
+            }
         });
 
         api.get('/usuarios/listar-clientes', {
@@ -44,11 +45,12 @@ export default function FormularioCadastrarProcesso() {
             setClientes(clientesData);
         })
         .catch(error => {
-            setAlert({
-                type: "error",
-                message: "Erro ao buscar clientes."
-            });
-            console.error('Erro ao buscar clientes:', error);
+            console.error("Erro ao listar clientes:", error.status);
+            if(error.status >= 500){
+                setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+            }else{
+                setAlert({ show: true, message: error.response.data.message, type: "error" })
+            }
         });
     }, []);
 
@@ -120,11 +122,12 @@ export default function FormularioCadastrarProcesso() {
                 window.location.reload();
             }, 1800);
         } catch (error) {
-            setAlert({
-                type: "error",
-                message: error.response?.data?.message || JSON.stringify(error.response?.data) || 'Erro ao cadastrar processo'
-            });
-            console.error('Erro ao cadastrar processo:', error);
+            console.error("Erro ao cadastrar esse processo:", error.status);
+            if(error.status >= 500){
+                setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+            }else{
+                setAlert({ show: true, message: error.response.data.message, type: "error" })
+            }
         }
     };
 

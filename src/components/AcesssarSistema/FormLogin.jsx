@@ -56,20 +56,14 @@ export default function FormLogin() {
                 }, 1200);
             }
         } catch (error) {
-            console.error("Erro ao fazer login:", error);
+            console.error("Erro ao fazer login:", error.status);
             if (error.response?.status === 401) {
                 setAlert({ show: true, message: "Email ou senha incorretos. Por favor, verifique suas credenciais.", type: "error" });
-            } else if (error.response?.status === 400) {
-                const mensagensErro = error.response.data;
-                if (typeof mensagensErro === 'object') {
-                    const primeiraMensagem = Object.values(mensagensErro)[0];
-                    setAlert({ show: true, message: primeiraMensagem, type: "error" });
-                } else {
-                    setAlert({ show: true, message: mensagensErro || "Dados inválidos. Por favor, verifique as informações.", type: "error" });
-                }
-            } else {
-                setAlert({ show: true, message: "Ocorreu um erro ao tentar fazer login. Por favor, tente novamente mais tarde.", type: "error" });
-            }
+            } else if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
         }
     };
 
