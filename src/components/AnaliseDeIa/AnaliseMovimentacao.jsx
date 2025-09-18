@@ -7,6 +7,7 @@ import { api } from "../../service/api";
 import { useParams } from "react-router-dom";
 import { formatarData } from "../../Utils/mascaras";
 import Botao from "../Ui/Botao";
+import AlertStyle from '../Ui/AlertStyle';
 
 export default function AnaliseMovimentacao() {
 
@@ -19,6 +20,7 @@ export default function AnaliseMovimentacao() {
   const [modalAberto, setModalAberto] = useState(false);
   const [comentarioSelecionado, setComentarioSelecionado] = useState(null);
   const [modoEdicao, setModoEdicao] = useState(false);
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
   const [analise, setAnalise] = useState("");
   const [movimentacao, setMovimentacao] = useState("");
@@ -38,7 +40,14 @@ export default function AnaliseMovimentacao() {
       setMovimentacaoData(movimentacaoData)
 
     }).catch((error) => {
-      console.error("Erro ao buscar análise e movimentação:", error);
+      console.error("Erro ao buscar análise e movimentação:", error.status);
+
+      if(erro.status >= 500){
+        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+      }else{
+        setAlert({ show: true, message: error.response.data.message, type: "error" })
+      }
+
       setAnalise("Análise não disponível no momento.");
       setMovimentacao("Movimentação não disponível no momento.");
     });
@@ -54,7 +63,12 @@ export default function AnaliseMovimentacao() {
         setComentarios([]);
       }
     }).catch((error) => {
-      console.error("Erro ao buscar comentários:", error);
+      console.error("Erro ao buscar comentários:", error.status);
+      if(erro.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       setComentarios([]);
     });
 
@@ -89,7 +103,12 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
         setComentarios(Array.isArray(response.data) ? response.data : []);
       });
     }).catch((error) => {
-      console.error("Erro ao salvar comentário:", error);
+      console.error("Erro ao salvar comentário:", error.status);
+      if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
     });
   }else{
     api.put(`/comentarios-processos/${comentarioSelecionado.id}`,  salvarComentario, {
@@ -102,7 +121,12 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
         setComentarios(Array.isArray(response.data) ? response.data : []);
       });
     }).catch((error) => {
-      console.error("Erro ao atualizar comentário:", error);
+      console.error("Erro ao atualizar comentário:", error.status);
+      if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
     });
   };
     setModalAberto(false);
@@ -117,7 +141,12 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
       }).then((response) => {     
         console.info("Comentário excluído com sucesso:", response.data);
       }).catch((error) => {
-        console.error("Erro ao excluir comentário:", error);
+        console.error("Erro ao excluir comentário:", error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       });
 
       const novaLista = [...comentarios];
@@ -145,6 +174,14 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
             Atualizações {movimentacaoData}
           </BarraTitulo>
         </div>
+
+        {alert && (
+          <AlertStyle
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert(null)}
+          />
+        )}
 
         <div className="flex flex-col lg:flex-row gap-x-6">
           {/* Comentários */}

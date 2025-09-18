@@ -1,16 +1,17 @@
 import { useState } from "react";
 import 'tailwindcss/tailwind.css';
 import { api } from "../../service/api";
+import AlertStyle from '../Ui/AlertStyle';
 
 
 export default function Toggle(props) {
-    const [ligado, setLigado] = useState(props.ativo);
+    const [ligado, setLigado] = useState(props.status);
+    const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
     const idUsuario = props.idUsuario;
     console.log("Id do usuario:"+ idUsuario + props.ativo + "Usuario está Ativou ou Inativo")
 
     function mudarStatusUsuario(){
-        setLigado(!ligado)
 
         api.put(`/usuarios/atualizar-status/${idUsuario}`, 
             // {
@@ -20,15 +21,31 @@ export default function Toggle(props) {
             // }
         )
         .then((res) => {
-            console.log(res)
+            console.log(res) 
+            setLigado(!ligado)
         })
         .catch((error) =>{
-            console.log(error);
+            console.log("Erro ao ativar ou inativar o usuário", error.status);
+
+            if(error.status >= 500){
+                setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+            }else{
+                setAlert({ show: true, message: error.response.data.message, type: "error" })
+            }
         })
     }
 
     return (
         <div className="flex items-center space-x-4">
+
+        {alert && (
+                <AlertStyle
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
+            )}
+
         <span className={`${ligado ? "text-verdeToggle" : "text-vermelhoToggle"} font-bold`}>
             {ligado ? "Ativo" : "Inativo"}
         </span>

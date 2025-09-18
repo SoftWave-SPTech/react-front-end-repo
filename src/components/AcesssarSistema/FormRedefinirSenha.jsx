@@ -46,8 +46,8 @@ const FormRedefinirSenha = () => {
                 navigate("/esqueci-senha");
             }, 2000);
         } catch (error) {
-            console.error("Erro ao solicitar redefinição de senha:", error);
-
+            console.error("Erro ao solicitar redefinição de senha:", error.staus);
+            
             if (error.response?.status === 404) {
                 setAlert({
                     type: "error",

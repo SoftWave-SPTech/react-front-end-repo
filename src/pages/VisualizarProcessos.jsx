@@ -8,6 +8,7 @@ import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
 import { api } from '../service/api';
 import { FiSearch } from 'react-icons/fi';
 import LayoutBase from '../layouts/LayoutBase';
+import AlertStyle from '../components/Ui/AlertStyle';
 
 export default function VisualizarProcessos() {
   const [processos, setProcessos] = useState([]);
@@ -16,6 +17,7 @@ export default function VisualizarProcessos() {
   const [modalConfirma, setModalConfirma] = useState(false);
   const [processoSelecionado, setProcessoSelecionado] = useState(null);
   const [expandido, setExpandido] = useState(null);
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
   const navigate = useNavigate();
 
@@ -26,7 +28,12 @@ export default function VisualizarProcessos() {
         setProcessos(response.data);
       })
       .catch((error) => {
-        console.error('Erro ao buscar processos:', error);
+        console.error('Erro ao buscar processos:', error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       });
   }, []);
 
@@ -39,7 +46,12 @@ export default function VisualizarProcessos() {
         setProcessoDaVez(response.data);
       })
       .catch((error) => {
-        console.error('Erro ao buscar processos:', error);
+        console.error('Erro ao buscar processos:', error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       });
   };
 
@@ -51,6 +63,16 @@ export default function VisualizarProcessos() {
   <LayoutBase backgroundClass="bg-cinzaAzulado">
       <div className="flex-1 p-2 sm:p-8 overflow-auto">
         {/* Barra de pesquisa acima do título */}
+
+        {alert && (
+                <AlertStyle
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
+            )}
+
+
         <div className="flex justify-end mb-4">
           <div className="w-full max-w-full sm:max-w-xl">
             <div className="relative">

@@ -28,11 +28,12 @@ const VisualizarProcessosAdvogado = () => {
         setDadosProcesso(response.data)
       })
       .catch(error => {
-        console.error("Erro ao enviar o arquivo:", error);
-        setAlert({
-          type: "error",
-          message: "Erro ao buscar dados do processo."
-        });
+        console.error("Erro ao buscar processo:", error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       });
 
     api.get(`/usuarios/usuario-documentos/${idUsuario}`)
@@ -47,17 +48,12 @@ const VisualizarProcessosAdvogado = () => {
           telefone: response.data.telefone || "+5511999999999"
         });
       })
-      .catch(error => {
-        console.error("Erro ao enviar o arquivo:", error);
-        setAlert({
-          type: "error",
-          message: "Erro ao buscar dados do usuário."
-        });
-        // Em caso de erro, adiciona telefone de teste
-        setDadosUsuario(prev => ({
-          ...prev,
-          telefone: "+5511999999999"
-        }));
+      .catch(error => {        console.error("Erro ao buscar documentos do usuário:", error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       });
   }, []);
 
@@ -72,11 +68,12 @@ const VisualizarProcessosAdvogado = () => {
         setTimeout(() => window.location.reload(), 1000);
       })
       .catch(error => {
-        console.error("Erro ao tentar atualizar processo:", error);
-        setAlert({
-          type: "error",
-          message: "Erro ao tentar atualizar processo."
-        });
+        console.error("Erro ao tentar atualizar processo:", error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       });
   };
 
@@ -104,15 +101,12 @@ const VisualizarProcessosAdvogado = () => {
         }, 1000);
       })
       .catch((error) => {
+        console.error("Erro ao gerar análise IA", error.status);
         if(error.status == 409){
           setLoading(false);
           navigate(`/analise-ia/${processoId}/${movimentacaoId}`);
         }else{
-          console.error("Erro ao gerar análise IA", error);
-          setAlert({
-            type: "error",
-            message: "Erro ao gerar análise IA."
-          });
+          setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
           setLoading(false);
         }
       });
@@ -134,14 +128,23 @@ const VisualizarProcessosAdvogado = () => {
       //   }
       // }
     )
-    .then(response => {
-      console.log("Comentário enviado com sucesso:", response.data);
-      setComentario(''); // Limpa o input após envio
-      window.location.reload()
-    })
-    .catch(error => {
-      console.error("Erro ao enviar o comentário:", error);
-    });
+      .then(response => {
+        console.log("Comentário enviado com sucesso:", response.data);
+        setComentario('');
+        setAlert({
+          type: "success",
+          message: "Comentário enviado com sucesso!"
+        });
+        setTimeout(() => window.location.reload(), 1000);
+      })
+      .catch(error => {
+        console.error("Erro ao enviar o comentário:", error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
+      });
   };
 
     const blocoStyle = {
@@ -174,6 +177,14 @@ const VisualizarProcessosAdvogado = () => {
         <div className="flex flex-col mb-6">
           <BarraTitulo className="w-full text-lg md:text-3xl py-3 md:py-4">Visualizar Processo</BarraTitulo>
         </div>
+
+        {alert && (
+                <Alert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
+            )}
 
         {/* Conteúdo principal responsivo */}
         <div className="flex flex-col lg:flex-row gap-4 md:gap-5 w-full">
