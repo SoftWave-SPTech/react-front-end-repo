@@ -8,85 +8,67 @@ import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
 import { api } from '../service/api';
 import AlertStyle from '../components/Ui/AlertStyle';
 
-
 export default function VisualizarDocumentosPessoais() {
   const [documentos, setDocumentos] = useState([]);
   const [modalAberto, setModalAberto] = useState(false);
   const [filtro, setFiltro] = useState('');
   const [modalExcluir, setModalExcluir] = useState({ aberto: false, index: null });
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+
   const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
   const idUsuario = sessionStorage.getItem('id');
-  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
   const abrirModal = () => setModalAberto(true);
   const fecharModal = () => setModalAberto(false);
 
   useEffect(() => {
     api.get(`/documentos-pessoais/usuario/${idUsuario}`, {
-      headers: {
-        "Authorization": TOKEN
-      }
+      headers: { "Authorization": TOKEN }
     })
       .then(response => {
         console.log("Consulta com sucesso:", response.data);
-        setDocumentos(response.data)
-        })
-        .catch(error => {
+        setDocumentos(response.data);
+      })
+      .catch(error => {
         console.error("Erro ao buscar o arquivo:", error.status);
-        if(error.status >= 500){
-            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
-          }else{
-            setAlert({ show: true, message: error.response.data.message, type: "error" })
-          }
+        if (error.status >= 500) {
+          setAlert({
+            show: true,
+            message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!",
+            type: "error"
+          });
+        } else {
+          setAlert({ show: true, message: error.response.data.message, type: "error" });
+        }
       });
-
   }, []);
 
   const adicionarDocumento = (novoDoc) => {
-      setDocumentos([...documentos, novoDoc]);
-      
-      const formData = new FormData();
-      formData.append("nomeArquivo", novoDoc.nome);
-      formData.append("documentoPessoal", novoDoc.file);
-      formData.append("idUsuario", idUsuario)
-      
-      api.post("/documentos-pessoais", formData, {
-              headers: {
-                  "Authorization":  TOKEN
-              }
-              })
-              .then(response => {
-              console.log("Upload realizado com sucesso:", response.data);
-              window.location.reload()
-              })
-              .catch(error => {
-              console.error("Erro ao enviar o arquivo:", error.status);
-              if(error.status >= 500){
-                setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
-              }else{
-                setAlert({ show: true, message: error.response.data.message, type: "error" })
-              }
-              });
-  
-      fecharModal();
-    };
+    setDocumentos([...documentos, novoDoc]);
 
     const formData = new FormData();
     formData.append("nomeArquivo", novoDoc.nome);
     formData.append("documentoPessoal", novoDoc.file);
-    formData.append("idUsuario", idUsuario)
+    formData.append("idUsuario", idUsuario);
 
     api.post("/documentos-pessoais", formData, {
-      headers: {
-        "Authorization": TOKEN
-      }
+      headers: { "Authorization": TOKEN }
     })
       .then(response => {
         console.log("Upload realizado com sucesso:", response.data);
-        window.location.reload()
+        window.location.reload();
       })
       .catch(error => {
-        console.error("Erro ao enviar o arquivo:", error);
+        console.error("Erro ao enviar o arquivo:", error.status);
+        if (error.status >= 500) {
+          setAlert({
+            show: true,
+            message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!",
+            type: "error"
+          });
+        } else {
+          setAlert({ show: true, message: error.response.data.message, type: "error" });
+        }
       });
 
     fecharModal();
@@ -97,20 +79,22 @@ export default function VisualizarDocumentosPessoais() {
     setDocumentos(novaLista);
 
     api.delete(`/documentos-pessoais/${modalExcluir.id}`, {
-      headers: {
-        "Authorization": TOKEN
-      }
+      headers: { "Authorization": TOKEN }
     })
-      .then(response => {
-        console.log("Documento Deletado com sucesso");
+      .then(() => {
+        console.log("Documento deletado com sucesso");
       })
       .catch(error => {
         console.error("Erro ao excluir o arquivo:", error.status);
-        if(error.status >= 500){
-            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
-          }else{
-            setAlert({ show: true, message: error.response.data.message, type: "error" })
-          }
+        if (error.status >= 500) {
+          setAlert({
+            show: true,
+            message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!",
+            type: "error"
+          });
+        } else {
+          setAlert({ show: true, message: error.response.data.message, type: "error" });
+        }
       });
 
     setModalExcluir({ aberto: false, index: null, id: null });
@@ -133,13 +117,13 @@ export default function VisualizarDocumentosPessoais() {
       <div className="p-2 relative max-w-7xl mx-auto">
         <BarraTitulo className="mb-6 text-lg sm:text-xl md:text-2xl">Meus documentos</BarraTitulo>
 
-        {alert && (
-                <AlertStyle
-                    type={alert.type}
-                    message={alert.message}
-                    onClose={() => setAlert(null)}
-                />
-            )}
+        {alert && alert.show && (
+          <AlertStyle
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert(null)}
+          />
+        )}
 
         <div className="flex justify-end mb-6">
           <div className="relative w-full max-w-xs">
@@ -193,6 +177,7 @@ export default function VisualizarDocumentosPessoais() {
             onUpload={adicionarDocumento}
           />
         )}
+
         {modalExcluir.aberto && (
           <ModalConfirmacao
             titulo="Excluir Documento"

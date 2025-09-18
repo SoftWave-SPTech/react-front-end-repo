@@ -281,4 +281,62 @@ export default function FormularioCadastrarProcesso({
               <p className="text-preto text-sm italic w-full text-center">Nenhum advogado encontrado.</p>
             )}
           </div>
-        </div
+        </div>
+
+        {/* Clientes */}
+        <div className="mb-6">
+          <label className="block text-preto text-lg md:text-xl mb-1 font-normal">Clientes</label>
+          <input
+            type="text"
+            placeholder="Digite para pesquisar cliente..."
+            value={buscaCliente}
+            onChange={e => setBuscaCliente(e.target.value)}
+            className="border border-preto rounded-lg w-full py-[0.5rem] px-[0.75rem] text-preto text-base md:text-lg focus:outline-none mb-2"
+          />
+          <div className="border border-preto rounded-lg bg-branco max-h-[8rem] min-h-[2.5rem] overflow-y-auto px-[0.5rem] py-[0.25rem] flex items-center">
+            {clientesFiltrados.length > 0 ? (
+              <div className="w-full">
+                {clientesFiltrados.map((cliente) => (
+                  <div key={cliente.id} className="flex items-center mb-1 last:mb-0">
+                    <input
+                      type="checkbox"
+                      id={`cli-${cliente.id}`}
+                      checked={clientesSelecionados.includes(Number(cliente.id))}
+                      onChange={() => handleClienteChange(Number(cliente.id))}
+                      className="mr-2"
+                    />
+                    <label htmlFor={`cli-${cliente.id}`} className="text-preto text-base font-sans">
+                      {cliente.nome}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-preto text-sm italic w-full text-center">Nenhum cliente encontrado.</p>
+            )}
+          </div>
+        </div>
+
+        {/* Ações */}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+          <button
+            type="submit"
+            className="w-full sm:w-auto bg-AzulEscuro text-branco text-base md:text-lg font-sans font-semibold rounded-lg py-2 px-4 hover:bg-azulClaro transition-colors"
+          >
+            {emEdicao ? 'SALVAR ALTERAÇÕES' : 'CADASTRAR'}
+          </button>
+
+          {emEdicao && (
+            <button
+              type="button"
+              onClick={onCancelarEdicao}
+              className="w-full sm:w-auto border border-AzulEscuro text-AzulEscuro text-base md:text-lg font-sans font-semibold rounded-lg py-2 px-4 hover:bg-AzulEscuro hover:text-white transition-colors"
+            >
+              CANCELAR EDIÇÃO
+            </button>
+          )}
+        </div>
+      </form>
+    </div>
+  );
+}
