@@ -85,11 +85,15 @@ export default function AdvogadoJuridicoForm() {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
-    .then(() => 
+    .then(async () => 
     {
-      EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
-
-      showAlert('success', 'Cadastro realizado com sucesso!');
+      try {
+        await EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
+        showAlert('success', 'Cadastro realizado com sucesso!');
+      } catch (emailError) {
+        console.error('Erro ao enviar email:', emailError);
+        showAlert('success', 'Cadastro realizado com sucesso! (Email não pôde ser enviado)');
+      }
       setFormData({
         nomeFantasia: '',
         razaoSocial: '',

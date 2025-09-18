@@ -18,17 +18,16 @@ export default function VisualizarDocumentosPessoais() {
   const idUsuario = sessionStorage.getItem('id');
   const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
-
   const abrirModal = () => setModalAberto(true);
   const fecharModal = () => setModalAberto(false);
 
   useEffect(() => {
-      api.get(`/documentos-pessoais/usuario/${idUsuario}`, {
-        headers: {
-          "Authorization":  TOKEN
-        }
-        })
-        .then(response => {
+    api.get(`/documentos-pessoais/usuario/${idUsuario}`, {
+      headers: {
+        "Authorization": TOKEN
+      }
+    })
+      .then(response => {
         console.log("Consulta com sucesso:", response.data);
         setDocumentos(response.data)
         })
@@ -40,8 +39,8 @@ export default function VisualizarDocumentosPessoais() {
             setAlert({ show: true, message: error.response.data.message, type: "error" })
           }
       });
-  
-    }, []);
+
+  }, []);
 
   const adicionarDocumento = (novoDoc) => {
       setDocumentos([...documentos, novoDoc]);
@@ -72,15 +71,36 @@ export default function VisualizarDocumentosPessoais() {
       fecharModal();
     };
 
-  const excluirDocumento = () => {
-      const novaLista = documentos.filter((_, i) => i !== modalExcluir.index);
-      setDocumentos(novaLista);
-  
-      api.delete(`/documentos-pessoais/${modalExcluir.id}`, {
-        headers: {
-          "Authorization":  TOKEN
-        }
+    const formData = new FormData();
+    formData.append("nomeArquivo", novoDoc.nome);
+    formData.append("documentoPessoal", novoDoc.file);
+    formData.append("idUsuario", idUsuario)
+
+    api.post("/documentos-pessoais", formData, {
+      headers: {
+        "Authorization": TOKEN
+      }
+    })
+      .then(response => {
+        console.log("Upload realizado com sucesso:", response.data);
+        window.location.reload()
       })
+      .catch(error => {
+        console.error("Erro ao enviar o arquivo:", error);
+      });
+
+    fecharModal();
+  };
+
+  const excluirDocumento = () => {
+    const novaLista = documentos.filter((_, i) => i !== modalExcluir.index);
+    setDocumentos(novaLista);
+
+    api.delete(`/documentos-pessoais/${modalExcluir.id}`, {
+      headers: {
+        "Authorization": TOKEN
+      }
+    })
       .then(response => {
         console.log("Documento Deletado com sucesso");
       })
@@ -92,28 +112,26 @@ export default function VisualizarDocumentosPessoais() {
             setAlert({ show: true, message: error.response.data.message, type: "error" })
           }
       });
-  
-      setModalExcluir({ aberto: false, index: null, id: null });
-    };
-  
-    const confirmarExclusao = (id, index) => {
-      setModalExcluir({ aberto: true, index, id });
-    };
-  
-    const cancelarExclusao = () => {
-      setModalExcluir({ aberto: false, index: null, id: null });
-    };
-  
-    console.log(documentos);
-  
-    const documentosFiltrados = documentos.filter((doc) =>
-      doc.nomeArquivo?.toLowerCase().includes(filtro.toLowerCase())
-    );
+
+    setModalExcluir({ aberto: false, index: null, id: null });
+  };
+
+  const confirmarExclusao = (id, index) => {
+    setModalExcluir({ aberto: true, index, id });
+  };
+
+  const cancelarExclusao = () => {
+    setModalExcluir({ aberto: false, index: null, id: null });
+  };
+
+  const documentosFiltrados = documentos.filter((doc) =>
+    doc.nomeArquivo?.toLowerCase().includes(filtro.toLowerCase())
+  );
 
   return (
     <LayoutBase backgroundClass="bg-cinzaAzulado">
-      <div className="p-2 relative">
-        <BarraTitulo className="mb-6">Meus documentos</BarraTitulo>
+      <div className="p-2 relative max-w-7xl mx-auto">
+        <BarraTitulo className="mb-6 text-lg sm:text-xl md:text-2xl">Meus documentos</BarraTitulo>
 
         {alert && (
                 <AlertStyle
@@ -151,9 +169,9 @@ export default function VisualizarDocumentosPessoais() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {documentosFiltrados.length === 0 ? (
-            <p className="text-gray-500 text-sm">Nenhum documento encontrado.</p>
+            <p className="text-gray-500 text-sm col-span-full">Nenhum documento encontrado.</p>
           ) : (
             documentosFiltrados.map((doc, idx) => (
               <CardDocumento
@@ -165,7 +183,7 @@ export default function VisualizarDocumentosPessoais() {
           )}
         </div>
 
-        <div className="fixed bottom-8 right-8">
+        <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50">
           <BotaoAdicionar onClick={abrirModal} />
         </div>
 

@@ -69,7 +69,7 @@ const MenuLateral = () => {
     { rotulo: "Pesquisar usuários", icone: <FiUser />, rota: "/lista-usuarios", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Cadastrar usuários", icone: <FiUserPlus />, rota: "/cadastrar-usuario", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Documentos pessoais", icone: <FiFileText />, rota: "/documentos-pessoais", roles: ["ROLE_USUARIO"] },
-    // { rotulo: "Área financeira", icone: <FiDollarSign />, rota: "/area-financeira", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
+    { rotulo: "Área financeira", icone: <FiDollarSign />, rota: "/registro-pagamentos", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
     { rotulo: "Podcast", icone: <FiMic />, rota: "/podcast", roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
   ];
 

@@ -12,21 +12,27 @@ export default function FormPrimeiroAcesso() {
 
     const validarFormulario = () => {
         const novosErros = {};
+        
         if (!email) {
             novosErros.email = "Email é obrigatório";
         } else if (!/\S+@\S+\.\S+/.test(email)) {
             novosErros.email = "Email inválido";
         }
+        
         if (!chave) {
             novosErros.chave = "Chave de acesso é obrigatória";
         }
+
         setErrors(novosErros);
         return Object.keys(novosErros).length === 0;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!validarFormulario()) return;
+
+        if (!validarFormulario()) {
+            return;
+        }
 
         try {
             const response = await api.post('/auth/primeiro-acesso', {
@@ -51,6 +57,7 @@ export default function FormPrimeiroAcesso() {
             } else if (error.response?.status === 400) {
                 const mensagensErro = error.response.data;
                 if (typeof mensagensErro === 'object') {
+                    // Mostra apenas a primeira mensagem, pode adaptar para mostrar todas se quiser
                     const primeiraMensagem = Object.values(mensagensErro)[0];
                     setAlert({
                         show: true,
@@ -64,7 +71,7 @@ export default function FormPrimeiroAcesso() {
                         type: "error"
                     });
                 }
-            } else {
+             } else {
                 setAlert({
                     show: true,
                     message: "Ocorreu um erro ao tentar realizar o acesso. Por favor, tente novamente mais tarde.",
@@ -79,20 +86,19 @@ export default function FormPrimeiroAcesso() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-azulEscuroForte/5 px-4 sm:px-6 py-8">
+        <div className="flex items-center justify-center min-h-screen">
             <form
-                className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg w-full max-w-sm"
+                className="bg-white p-6 rounded-lg shadow-lg w-96 max-w-sm"
                 onSubmit={handleSubmit}
             >
-                <div className="text-center mb-3">
+                <div className="text-center mb-4">
                     <img
                         src="src/assets/images/boneco.png"
-                        alt="Ilustração"
-                        className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto mb-2 object-contain"
+                        alt=""
+                        className="w-32 h-32 mx-auto mb-2"
                     />
-                    <h2 className="text-xl sm:text-2xl font-semibold">PRIMEIRO ACESSO</h2>
+                    <h2 className="text-2xl">PRIMEIRO ACESSO</h2>
                 </div>
-
                 {alert.show && (
                     <Alert
                         type={alert.type}
@@ -100,42 +106,33 @@ export default function FormPrimeiroAcesso() {
                         onClose={handleCloseAlert}
                     />
                 )}
-
-                <div className="space-y-3">
-                    <Input
-                        label="E-MAIL"
-                        name="email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="seu@email.com"
-                        largura="cheia"
-                        errorMessage={errors.email}
-                        autoComplete="email"
-                    />
-                    <Input
-                        label="CHAVE DE ACESSO"
-                        name="chave"
-                        value={chave}
-                        onChange={(e) => setChave(e.target.value)}
-                        placeholder="NICN4L85"
-                        largura="cheia"
-                        errorMessage={errors.chave}
-                        autoComplete="one-time-code"
-                    />
-                </div>
-
+                <Input
+                    label="E-MAIL"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="leonardo@email.com"
+                    largura="cheia"
+                    errorMessage={errors.email}
+                />
+                <Input
+                    label="CHAVE DE ACESSO"
+                    name="chave"
+                    value={chave}
+                    onChange={(e) => setChave(e.target.value)}
+                    placeholder="NICN4L85"
+                    largura="cheia"
+                    errorMessage={errors.chave}
+                />
                 <Botao largura="cheia" cor="padrao" type="submit" className="mt-7">
                     ENTRAR
                 </Botao>
-
                 <p className="mt-4 text-center mb-4 text-black">
                     JÁ ACESSOU O SITE ANTES?{" "}
                     <a href="/login" className="font-bold text-azulEscuroForte hover:underline hover:text-dourado">
                         ENTRE AQUI.
                     </a>
                 </p>
-
                 <Botao
                     tamanho="pequeno"
                     cor="contornoAzul"

@@ -12,23 +12,28 @@ export default function FormCadastrarSenha() {
 
   const validarFormulario = () => {
     const novosErros = {};
+
     if (!senha) {
       novosErros.senha = "Senha é obrigatória";
     } else if (senha.length < 8) {
       novosErros.senha = "A senha deve ter pelo menos 8 caracteres";
     }
+
     if (!confirmarSenha) {
       novosErros.confirmarSenha = "Confirmação de senha é obrigatória";
     } else if (senha !== confirmarSenha) {
       novosErros.confirmarSenha = "As senhas não coincidem";
     }
+
     setErrors(novosErros);
     return Object.keys(novosErros).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validarFormulario()) return;
+    if (!validarFormulario()) {
+      return;
+    }
 
     try {
       const email = sessionStorage.getItem("email");
@@ -41,18 +46,22 @@ export default function FormCadastrarSenha() {
         type: "success",
         message: "Senha cadastrada com sucesso!"
       });
-      // auto-login
+
       try {
-        const loginResponse = await api.post('/auth/login', { email, senha });
+        const loginResponse = await api.post('/auth/login', {
+          email: email,
+          senha: senha,
+        });
+
         if (loginResponse.status === 200) {
-          const d = loginResponse.data;
-          sessionStorage.setItem("id", d.id);
-          sessionStorage.setItem("email", d.email);
-          sessionStorage.setItem("token", d.token);
-          sessionStorage.setItem("tipoUsuario", d.tipoUsuario);
-          sessionStorage.setItem("role", d.role);
-          sessionStorage.setItem("nome", d.nome);
-          if (d.foto) sessionStorage.setItem("fotoPerfil", "http://localhost:8080/" + d.foto);
+          sessionStorage.setItem("id", loginResponse.data.id);
+          sessionStorage.setItem("email", loginResponse.data.email);
+          sessionStorage.setItem("token", loginResponse.data.token);
+          sessionStorage.setItem("tipoUsuario", loginResponse.data.tipoUsuario);
+          sessionStorage.setItem("role", loginResponse.data.role);
+          sessionStorage.setItem("nome", loginResponse.data.nome);
+          sessionStorage.setItem("fotoPerfil", "http://localhost:8080/" + loginResponse.data.foto);
+
           setTimeout(() => {
             if (loginResponse.data.tipoUsuario === 'UsuarioFisico' || loginResponse.data.tipoUsuario === 'UsuarioJuridico') {
               window.location.href = "/perfil-cliente";
@@ -82,43 +91,18 @@ export default function FormCadastrarSenha() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-azulEscuroForte/5 px-4 sm:px-6 py-8">
+    <div className="flex items-center justify-center min-h-screen">
       <form
-        className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg w-full max-w-sm"
+        className="bg-white p-8 rounded-lg shadow-lg w-96 max-w-sm"
         onSubmit={handleSubmit}
       >
-        <div className="text-center mb-3">
+        <div className="text-center mb-4">
           <img
             src="src/assets/images/boneco.png"
-            alt="Ilustração"
-            className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto mb-2 object-contain"
+            alt=""
+            className="w-32 h-32 mx-auto mb-2"
           />
-          <h2 className="text-xl sm:text-2xl font-semibold">CADASTRAR SENHA</h2>
-        </div>
-
-        <div className="space-y-3">
-          <Input
-            type="password"
-            label="SENHA"
-            name="senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            placeholder="********"
-            largura="cheia"
-            errorMessage={errors.senha}
-            autoComplete="new-password"
-          />
-          <Input
-            type="password"
-            label="CONFIRMAR SENHA"
-            name="confirmarSenha"
-            value={confirmarSenha}
-            onChange={(e) => setConfirmarSenha(e.target.value)}
-            placeholder="********"
-            largura="cheia"
-            errorMessage={errors.confirmarSenha}
-            autoComplete="new-password"
-          />
+          <h2 className="text-2xl">CADASTRAR SENHA</h2>
         </div>
 
         {alert && (
@@ -157,7 +141,7 @@ export default function FormCadastrarSenha() {
           tamanho="pequeno"
           cor="contornoAzul"
           type="button"
-          className="block mx-auto mt-5"
+          className="block mx-auto mt-6"
           onClick={() => window.history.back()}
         >
           VOLTAR

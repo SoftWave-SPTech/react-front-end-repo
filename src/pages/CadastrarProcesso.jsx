@@ -27,7 +27,7 @@ const CadastrarProcesso = () => {
     <LayoutBase backgroundClass="bg-cinzaAzulado">
       <BarraTitulo>Cadastrar Processos</BarraTitulo>
 
-      <div className="flex flex-col lg:flex-row justify-center items-start gap-8 lg:gap-20 w-full max-w-[1920px] mx-auto px-2 py-6" style={{ minHeight: 600 }}>
+      <div className="flex flex-col lg:flex-row justify-center items-start gap-8 lg:gap-20 w-full max-w-[1920px] mx-auto px-6 lg:px-12 py-6" style={{ minHeight: 600 }}>
         <div className="flex justify-center items-start w-full max-w-[500px] lg:max-w-[500px] mb-8 lg:mb-0">
           <FormularioCadastrarProcesso
             processoEditando={processoEditando}

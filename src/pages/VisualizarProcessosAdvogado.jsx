@@ -7,7 +7,7 @@ import CardDocumento from '../components/Ui/CardDocumento';
 import ModalAguardando from "../components/Ui/ModalAguardando";
 import { api } from "../service/api";
 import { FiSmile, FiFrown, FiMail, FiPhone } from "react-icons/fi";
-import { FaBalanceScale } from "react-icons/fa";
+import { FaBalanceScale, FaWhatsapp } from "react-icons/fa"; // Importa o ícone do WhatsApp
 import Alert from '../components/Ui/AlertStyle'; 
 
 const VisualizarProcessosAdvogado = () => {
@@ -42,10 +42,13 @@ const VisualizarProcessosAdvogado = () => {
         if (response.data.foto != null) {
           setFotoPerfil("http://localhost:8080/" + response.data.foto);
         }
-        setDadosUsuario(response.data)
+        // Adiciona número de telefone de teste se não houver telefone
+        setDadosUsuario({
+          ...response.data,
+          telefone: response.data.telefone || "+5511999999999"
+        });
       })
-      .catch(error => {
-        console.error("Erro ao buscar documentos do usuário:", error.status);
+      .catch(error => {        console.error("Erro ao buscar documentos do usuário:", error.status);
         if(error.status >= 500){
             setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
           }else{
@@ -56,7 +59,7 @@ const VisualizarProcessosAdvogado = () => {
 
   const handleAtualizar = () => {
     api.get(`/api/processo/numero/${dadosProcesso.numeroProcesso}`)
-      .then(response => {
+      .then(() => {
         console.log("Atualizado com sucesso")
         setAlert({
           type: "success",
@@ -109,15 +112,21 @@ const VisualizarProcessosAdvogado = () => {
       });
   }
 
-  const cadastrarComentario = (idProcesso) => {
-    api.post(`/comentarios-processos/processo`,
+  
+    const cadastrarComentario = (idProcesso) => {
+    api.post(`/comentarios-processos/processo`, 
       {
         comentario: comentario,
         dataCriacao: new Date().toISOString(),
         usuarioID: sessionStorage.getItem("id"),
         ultimaMovimentacaoID: null,
         processoID: idProcesso,
-      }
+      },
+      // {
+      //   headers: {
+      //     "Authorization": TOKEN
+      //   }
+      // }
     )
       .then(response => {
         console.log("Comentário enviado com sucesso:", response.data);
@@ -137,6 +146,22 @@ const VisualizarProcessosAdvogado = () => {
           }
       });
   };
+
+    const blocoStyle = {
+    background: '#FFFFFF',
+    borderRadius: '8px',
+    padding: '16px',
+    boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
+    marginBottom: '20px'
+  };
+
+  const tituloBlocoStyle = {
+    fontSize: '18px',
+    fontWeight: 'bold',
+    marginBottom: '10px'
+
+  };
+
   return (
     <LayoutBase backgroundClass="bg-cinzaAzulado">
       <div className="p-2 md:p-5 font-sans text-[#2f2f2f] min-h-screen w-full">
@@ -190,7 +215,22 @@ const VisualizarProcessosAdvogado = () => {
                   )}
                 </p>
                 <p className="flex items-center gap-2 break-all"><FiMail className="text-base" /> {dadosUsuario.email}</p>
-                <p className="flex items-center gap-2 break-all"><FiPhone className="text-base" /> {dadosUsuario.telefone}</p>
+                <p className="flex items-center gap-2 break-all">
+                  <FiPhone className="text-base" /> {dadosUsuario.telefone}
+                  {/* Botão WhatsApp dentro dos dados do cliente */}
+                  {dadosUsuario.telefone && (
+                    <a
+                      href={`https://wa.me/${dadosUsuario.telefone.replace(/\D/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ml-2 bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded flex items-center text-xs"
+                      title="Conversar no WhatsApp"
+                    >
+                      <FaWhatsapp className="mr-1" /> {/* Ícone do WhatsApp */}
+                      WhatsApp
+                    </a>
+                  )}
+                </p>
               </div>
             </div>
 
@@ -267,7 +307,7 @@ const VisualizarProcessosAdvogado = () => {
                     className="flex-shrink-0 w-32 md:w-36 bg-branco rounded-lg shadow flex flex-col items-center justify-between py-2"
                   >
                     <p className="mb-1 text-xs text-center">Atualização<br />{movimentacao.data}</p>
-                     {/* <div className="w-10 h-10 bg-preto rounded-full mb-2"></div> */}
+                    {/* <div className="w-10 h-10 bg-preto rounded-full mb-2"></div> */}
                     <FaBalanceScale className="text-3xl text-AzulEscuro mb-2" />
                     <button
                       onClick={() => gerarAnaliseIA(dadosProcesso.id, movimentacao.id)}
@@ -292,38 +332,39 @@ const VisualizarProcessosAdvogado = () => {
                   }
                 `}
               </style>
+
+            {/* Comentário removido */}
+            <div style={blocoStyle}>
+              <div style={tituloBlocoStyle}>Resumo do Processo</div>
+              <p>
+                {dadosProcesso.comentario?.comentario || "Não há registro de resumo do processo anteriores a este!"}
+              </p>
+
+              <input
+                type="text"
+                placeholder="Adicione um resumo do processo para o Cliente..."
+                value={comentario}
+                onChange={(e) => setComentario(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  marginTop: '8px'
+                }}
+              />
+            <Botao onClick={() => cadastrarComentario(dadosProcesso.id)} tamanho="pequeno" largura="pequeno">
+              ENVIAR
+            </Botao>
             </div>
 
-            {/* Comentário */}
-            <div className="bg-white rounded-lg p-3 md:p-4 shadow w-full">
-              <div className="text-base md:text-lg font-bold mb-2">Comentário</div>
-              <p className="break-words">
-                {dadosProcesso.comentario?.comentario || "Não há comentários anteriores a este!"}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-2 items-center w-full">
-                <input
-                  type="text"
-                  placeholder="Adicione um comentário para o Cliente..."
-                  value={comentario}
-                  onChange={(e) => setComentario(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded mt-2 mb-2"
-                />
-                <Botao
-                  onClick={() => cadastrarComentario(dadosProcesso.id)}
-                  tamanho="pequeno"
-                  largura="pequeno"
-                  className="w-full sm:w-auto"
-                >
-                  ENVIAR
-                </Botao>
-              </div>
-            </div>
           </div>
         </div>
+        </div>
+        
 
-        {/* Botão Voltar */}
         <div className="flex justify-center mt-6">
-          <Botao tamanho='medio' largura="medio" cores='padrao' onClick={handleVoltar}>
+          <Botao tamanho='medio' largura="medio" cor='padrao' onClick={handleVoltar}>
             VOLTAR
           </Botao>
         </div>

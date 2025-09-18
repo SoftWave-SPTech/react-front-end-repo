@@ -9,7 +9,6 @@ import { api } from '../service/api';
 import { useParams, useNavigate } from 'react-router-dom';
 import AlertStyle from '../components/Ui/AlertStyle';
 
-
 export default function VisualizarDocumentosProcesso() {
   const [documentos, setDocumentos] = useState([]);
   const [modalAberto, setModalAberto] = useState(false);
@@ -105,16 +104,14 @@ export default function VisualizarDocumentosProcesso() {
     setModalExcluir({ aberto: false, index: null, id: null });
   };
 
-  console.log(documentos);
-
   const documentosFiltrados = documentos.filter((doc) =>
     doc.nomeArquivo?.toLowerCase().includes(filtro.toLowerCase())
   );
 
   return (
     <LayoutBase tipoMenu="cliente">
-      <div className="p-6 relative">
-        <BarraTitulo className="mb-6">Documentos do Processo</BarraTitulo>
+      <div className="p-4 sm:p-6 relative">
+        <BarraTitulo className="mb-4 sm:mb-6">Documentos do Processo</BarraTitulo>
 
         {alert && (
                 <AlertStyle
@@ -124,7 +121,7 @@ export default function VisualizarDocumentosProcesso() {
                 />
             )}
 
-        <div className="flex justify-end mb-6">
+        <div className="flex justify-end mb-4 sm:mb-6">
           <div className="relative w-full max-w-xs">
             <input
               type="text"
@@ -152,21 +149,31 @@ export default function VisualizarDocumentosProcesso() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-4">
+        <div
+          className="
+            flex flex-wrap gap-4
+            sm:gap-6
+            md:grid md:grid-cols-2
+            lg:grid-cols-3
+            xl:grid-cols-4
+            w-full
+          "
+        >
           {documentosFiltrados.length === 0 ? (
-            <p className="text-gray-500 text-sm">Nenhum documento encontrado.</p>
+            <p className="text-gray-500 text-sm col-span-full">Nenhum documento encontrado.</p>
           ) : (
             documentosFiltrados.map((doc, idx) => (
-              <CardDocumento
-                key={doc.id}
-                doc={doc}
-                onExcluir={() => confirmarExclusao(doc.id, idx)}
-              />
+              <div key={doc.id} className="flex-1 min-w-[220px] max-w-full">
+                <CardDocumento
+                  doc={doc}
+                  onExcluir={() => confirmarExclusao(doc.id, idx)}
+                />
+              </div>
             ))
           )}
         </div>
 
-        <div className="fixed bottom-8 right-8">
+        <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8">
           <BotaoAdicionar onClick={abrirModal} />
         </div>
 

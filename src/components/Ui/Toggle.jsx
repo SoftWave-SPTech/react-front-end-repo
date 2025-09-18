@@ -9,6 +9,7 @@ export default function Toggle(props) {
     const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
     const idUsuario = props.idUsuario;
+    console.log("Id do usuario:"+ idUsuario + props.ativo + "Usuario está Ativou ou Inativo")
 
     function mudarStatusUsuario(){
 

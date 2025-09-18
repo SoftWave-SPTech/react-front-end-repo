@@ -13,21 +13,26 @@ const FormRedefinirSenha = () => {
 
     const validarFormulario = () => {
         const novosErros = {};
+        
         if (!email) {
             novosErros.email = "Email é obrigatório";
         } else if (!/\S+@\S+\.\S+/.test(email)) {
             novosErros.email = "Email inválido";
         }
+
         setErrors(novosErros);
         return Object.keys(novosErros).length === 0;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!validarFormulario()) return;
+
+        if (!validarFormulario()) {
+            return;
+        }
 
         try {
-            const response = await api.post(`/auth/solicitar-reset-senha?email=${email}`);
+            await api.post(`/auth/solicitar-reset-senha?email=${email}`);
             setAlert({
                 type: "success",
                 message: "E-mail com Token enviado com sucesso!",
@@ -36,6 +41,10 @@ const FormRedefinirSenha = () => {
                     navigate("/esqueci-senha");
                 }
             });
+            setTimeout(() => {
+                setAlert(null);
+                navigate("/esqueci-senha");
+            }, 2000);
         } catch (error) {
             console.error("Erro ao solicitar redefinição de senha:", error.staus);
             
@@ -71,23 +80,20 @@ const FormRedefinirSenha = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-azulEscuroForte/5 px-4 sm:px-6 py-8">
+        <div className="flex items-center justify-center min-h-screen">
             <form
-                className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg w-full max-w-sm"
+                className="bg-white p-8 rounded-lg shadow-lg w-96 md:w-1/4"
                 onSubmit={handleSubmit}
             >
-                <div className="text-center mb-3">
+                <div className="text-center mb-4">
                     <img
                         src="src/assets/images/boneco.png"
-                        alt="Ilustração"
-                        className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto mb-2 object-contain"
+                        alt=""
+                        className="w-32 h-32 mx-auto mb-2"
                     />
-                    <h2 className="text-xl sm:text-2xl font-semibold">REDEFINIR SENHA</h2>
-                    <p className="text-sm sm:text-base mt-1">
-                        Informe seu email para receber o token de troca de senha.
-                    </p>
+                    <h2 className="text-2xl">REDEFINIR SENHA</h2>
+                    <p className="text-base text-center mt-1"> Informe seu email para receber o token de troca de senha em seu email.</p>
                 </div>
-
                 {alert && (
                     <Alert
                         type={alert.type}
@@ -95,24 +101,17 @@ const FormRedefinirSenha = () => {
                         onClose={alert.onClose}
                     />
                 )}
-
                 <Input
-                    type="email"
+                    type="text"
                     label="E-MAIL"
                     name="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="seu@email.com"
+                    placeholder="leonardo@email.com"
                     largura="cheia"
                     errorMessage={errors.email}
-                    autoComplete="email"
                 />
-
                 <Botao largura="cheia" cor="padrao" type="submit" className="mt-7">
-                    ENVIAR TOKEN
-                </Botao>
-
-                <Botao largura="cheia" cor="padrao" type="submit" className="mt-6">
                     ENVIAR TOKEN
                 </Botao>
 
@@ -120,7 +119,7 @@ const FormRedefinirSenha = () => {
                     tamanho="pequeno"
                     cor="contornoAzul"
                     type="button"
-                    className="block mx-auto mt-5"
+                    className="block mx-auto mt-6"
                     onClick={() => window.history.back()}
                 >
                     VOLTAR

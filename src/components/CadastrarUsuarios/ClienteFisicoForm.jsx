@@ -79,11 +79,15 @@ export default function ClienteFisicoForm() {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
-    .then(() => {
-
-        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
-
-        showAlert('success', 'Cadastro realizado com sucesso!');
+    .then(async () => {
+        try {
+          await EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
+          showAlert('success', 'Cadastro realizado com sucesso!');
+        } catch (emailError) {
+          console.error('Erro ao enviar email:', emailError);
+          showAlert('success', 'Cadastro realizado com sucesso! (Email não pôde ser enviado)');
+        }
+        
         setFormData({
           nome: '',
           cpf: '',

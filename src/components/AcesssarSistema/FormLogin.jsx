@@ -13,27 +13,37 @@ export default function FormLogin() {
 
     const validarFormulario = () => {
         const novosErros = {};
+        
         if (!email) {
             novosErros.email = "Email é obrigatório";
         } else if (!/\S+@\S+\.\S+/.test(email)) {
             novosErros.email = "Email inválido";
         }
+        
         if (!senha) {
             novosErros.senha = "Senha é obrigatória";
+        } else if (senha.length < 8) {
+            novosErros.senha = "A senha deve ter pelo menos 8 caracteres";
         }
+
         setErrors(novosErros);
         return Object.keys(novosErros).length === 0;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!validarFormulario()) return;
+
+        if (!validarFormulario()) {
+            return;
+        }
 
         try {
             const response = await api.post('/auth/login', {
                 email: email,
                 senha: senha,
             });
+
+            console.log("Resposta da API:", response.data);
 
             if (response.status === 200) {
                 setAlert({ show: true, message: "Login realizado com sucesso!", type: "success" });
@@ -48,38 +58,43 @@ export default function FormLogin() {
                 setTimeout(() => {
                     if (response.data.role === "ROLE_USUARIO") {
                         window.location.href = "/perfil-cliente";
-                    } else if (response.data.role === "ROLE_ADMIN") {
+                    } else if(response.data.role === "ROLE_ADMIN") {
                         window.location.href = "/dashboard";
                     } else {
                         window.location.href = "/perfil-advogado";
                     }
-                }, 1200);
+                }, 1200); 
             }
         } catch (error) {
-            console.error("Erro ao fazer login:", error.status);
+            console.error("Erro ao fazer login:", error);
+
             if (error.response?.status === 401) {
                 setAlert({ show: true, message: "Email ou senha incorretos. Por favor, verifique suas credenciais.", type: "error" });
-            } else if(error.status >= 500){
-            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
-          }else{
-            setAlert({ show: true, message: error.response.data.message, type: "error" })
-          }
+            } else if (error.response?.status === 400) {
+                const mensagensErro = error.response.data;
+                if (typeof mensagensErro === 'object') {
+                    const primeiraMensagem = Object.values(mensagensErro)[0];
+                    setAlert({ show: true, message: primeiraMensagem, type: "error" });
+                } else {
+                    setAlert({ show: true, message: mensagensErro || "Dados inválidos. Por favor, verifique as informações.", type: "error" });
+                }
+            } else if (error.response?.status >= 500) {
+                setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" });
+            } else {
+                setAlert({ show: true, message: error.response?.data?.message || "Ocorreu um erro ao tentar fazer login. Por favor, tente novamente mais tarde.", type: "error" });
+            }
         }
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-azulEscuroForte px-4 sm:px-6 py-8">
+        <div className="flex items-center justify-center min-h-screen bg-azulEscuroForte px-4">
             <form
-                className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg w-full max-w-sm"
+                className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm"
                 onSubmit={handleSubmit}
             >
                 <div className="text-center">
-                    <img
-                        src="src/assets/images/boneco.png"
-                        alt="Ilustração"
-                        className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto mb-2 object-contain"
-                    />
-                    <h2 className="text-xl sm:text-2xl font-semibold">LOGIN</h2>
+                    <img src="src/assets/images/boneco.png" alt="" className="w-32 h-32 mx-auto mb-2" />
+                    <h2 className="text-2xl">LOGIN</h2>
                 </div>
 
                 {alert.show && (
@@ -99,7 +114,6 @@ export default function FormLogin() {
                     placeholder="leonardo@email.com"
                     largura="cheia"
                     errorMessage={errors.email}
-                    autoComplete="email"
                 />
 
                 <Input
@@ -111,7 +125,6 @@ export default function FormLogin() {
                     placeholder="*********"
                     largura="cheia"
                     errorMessage={errors.senha}
-                    autoComplete="current-password"
                 />
 
                 <p className="mb-6 block text-left">
@@ -126,9 +139,9 @@ export default function FormLogin() {
 
                 <p className="mt-4 text-center mb-4 text-black">
                     É SEU PRIMEIRO ACESSO?{" "}
-                    <Link to="/primeiro-acesso" className="font-bold text-azulEscuroForte hover:underline hover:text-dourado">
+                    <a href="/primeiro-acesso" className="font-bold text-azulEscuroForte hover:underline hover:text-dourado">
                         ENTRE AQUI.
-                    </Link>
+                    </a>
                 </p>
 
                 <Botao

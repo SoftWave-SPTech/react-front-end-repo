@@ -82,14 +82,20 @@ export default function AdvogadoFisicoForm() {
           Authorization: `Bearer ${sessionStorage.getItem('token')}`,
         },
       })
-      .then(() => {
-
-        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
-
-        setAlert({
-          type: 'success',
-          message: 'Cadastro realizado com sucesso!',
-        });
+      .then(async () => {
+        try {
+          await EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
+          setAlert({
+            type: 'success',
+            message: 'Cadastro realizado com sucesso!',
+          });
+        } catch (emailError) {
+          console.error('Erro ao enviar email:', emailError);
+          setAlert({
+            type: 'success',
+            message: 'Cadastro realizado com sucesso! (Email não pôde ser enviado)',
+          });
+        }
        
         setFormData({
           nome: '',
