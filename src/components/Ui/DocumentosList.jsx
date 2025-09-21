@@ -1,57 +1,60 @@
 import React from 'react';
 import { FiFileText } from 'react-icons/fi';
 
-const DocumentosList = ({ documentos = [] }) => {
+const DocumentosList = ({ documentos = [], filtro = '' }) => {
+  const documentosFiltrados = documentos.filter(doc =>
+    doc.nomeArquivo?.toLowerCase().includes(filtro.toLowerCase()) ||
+    doc.data?.toLowerCase().includes(filtro.toLowerCase())
+  );
+
   if (!documentos || documentos.length === 0) {
     return (
-      <div style={{
-        background: '#172042',
-        color: '#bfc8e2',
-        borderRadius: '8px',
-        padding: '10px 16px',
-        fontSize: '1rem',
-        marginTop: '8px'
-      }}>
+      <div className="bg-[#0f1b3e] text-white rounded-lg p-4 text-center">
         Nenhum documento encontrado.
       </div>
     );
   }
 
   return (
-    <div className="flex-1 p-2">
-      {documentos.map(doc => (
-        <div
-          key={doc.id}
-          className="bg-white rounded-2xl shadow-md flex flex-col justify-between min-h-[110px] px-5 pt-5 pb-3 mb-4"
-        >
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <FiFileText className="text-4xl text-[#0f1b3e] flex-shrink-0" />
-            <p className="m-0 font-bold text-base text-center flex-1">{doc.nomeArquivo}</p>
+    <div className="flex flex-col">
+      {/* Lista de documentos */}
+      <div className="overflow-y-auto space-y-3 pr-2" style={{ height: '280px' }}>
+        {documentosFiltrados.length === 0 ? (
+          <div className="bg-[#0f1b3e] text-white rounded-lg p-4 text-center">
+            Nenhum documento encontrado para "{filtro}".
           </div>
-          <div className="mt-auto flex flex-col items-center w-full">
-            <small className="text-gray-400 mb-1">{doc.data}</small>
-            <a
-              href={`http://localhost:8080/${doc.urlArquivo}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full text-center border-2 border-[#0f1b3e] text-white bg-azulEscuroForte  rounded-lg font-bold py-2 transition-colors duration-200 hover:bg-[#1b2a4e] hover:text-dourado"
+        ) : (
+          documentosFiltrados.map(doc => (
+            <div
+              key={doc.id}
+              className="bg-[#0f1b3e] text-white rounded-lg p-4 flex items-center justify-between"
             >
-              Visualizar
-            </a>
-          </div>
-        </div>
-      ))}
+              <div className="flex items-center flex-1 mr-3">
+                <FiFileText className="text-2xl text-white flex-shrink-0 mr-3" />
+                <div className="flex-1">
+                  <div className="text-sm font-medium mb-1">
+                    {doc.nomeArquivo}
+                  </div>
+                  <div className="text-xs text-gray-300">
+                    {doc.data}
+                  </div>
+                </div>
+              </div>
+              <a
+                href={`http://localhost:8080/${doc.urlArquivo}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-[#0f1b3e] rounded-lg font-bold py-2 px-4 transition-colors duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#0f1b3e] flex-shrink-0"
+              >
+                Visualizar
+              </a>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 };
 
-const cardStyle = {
-  backgroundColor: '#fff',
-  padding: '15px',
-  marginBottom: '10px',
-  borderRadius: '8px',
-  boxShadow: '0 0 6px rgba(0,0,0,0.1)',
-  textAlign: 'center'
-};
 
 export default DocumentosList;
