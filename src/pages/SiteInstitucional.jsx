@@ -129,6 +129,7 @@ function SiteInstitucional() {
           backgroundRepeat: 'no-repeat',
         }}
       >
+        <script src="//code.jivosite.com/widget/uA84dwOduE" async></script>
         <header className="bg-transparent py-4 px-4 sm:px-6 lg:px-[5%] w-full">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center">
