@@ -42,7 +42,7 @@ export default function AnaliseMovimentacao() {
     }).catch((error) => {
       console.error("Erro ao buscar análise e movimentação:", error.status);
 
-      if(erro.status >= 500){
+      if(error.status >= 500){
         setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
       }else{
         setAlert({ show: true, message: error.response.data.message, type: "error" })
@@ -64,7 +64,7 @@ export default function AnaliseMovimentacao() {
       }
     }).catch((error) => {
       console.error("Erro ao buscar comentários:", error.status);
-      if(erro.status >= 500){
+      if(error.status >= 500){
             setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
           }else{
             setAlert({ show: true, message: error.response.data.message, type: "error" })
