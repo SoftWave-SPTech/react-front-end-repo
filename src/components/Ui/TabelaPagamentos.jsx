@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatCurrencyBRL } from '../../utils/format';
+import { formatCurrencyBRL } from '../../utils/format.js';
 
 export default function TabelaPagamentos({
   pagamentos = [],
