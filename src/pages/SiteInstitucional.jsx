@@ -4,7 +4,7 @@ import CarroselAdvogados from '../components/SiteInstitucional/CarroselAdvogados
 import PlayerVideo from '../components/SiteInstitucional/playerVideo.jsx';
 import MidiaSocial from '../components/SiteInstitucional/midiaSocial.jsx';
 import CatalogoVideos from '../components/SiteInstitucional/catalogoVideos.jsx';
-import leaoLogo from '../assets/images/SiteInstitucional/leaologo.png';
+// import leaoLogo from '../assets/images/SiteInstitucional/leaologo.png';
 import estatuaJustica from '../assets/images/SiteInstitucional/EstatuaJustica.png';
 import { GiScales, GiBriefcase, GiFamilyHouse, GiShoppingBag, GiHouseKeys, GiQuillInk, GiTalk } from "react-icons/gi";
 
@@ -132,7 +132,7 @@ function SiteInstitucional() {
         <header className="bg-transparent py-4 px-4 sm:px-6 lg:px-[5%] w-full">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center">
-              <img src={leaoLogo} alt="Logo" className="w-16 h-16 sm:w-20 sm:h-20 lg:w-[8rem] lg:h-[8.5rem] object-contain" />
+              <img src="/src/assets/images/SiteInstitucional/leaologo.png" alt="Logo" className="w-16 h-16 sm:w-20 sm:h-20 lg:w-[8rem] lg:h-[8.5rem] object-contain" />
               <div className="text-white leading-tight ml-2 sm:ml-4">
                 <p className="text-sm sm:text-lg md:text-xl xl:text-3xl font-bold">LAURIANO & LEÃO SOCIEDADE</p>
                 <p className="text-sm sm:text-lg md:text-xl xl:text-3xl font-bold">DE ADVOGADOS</p>
