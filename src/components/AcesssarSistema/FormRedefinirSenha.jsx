@@ -3,7 +3,7 @@ import Botao from '../Ui/Botao';
 import { Input } from '../Ui/Input';
 import { api } from '../../service/api';
 import { useNavigate } from 'react-router-dom';
-import Alert from '../Ui/AlertStyle';
+import AlertStyle from '../Ui/AlertStyle';
 
 const FormRedefinirSenha = () => {
     const [email, setEmail] = useState("");

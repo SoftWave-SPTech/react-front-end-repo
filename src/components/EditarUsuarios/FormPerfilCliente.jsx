@@ -1,13 +1,13 @@
-import { Input } from "../Ui/Input.jsx";
-import Botao from "../Ui/Botao.jsx";
-import BarraTitulo from "../Ui/BarraTitulo.jsx";
+import { Input } from "../Ui/Input";
+import Botao from "../Ui/Botao";
+import BarraTitulo from "../Ui/BarraTitulo";
 import { useEffect, useState, useRef } from "react";
 import { FiUpload, FiTrash } from 'react-icons/fi';
-import { api } from '../../service/api.js';
-import { buscarCep } from "../../service/buscarCep.js";
+import { api } from '../../service/api';
+import { buscarCep } from "../../service/buscarCep";
 import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG, mascaraCNPJ } from '../../Utils/mascaras';
-import { validarPerfilCliente } from '../../Utils/validacoes.jsx';
-import Alert from "../Ui/AlertStyle.jsx"; // Importa o AlertStyle
+import { validarPerfilCliente } from '../../Utils/validacoes';
+import AlertStyle from "../Ui/AlertStyle";
 
 function FormPerfilCliente() {
   const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;

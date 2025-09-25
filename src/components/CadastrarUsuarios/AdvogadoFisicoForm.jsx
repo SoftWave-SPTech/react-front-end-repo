@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { api } from '../../service/api.js';
+import { api } from '../../service/api';
 import { nanoid } from 'nanoid';
 
-import Botao from '../../components/Ui/Botao';
+import Botao from '../Ui/Botao';
 import { Input } from '../Ui/Input';
 
 import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoFisico } from '../../Utils/validacoes';
 import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG,mascaraOAB } from '../../Utils/mascaras';
-import EnviarChaveAcesso from './EnvioEmail.jsx';
-import Alert from '../Ui/AlertStyle'; // Importa o AlertStyle
+import EnviarChaveAcesso from './EnvioEmail';
+import AlertStyle from '../Ui/AlertStyle';
 
 export default function AdvogadoFisicoForm() {
   const [formData, setFormData] = useState({

@@ -1,5 +1,5 @@
 import emailjs from '@emailjs/browser';
-import Alert from "../Ui/AlertStyle";
+import AlertStyle from "../Ui/AlertStyle";
 
 // A função agora recebe setAlert como parâmetro para gerenciar os alerts
 const EnviarChaveAcesso = async (nome, chaveAcesso, email, setAlert) => {

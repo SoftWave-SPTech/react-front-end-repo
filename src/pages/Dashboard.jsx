@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import LayoutBase from '../layouts/LayoutBase';
 import ProcessosRecentes from '../components/Dashboard/ProcessosRecentes';
-import SetoresCasos from '../components/Dashboard/GraficoSetores';
-import Clientes from '../components/Dashboard/GraficoStatusCliente';
-import Receita from '../components/Dashboard/GraficoReceita';
+import GraficoSetores from '../components/Dashboard/GraficoSetores';
+import GraficoStatusCliente from '../components/Dashboard/GraficoStatusCliente';
+import GraficoReceita from '../components/Dashboard/GraficoReceita';
 import KpiValorCausas from '../components/Dashboard/KpiValorCausas';
-import KPIs from '../components/Dashboard/KpisTotais';
+import KpisTotais from '../components/Dashboard/KpisTotais';
 import BarraTitulo from '../components/Ui/BarraTitulo';
 import { api } from '../service/api';
 import AlertStyle from '../components/Ui/AlertStyle';

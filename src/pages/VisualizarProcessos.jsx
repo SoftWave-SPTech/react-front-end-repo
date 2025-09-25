@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MenuLateralAdvogado from '../components/Menu/MenuLateral';
+import MenuLateral from '../components/Menu/MenuLateral';
 import BarraTitulo from '../components/Ui/BarraTitulo';
 import { Input } from '../components/Ui/Input';
 import Botao from '../components/Ui/Botao';

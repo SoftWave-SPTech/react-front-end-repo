@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { api } from '../../service/api';
 import Botao from "../Ui/Botao";
 import { Input } from "../Ui/Input";
-import Alert from "../Ui/AlertStyle";
+import AlertStyle from "../Ui/AlertStyle";
 
 export default function FormCadastrarSenha() {
   const [senha, setSenha] = useState("");

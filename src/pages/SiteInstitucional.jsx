@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
-import CarroselAdvogados from '../components/SiteInstitucional/CarroselAdvogados.jsx';
-import PlayerVideo from '../components/SiteInstitucional/playerVideo.jsx';
-import MidiaSocial from '../components/SiteInstitucional/midiaSocial.jsx';
-import CatalogoVideos from '../components/SiteInstitucional/catalogoVideos.jsx';
+import CarroselAdvogados from '../components/SiteInstitucional/CarroselAdvogados';
+import PlayerVideo from '../components/SiteInstitucional/playerVideo';
+import MidiaSocial from '../components/SiteInstitucional/midiaSocial';
+import CatalogoVideos from '../components/SiteInstitucional/catalogoVideos';
 // import leaoLogo from '../assets/images/SiteInstitucional/leaologo.png';
 import estatuaJustica from '../assets/images/SiteInstitucional/EstatuaJustica.png';
 import { GiScales, GiBriefcase, GiFamilyHouse, GiShoppingBag, GiHouseKeys, GiQuillInk, GiTalk } from "react-icons/gi";

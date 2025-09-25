@@ -8,7 +8,7 @@ import ModalAguardando from "../components/Ui/ModalAguardando";
 import { api } from "../service/api";
 import { FiSmile, FiFrown, FiMail, FiPhone } from "react-icons/fi";
 import { FaBalanceScale, FaWhatsapp } from "react-icons/fa"; // Importa o ícone do WhatsApp
-import Alert from '../components/Ui/AlertStyle'; 
+import AlertStyle from '../components/Ui/AlertStyle'; 
 
 const VisualizarProcessosAdvogado = () => {
   const { idUsuario, idProcesso } = useParams();

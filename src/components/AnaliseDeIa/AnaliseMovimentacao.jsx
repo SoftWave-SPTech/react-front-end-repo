@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ComentarioAdvogado from "../Ui/ComentarioAdvogado";
 import BlocoInformativo from "../Ui/BlocoInformativo";
-import BarraTitulo from "../../components/Ui/BarraTitulo";
+import BarraTitulo from "../Ui/BarraTitulo";
 import ModalComentario from "../Ui/ModalComentario";
 import { api } from "../../service/api";
 import { useParams } from "react-router-dom";

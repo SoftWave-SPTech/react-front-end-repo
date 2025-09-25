@@ -3,7 +3,7 @@ import { FiFileText, FiTrash, FiEdit2 } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../service/api';
 import ModalConfirmacao from '../Ui/ModalConfirmacao';
-import Alert from '../Ui/AlertStyle';
+import AlertStyle from '../Ui/AlertStyle';
 import 'tailwindcss/tailwind.css';
 
 export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {

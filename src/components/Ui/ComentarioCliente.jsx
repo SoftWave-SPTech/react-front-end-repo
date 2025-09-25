@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Alert from './AlertStyle';
+import AlertStyle from './AlertStyle';
 
 const AtualizarProcessoBtn = () => {
   const [showAlert, setShowAlert] = useState(false);

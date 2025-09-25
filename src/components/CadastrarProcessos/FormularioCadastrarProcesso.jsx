@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import 'tailwindcss/tailwind.css';
 import { api } from '../../service/api';
-import Alert from '../Ui/AlertStyle';
+import AlertStyle from '../Ui/AlertStyle';
 
 export default function FormularioCadastrarProcesso({
   processoEditando = null,
