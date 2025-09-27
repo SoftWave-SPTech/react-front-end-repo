@@ -79,7 +79,12 @@ function FormPerfilCliente() {
           criarAtualizarFisicos(dados);
         })
         .catch((erro) => {
-          console.log(erro);
+          if(erro.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: erro.response.data.message, type: "error" })
+          }
+          console.error("Erro ao buscar usuários físicos:", erro.status);
         });
 
     } else if (sessionStorage.getItem('tipoUsuario') === "UsuarioJuridico") {
@@ -107,7 +112,12 @@ function FormPerfilCliente() {
           criarAtualizarJuridicos(dados);
         })
         .catch((erro) => {
-          console.log(erro);
+          console.error("Erro ao buscar usuários jurídicos:", erro.status);
+          if(erro.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: erro.response.data.message, type: "error" })
+          }
         });
     }
   }, []);
@@ -242,10 +252,12 @@ function FormPerfilCliente() {
           setTimeout(() => window.location.reload(), 1500);
         })
         .catch((erro) => {
-          setAlert({
-            type: "error",
-            message: "Ocorreu um erro, tente novamente!"
-          });
+          console.error("Erro ao atualizar usuários físicos:", erro.status);
+          if(erro.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: erro.response.data.message, type: "error" })
+          }
         });
 
     } else if (sessionStorage.getItem('tipoUsuario') === "UsuarioJuridico") {
@@ -280,10 +292,12 @@ function FormPerfilCliente() {
           setTimeout(() => window.location.reload(), 1500);
         })
         .catch((erro) => {
-          setAlert({
-            type: "error",
-            message: "Ocorreu um erro, tente novamente!"
-          });
+          if(erro.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: erro.response.data.message, type: "error" })
+          }
+          console.error("Erro ao atualizar usuários jurídicos:", erro.status);
         });
     }
   }
@@ -316,10 +330,12 @@ function FormPerfilCliente() {
           setTimeout(() => window.location.reload(), 1500);
         })
         .catch(error => {
-          setAlert({
-            type: "error",
-            message: "Erro ao enviar o arquivo."
-          });
+          console.error("Erro ao atualizar foto de perfil:", error.status);
+          if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
         });
     }
   }
@@ -339,10 +355,12 @@ function FormPerfilCliente() {
         setTimeout(() => window.location.reload(), 1500);
       })
       .catch(error => {
-        setAlert({
-          type: "error",
-          message: "Erro ao excluir a foto."
-        });
+        console.error("Erro ao excluuir foto de perfil:", error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       });
   }
 

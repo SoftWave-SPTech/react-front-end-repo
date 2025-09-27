@@ -8,7 +8,7 @@ export default function FormCadastrarSenha() {
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [errors, setErrors] = useState({});
-  const [alert, setAlert] = useState(null);
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
   const validarFormulario = () => {
     const novosErros = {};
@@ -71,6 +71,7 @@ export default function FormCadastrarSenha() {
           }, 1500);
         }
       } catch (loginError) {
+        console.error("Erro ao fazer login:", loginError.status);
         setAlert({
           type: "warning",
           message: "Senha cadastrada, mas houve um erro ao fazer login. Por favor, tente fazer login manualmente."
@@ -80,28 +81,12 @@ export default function FormCadastrarSenha() {
         }, 2000);
       }
     } catch (error) {
-      if (error.response?.status === 400) {
-        const mensagensErro = error.response.data;
-        if (typeof mensagensErro === 'object') {
-          Object.keys(mensagensErro).forEach(mensagem => {
-            if (mensagem === "novaSenha") {
-              setErrors(prev => ({ ...prev, senha: mensagensErro.novaSenha }));
-            } else if (mensagem === "novaSenhaConfirma") {
-              setErrors(prev => ({ ...prev, confirmarSenha: mensagensErro.novaSenhaConfirma }));
-            }
-          });
-        } else {
-          setAlert({
-            type: "error",
-            message: mensagensErro || "Dados inválidos. Por favor, verifique as informações."
-          });
-        }
-      } else {
-        setAlert({
-          type: "error",
-          message: "Ocorreu um erro ao tentar cadastrar a senha. Por favor, tente novamente mais tarde."
-        });
-      }
+      console.error("Erro ao atualizar usuários físicos:", error.status);
+      if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
     }
   };
 

@@ -2,10 +2,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../service/api';
 import ModalAguardando from './ModalAguardando';
+import AlertStyle from '../Ui/AlertStyle';
 
 const ProcessoAndamento = ({ andamentos = [], processoId, filtro = '' }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
   const andamentosFiltrados = andamentos.filter(item => {
     if (!filtro.trim()) return true;
@@ -33,8 +35,8 @@ const ProcessoAndamento = ({ andamentos = [], processoId, filtro = '' }) => {
         setLoading(false);
         navigate(`/analise-ia/${processoId}/${item.id}`)
       })
-      .catch(() => {
-        console.error("Erro ao gerar análise IA");
+      .catch((error) => {
+        console.error("Erro ao gerar análise IA", error.status);
         setLoading(false);
         navigate(`/analise-ia/${processoId}/${item.id}`)
       });

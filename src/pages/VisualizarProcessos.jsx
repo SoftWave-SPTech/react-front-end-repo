@@ -8,6 +8,7 @@ import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
 import { api } from '../service/api';
 import { FiSearch } from 'react-icons/fi';
 import LayoutBase from '../layouts/LayoutBase';
+import AlertStyle from '../components/Ui/AlertStyle';
 
 export default function VisualizarProcessos() {
   const [processos, setProcessos] = useState([]);
@@ -16,6 +17,7 @@ export default function VisualizarProcessos() {
   const [modalConfirma, setModalConfirma] = useState(false);
   const [processoSelecionado, setProcessoSelecionado] = useState(null);
   const [expandido, setExpandido] = useState(null);
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
   const navigate = useNavigate();
 
@@ -26,7 +28,12 @@ export default function VisualizarProcessos() {
         setProcessos(response.data);
       })
       .catch((error) => {
-        console.error('Erro ao buscar processos:', error);
+        console.error('Erro ao buscar processos:', error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       });
   }, []);
 
@@ -39,18 +46,46 @@ export default function VisualizarProcessos() {
         setProcessoDaVez(response.data);
       })
       .catch((error) => {
-        console.error('Erro ao buscar processos:', error);
+        console.error('Erro ao buscar processos:', error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       });
   };
 
-  function transferirPageProcessoCliente(){
+ 
+  const processosFiltrados = processos.filter((p) => {
+    const buscaLower = busca.toLowerCase();
 
-  }
+    let dataUltimaModificacao = p.dataAtualizacao && p.dataAtualizacao !== "null" && p.dataAtualizacao.trim() !== ""
+      ? new Date(p.dataAtualizacao.replace(' ', 'T')).toLocaleDateString('pt-BR')
+      : (p.dataCriacao && p.dataCriacao !== "null" && p.dataCriacao.trim() !== ""
+          ? new Date(p.dataCriacao.replace(' ', 'T')).toLocaleDateString('pt-BR')
+          : "");
+
+    return (
+      (p.numeroProcesso && p.numeroProcesso.toLowerCase().includes(buscaLower)) ||
+      (p.descricao && p.descricao.toLowerCase().includes(buscaLower)) ||
+      (dataUltimaModificacao && dataUltimaModificacao.includes(buscaLower))
+    );
+  });
 
   return (
   <LayoutBase backgroundClass="bg-cinzaAzulado">
       <div className="flex-1 p-2 sm:p-8 overflow-auto">
         {/* Barra de pesquisa acima do título */}
+
+        {alert && (
+                <AlertStyle
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
+            )}
+
+
         <div className="flex justify-end mb-4">
           <div className="w-full max-w-full sm:max-w-xl">
             <div className="relative">
@@ -61,7 +96,7 @@ export default function VisualizarProcessos() {
                 valor={busca}
                 onChange={(e) => setBusca(e.target.value)}
                 className="pl-10 w-full"
-                placeholder="Buscar por número do processo"
+                placeholder="Buscar por número, descrição e data do processo"
                 />
                 <div className='cursor-pointer bg-azulEscuroForte w-10 h-10 sm:w-12 sm:h-11 flex items-center rounded-r-md justify-center'>
                   <FiSearch className="w-6 h-6 sm:w-7 sm:h-6 text-white" />
@@ -83,14 +118,22 @@ export default function VisualizarProcessos() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm bg-white rounded shadow-md">
             <tbody>
-              {processos.map((p) => (
+              {processosFiltrados.map((p) => (
                 <React.Fragment key={p.id}>
                   <tr
                     className="border-b hover:bg-gray-50 cursor-pointer"
                     onClick={() => toggleExpandido(p.id)}
                   >
                     <td className="px-2 sm:px-4 py-2 font-semibold mb-4" style={{ paddingBottom: '1rem' }} colSpan={10}>
-                      <span className="block sm:inline">Processo nº {p.numeroProcesso}</span>
+                      <span>
+                        <span className='font-bold'>Processo nº</span> {p.numeroProcesso} - 
+                        <span className='font-bold'> Descrição:</span> {p.descricao} - 
+                        <span className='font-bold'> Data da última modificação:</span> {
+                          p.dataAtualizacao && p.dataAtualizacao !== "null" && p.dataAtualizacao.trim() !== ""
+                            ? new Date(p.dataAtualizacao).toLocaleDateString('pt-BR')
+                            : (p.dataCriacao ? new Date(p.dataCriacao).toLocaleDateString('pt-BR') : "")
+                        }
+                      </span>
                       <span className="float-right text-gray-400">
                         {expandido === p.id ? '▲' : '▼'}
                       </span>
@@ -120,10 +163,10 @@ export default function VisualizarProcessos() {
                   )}
                 </React.Fragment>
               ))}
-              {processos.length === 0 && (
+              {processosFiltrados.length === 0 && (
                 <tr>
                   <td colSpan="10" className="text-center py-6 text-gray-500">
-                    Nenhum processo encontrado.
+                    Nenhum processo encontrado
                   </td>
                 </tr>
               )}

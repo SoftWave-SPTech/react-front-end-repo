@@ -3,6 +3,7 @@ import { FiFileText, FiTrash, FiEdit2 } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../service/api';
 import ModalConfirmacao from '../Ui/ModalConfirmacao';
+import Alert from '../Ui/AlertStyle';
 import 'tailwindcss/tailwind.css';
 
 export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
@@ -11,8 +12,10 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
   const [usuarioId, setUsuarioId] = useState("");
   const [role, setRole] = useState("");
   const [modalExcluir, setModalExcluir] = useState({ aberto: false, id: null });
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'info' });
   const navigate = useNavigate();
 
+  // Pega id e role do usuário logado
   useEffect(() => {
     const id = sessionStorage.getItem('id');
     const r = sessionStorage.getItem('role');
@@ -22,6 +25,7 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
     }
   }, []);
 
+  // Função para buscar processos
   const fetchProcessos = async () => {
     try {
       let response;
@@ -37,27 +41,33 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
       if (response) setProcessos(response.data);
     } catch (error) {
       console.error('Erro ao buscar processos:', error);
+      if (error.status >= 500) {
+        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte.", type: "error" });
+      } else {
+        setAlert({ show: true, message: error.response?.data?.message || "Erro ao buscar processos.", type: "error" });
+      }
     }
   };
 
+  // Busca processos quando role/id mudam ou reloadKey é atualizado
   useEffect(() => {
     if (role && usuarioId) fetchProcessos();
-    // refaz o fetch quando o pai manda “recarregar”
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role, usuarioId, reloadKey]);
 
+  // Filtra processos pelo número ou descrição
   const processosFiltrados = processos.filter((proc) =>
     (proc.numeroProcesso?.toLowerCase().includes(busca.toLowerCase()) || "") ||
     (proc.descricao?.toLowerCase().includes(busca.toLowerCase()) || "")
   );
 
+  // Visualizar processo
   const parametrosVisualizarProcesso = async (processo) => {
     try {
       const response = await api.get(`/clientes/com-processos`, {
         headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
       });
-
       const listaClientes = response.data;
+
       for (let cliente of listaClientes) {
         const processoEncontrado = cliente.processos.find(p => p.id === processo.id);
         if (processoEncontrado) {
@@ -67,15 +77,22 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
           return;
         }
       }
-      alert('Processo não vinculado a nenhum cliente encontrado.');
+
+      setAlert({ show: true, type: "warning", message: "Processo não vinculado a nenhum cliente encontrado." });
     } catch (error) {
       console.error("Erro ao buscar cliente do processo:", error);
+      if (error.status >= 500) {
+        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte.", type: "error" });
+      } else {
+        setAlert({ show: true, message: error.response?.data?.message || "Erro ao buscar processo.", type: "error" });
+      }
     }
   };
 
+  // Confirmação de exclusão
   const confirmarExclusao = (id) => {
     if (role === 'ROLE_ADVOGADO') {
-      alert('Você não tem permissão para excluir processos.');
+      setAlert({ show: true, type: "warning", message: "Você não tem permissão para excluir processos." });
       return;
     }
     setModalExcluir({ aberto: true, id });
@@ -83,6 +100,7 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
 
   const cancelarExclusao = () => setModalExcluir({ aberto: false, id: null });
 
+  // Excluir processo
   const excluirProcesso = async () => {
     try {
       await api.delete(`/processos/${modalExcluir.id}`, {
@@ -90,17 +108,30 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
       });
       setProcessos(prev => prev.filter(proc => proc.id !== modalExcluir.id));
       setModalExcluir({ aberto: false, id: null });
-      alert('Processo excluído com sucesso!');
+      setAlert({ show: true, type: "success", message: "Processo excluído com sucesso!" });
     } catch (error) {
-      alert('Erro ao excluir processo');
+      console.error("Erro ao excluir processo:", error);
+      if (error.status >= 500) {
+        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte.", type: "error" });
+      } else {
+        setAlert({ show: true, message: error.response?.data?.message || "Erro ao excluir processo.", type: "error" });
+      }
       setModalExcluir({ aberto: false, id: null });
     }
   };
 
-  const podeEditar = role === 'ROLE_ADMIN' || role === 'ROLE_DONO'; // ajuste se necessário
+  const podeEditar = role === 'ROLE_ADMIN' || role === 'ROLE_DONO';
 
   return (
     <div className="bg-AzulEscuro rounded-lg p-[2.5rem] font-sans w-full max-w-[56.25rem] mx-auto min-h-[45.8rem] flex flex-col" style={{ height: "70vh" }}>
+      
+      {/* ALERT */}
+      {alert.show && (
+        <Alert type={alert.type} onClose={() => setAlert({ ...alert, show: false })}>
+          {alert.message}
+        </Alert>
+      )}
+
       <div className="flex items-center mb-6 pb-4">
         <h2 className="text-3xl font-normal text-dourado flex-1">Processos</h2>
         <div className="relative w-[16rem] max-w-full">
@@ -140,7 +171,6 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
               </div>
 
               <div className="flex space-x-6">
-                {/* Editar */}
                 {podeEditar && (
                   <button
                     onClick={() => onEdit && onEdit(processo)}
@@ -150,8 +180,6 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
                     <FiEdit2 size={24} className="md:w-6 md:h-6" />
                   </button>
                 )}
-
-                {/* Visualizar */}
                 <button
                   onClick={() => parametrosVisualizarProcesso(processo)}
                   className="text-branco hover:text-dourado transition-colors"
@@ -159,8 +187,6 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
                 >
                   <FiFileText size={24} className="md:w-6 md:h-6" />
                 </button>
-
-                {/* Excluir */}
                 {podeEditar && (
                   <button
                     onClick={() => confirmarExclusao(processo.id)}
@@ -173,6 +199,7 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
               </div>
             </div>
           ))}
+
           {processosFiltrados.length === 0 && (
             <div className="text-branco text-center py-8 opacity-70">Nenhum processo encontrado.</div>
           )}

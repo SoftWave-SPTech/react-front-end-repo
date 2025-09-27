@@ -8,11 +8,13 @@ import KpiValorCausas from '../components/Dashboard/KpiValorCausas';
 import KPIs from '../components/Dashboard/KpisTotais';
 import BarraTitulo from '../components/Ui/BarraTitulo';
 import { api } from '../service/api';
+import AlertStyle from '../components/Ui/AlertStyle';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dadosDashboard, setDadosDashboard] = useState(null);
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
   const fetchDados = () => {
     const token = sessionStorage.getItem('token');
@@ -35,8 +37,13 @@ const Dashboard = () => {
         setLoading(false);
       })
       .catch((err) => {
-        setError('Erro ao buscar dados: ' + err.message);
-        console.log(err)
+        setError('Erro ao buscar dados: ' + err.data.message);
+        console.error("Erro ao buscar dados da dashboard:", err.status);
+        if(err.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: err.response.data.message, type: "error" })
+          }
         setLoading(false);
       });
   };
@@ -60,6 +67,14 @@ const Dashboard = () => {
         <BarraTitulo tamanho="responsivo" className="mb-4 shadow-lg">
           Dashboard
         </BarraTitulo>
+
+        {alert && (
+                <AlertStyle
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
+            )}
 
         <div className="flex gap-2 mb-2">
           <div className="flex-none w-2/5">

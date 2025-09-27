@@ -7,6 +7,7 @@ import CardDocumento from '../components/Ui/CardDocumento';
 import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
 import { api } from '../service/api';
 import { useParams, useNavigate } from 'react-router-dom';
+import AlertStyle from '../components/Ui/AlertStyle';
 
 export default function VisualizarDocumentosProcesso() {
   const [documentos, setDocumentos] = useState([]);
@@ -16,6 +17,7 @@ export default function VisualizarDocumentosProcesso() {
   const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
   const { idProcesso } = useParams();
   const navigate = useNavigate();
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
   const abrirModal = () => setModalAberto(true);
   const fecharModal = () => setModalAberto(false);
@@ -31,7 +33,12 @@ export default function VisualizarDocumentosProcesso() {
       setDocumentos(response.data)
       })
       .catch(error => {
-      console.error("Erro ao enviar o arquivo:", error);
+      console.error("Erro ao buscar o arquivo:", error.status);
+      if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
     });
 
   }, []);
@@ -54,7 +61,12 @@ export default function VisualizarDocumentosProcesso() {
             window.location.reload()
             })
             .catch(error => {
-            console.error("Erro ao enviar o arquivo:", error);
+            console.error("Erro ao enviar o arquivo:", error.status);
+            if(error.status >= 500){
+              setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+            }else{
+              setAlert({ show: true, message: error.response.data.message, type: "error" })
+            }
             });
 
     fecharModal();
@@ -73,7 +85,12 @@ export default function VisualizarDocumentosProcesso() {
       console.log("Documento Deletado com sucesso");
     })
     .catch(error => {
-      console.error("Erro ao enviar o arquivo:", error);
+      console.error("Erro ao excluir o arquivo:", error.status);
+      if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
     });
 
     setModalExcluir({ aberto: false, index: null, id: null });
@@ -95,6 +112,14 @@ export default function VisualizarDocumentosProcesso() {
     <LayoutBase tipoMenu="cliente">
       <div className="p-4 sm:p-6 relative">
         <BarraTitulo className="mb-4 sm:mb-6">Documentos do Processo</BarraTitulo>
+
+        {alert && (
+                <AlertStyle
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
+            )}
 
         <div className="flex justify-end mb-4 sm:mb-6">
           <div className="relative w-full max-w-xs">

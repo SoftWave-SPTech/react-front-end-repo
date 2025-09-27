@@ -6,6 +6,7 @@ import CardClientesProcessos from '../components/PesquisarProcessos/CardClientes
 import BotaoFiltros from '../components/PesquisarProcessos/BotaoFiltros';
 import BarraTitulo from '../components/Ui/BarraTitulo';
 import Botao from '../components/Ui/Botao';
+import AlertStyle from '../components/Ui/AlertStyle';
 
 const filtros = [
   { label: "Setor", endpoint: "filtro-setor" },
@@ -25,6 +26,7 @@ const PesquisarProcessos = () => {
   const [role, setRole] = useState('');
   const [usuarioId, setUsuarioId] = useState('');
   const [filtroAberto, setFiltroAberto] = useState(null);
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
   useEffect(() => {
     const id = sessionStorage.getItem('id');
@@ -54,7 +56,12 @@ const PesquisarProcessos = () => {
         }
         if (response) setClientes(response.data);
       } catch (error) {
-        console.error('Erro ao buscar clientes:', error);
+        console.error('Erro ao buscar clientes:', error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       } finally {
         setLoading(false);
       }
@@ -78,7 +85,12 @@ const PesquisarProcessos = () => {
       });
       setClientes(response.data);
     } catch (error) {
-      console.error('Erro ao buscar clientes:', error);
+      console.error('Erro ao buscar clientes:', error.status);
+      if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
     } finally {
       setLoading(false);
     }
@@ -97,7 +109,12 @@ const PesquisarProcessos = () => {
       setClientes(response.data);
       setFiltroAtivo({ ...filtro, valor });
     } catch (error) {
-      console.error('Erro ao aplicar filtro:', error);
+      console.error('Erro ao aplicar filtro:', error.status);
+      if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
     } finally {
       setLoading(false);
     }
@@ -120,7 +137,12 @@ const PesquisarProcessos = () => {
       }
       if (response) setClientes(response.data);
     } catch (error) {
-      console.error('Erro ao limpar filtros:', error);
+      console.error('Erro ao limpar filtros:', error.status);
+      if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
     } finally {
       setLoading(false);
     }
@@ -145,6 +167,15 @@ const PesquisarProcessos = () => {
           <div className="mb-[1.5rem]">
             <BarraTitulo>Pesquisar Processos</BarraTitulo>
           </div>
+
+          {alert && (
+                <AlertStyle
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
+            )}
+
           <div className="flex flex-col gap-[1.5rem]">
             {loading ? (
               <div className="text-center py-8">Carregando...</div>
