@@ -27,8 +27,37 @@ const CadastrarProcesso = () => {
     <LayoutBase backgroundClass="bg-cinzaAzulado">
       <BarraTitulo>Cadastrar Processos</BarraTitulo>
 
-      <div className="flex flex-col lg:flex-row justify-center items-start gap-8 lg:gap-20 w-full max-w-[1920px] mx-auto px-6 lg:px-12 py-6" style={{ minHeight: 600 }}>
-        <div className="flex justify-center items-start w-full max-w-[500px] lg:max-w-[500px] mb-8 lg:mb-0">
+      <div
+        className="
+          flex flex-col
+          xl:flex-row
+          justify-center items-stretch
+          gap-4 sm:gap-6 md:gap-10 xl:gap-20
+          w-full
+          max-w-[1920px]
+          mx-auto
+          px-2 sm:px-4 md:px-8 xl:px-16
+          py-2 sm:py-4 md:py-8
+          min-h-[400px]
+          transition-all
+        "
+      >
+        <div
+          className="
+            flex justify-center items-start
+            w-full
+            max-w-full
+            sm:max-w-[480px]
+            md:max-w-[520px]
+            xl:max-w-[520px]
+            mb-4 md:mb-6 xl:mb-0
+            bg-white bg-opacity-90
+            rounded-lg
+            shadow
+            p-2 sm:p-4 md:p-6
+            transition-all
+          "
+        >
           <FormularioCadastrarProcesso
             processoEditando={processoEditando}
             onSalvo={handleSalvo}
@@ -36,7 +65,21 @@ const CadastrarProcesso = () => {
           />
         </div>
 
-        <div className="flex justify-center items-start w-full max-w-[600px] lg:max-w-[600px]">
+        <div
+          className="
+            flex justify-center items-start
+            w-full
+            max-w-full
+            sm:max-w-[600px]
+            md:max-w-[700px]
+            xl:max-w-[700px]
+            bg-white bg-opacity-90
+            rounded-lg
+            shadow
+            p-2 sm:p-4 md:p-6
+            transition-all
+          "
+        >
           <ItemListaProcesso
             onEdit={handleEdit}
             reloadKey={reloadKey}
