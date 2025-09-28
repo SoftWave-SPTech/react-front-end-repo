@@ -96,6 +96,33 @@ const PesquisarProcessos = () => {
     }
   };
 
+  // Função para buscar clientes (usada em handleBusca e handleLimparFiltros)
+  const buscarClientes = async () => {
+    try {
+      setLoading(true);
+      let response;
+      if (role === 'ROLE_ADMIN' || role === 'ROLE_DONO') {
+        response = await api.get('/clientes/com-processos', {
+          headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+        });
+      } else if (role === 'ROLE_ADVOGADO') {
+        response = await api.get(`/clientes/com-processos/advogado/${usuarioId}`, {
+          headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+        });
+      }
+      if (response) setClientes(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar clientes:', error.status);
+      if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleFiltro = async (filtro, valor) => {
     if (!filtro.endpoint) return;
 
@@ -123,29 +150,7 @@ const PesquisarProcessos = () => {
   const handleLimparFiltros = async () => {
     setFiltroAtivo(null);
     setBusca("");
-    try {
-      setLoading(true);
-      let response;
-      if (role === 'ROLE_ADMIN' || role === 'ROLE_DONO') {
-        response = await api.get('/clientes/com-processos', {
-          headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-        });
-      } else if (role === 'ROLE_ADVOGADO') {
-        response = await api.get(`/clientes/com-processos/advogado/${usuarioId}`, {
-          headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-        });
-      }
-      if (response) setClientes(response.data);
-    } catch (error) {
-      console.error('Erro ao limpar filtros:', error.status);
-      if(error.status >= 500){
-            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
-          }else{
-            setAlert({ show: true, message: error.response.data.message, type: "error" })
-          }
-    } finally {
-      setLoading(false);
-    }
+    await buscarClientes();
   };
 
   const handleToggleFiltro = (label) => {
@@ -162,21 +167,22 @@ const PesquisarProcessos = () => {
 
   return (
     <LayoutBase backgroundClass="bg-cinzaAzulado">
-      <div className="relative flex flex-col lg:flex-row w-full h-full min-h-screen px-[1.5rem] md:px-[3rem] gap-[2rem]">
-        <div className="flex-1 flex flex-col">
-          <div className="mb-[1.5rem]">
+      <div className="relative flex flex-col lg:flex-row w-full h-full min-h-screen px-4 md:px-12 gap-6 md:gap-8">
+        {/* Conteúdo principal */}
+        <div className="flex-1 flex flex-col order-2 lg:order-1 w-full">
+          <div className="mb-6">
             <BarraTitulo>Pesquisar Processos</BarraTitulo>
           </div>
 
           {alert && (
-                <AlertStyle
-                    type={alert.type}
-                    message={alert.message}
-                    onClose={() => setAlert(null)}
-                />
-            )}
+            <AlertStyle
+              type={alert.type}
+              message={alert.message}
+              onClose={() => setAlert(null)}
+            />
+          )}
 
-          <div className="flex flex-col gap-[1.5rem]">
+          <div className="flex flex-col gap-6">
             {loading ? (
               <div className="text-center py-8">Carregando...</div>
             ) : clientesFiltrados.length > 0 ? (
@@ -191,8 +197,9 @@ const PesquisarProcessos = () => {
           </div>
         </div>
 
-        <div className="flex flex-col w-full max-w-[14rem] mt-[0.5rem] relative">
-          <div className="relative w-full mb-[1.5rem]">
+        {/* Sidebar de filtros */}
+        <div className="flex flex-col w-full max-w-full lg:max-w-[14rem] mt-2 relative order-1 lg:order-2">
+          <div className="relative w-full mb-6">
             <input
               type="text"
               placeholder="Filtrar por Cliente ou Processo..."
@@ -201,9 +208,9 @@ const PesquisarProcessos = () => {
                 setBusca(e.target.value);
                 handleBusca(e.target.value);
               }}
-              className="w-full rounded-md py-[0.5rem] pl-[1rem] pr-[2.5rem] text-base bg-white text-preto focus:outline-none"
+              className="w-full rounded-md py-2 pl-4 pr-10 text-base bg-white text-preto focus:outline-none"
             />
-            <span className="absolute right-[0.75rem] top-[0.75rem] text-preto opacity-60 pointer-events-none">
+            <span className="absolute right-3 top-2.5 text-preto opacity-60 pointer-events-none">
               <svg width="1.25rem" height="1.25rem" fill="none" viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/>
                 <path d="M20 20L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
@@ -211,7 +218,7 @@ const PesquisarProcessos = () => {
             </span>
           </div>
           {role !== 'ROLE_ADVOGADO' && (
-            <div className="flex flex-col gap-[1rem]">
+            <div className="flex flex-col gap-4">
               {filtros.map(filtro => (
                 <BotaoFiltros 
                   key={filtro.label} 
@@ -235,14 +242,17 @@ const PesquisarProcessos = () => {
               )}
             </div>
           )}
-          <div className="fixed right-[4.5rem] bottom-8 z-50 max-w-[14rem] w-full flex justify-end lg:justify-center">
-            <Botao
-              cor="padrao"
-              tamanho='grande'
-              onClick={() => window.history.back()}
-            >
-              Voltar
-            </Botao>
+          {/* Botão Voltar: fixo em telas grandes, fluido em mobile */}
+          <div className="w-full flex justify-end lg:justify-center mt-6 lg:mt-0">
+            <div className="w-full lg:w-auto lg:fixed lg:right-20 lg:bottom-8 z-50">
+              <Botao
+                cor="padrao"
+                tamanho='grande'
+                onClick={() => window.history.back()}
+              >
+                Voltar
+              </Botao>
+            </div>
           </div>
         </div>
       </div>

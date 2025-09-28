@@ -18,7 +18,7 @@ const AreaCliente = () => {
     const [advogado, setAdvogado] = useState(null);
     const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
-    let idAdvogado = 1; // ID padrão caso não exista
+    let idAdvogado = 1;
 
     useEffect(() => {
         // Buscar documentos
