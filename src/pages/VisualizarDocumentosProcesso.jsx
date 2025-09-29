@@ -40,7 +40,6 @@ export default function VisualizarDocumentosProcesso() {
             setAlert({ show: true, message: error.response.data.message, type: "error" })
           }
     });
-
   }, []);
 
   const adicionarDocumento = (novoDoc) => {
@@ -151,11 +150,11 @@ export default function VisualizarDocumentosProcesso() {
 
         <div
           className="
-            flex flex-wrap gap-4
-            sm:gap-6
-            md:grid md:grid-cols-2
-            lg:grid-cols-3
-            xl:grid-cols-4
+            grid grid-cols-1
+            sm:grid-cols-2
+            md:grid-cols-3
+            lg:grid-cols-4
+            gap-4 sm:gap-6
             w-full
           "
         >
@@ -163,7 +162,7 @@ export default function VisualizarDocumentosProcesso() {
             <p className="text-gray-500 text-sm col-span-full">Nenhum documento encontrado.</p>
           ) : (
             documentosFiltrados.map((doc, idx) => (
-              <div key={doc.id} className="flex-1 min-w-[220px] max-w-full">
+              <div key={doc.id} className="min-w-0">
                 <CardDocumento
                   doc={doc}
                   onExcluir={() => confirmarExclusao(doc.id, idx)}
