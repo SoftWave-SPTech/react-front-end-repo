@@ -51,7 +51,9 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
 
   // Busca processos quando role/id mudam ou reloadKey é atualizado
   useEffect(() => {
-    if (role && usuarioId) fetchProcessos();
+    if (role && usuarioId) {
+      fetchProcessos();
+    }
   }, [role, usuarioId, reloadKey]);
 
   // Filtra processos pelo número ou descrição
