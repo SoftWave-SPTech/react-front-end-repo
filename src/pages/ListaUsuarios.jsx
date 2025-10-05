@@ -18,7 +18,7 @@ export default function ListaUsuarios() {
     
 
     useEffect(() => {
-        api.get('/usuarios/listar-usarios-e-procesos',
+        api.get('/usuarios/listar-usuarios-e-processos',
             // {
             // headers: {
             //   "Authorization":  TOKEN

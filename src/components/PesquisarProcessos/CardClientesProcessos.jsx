@@ -8,9 +8,13 @@ export default function CardClientesProcessos({ cliente }) {
   const navigate = useNavigate();
   const [frame, setFrame] = useState(0);
   const frameSize = 3;
-  const totalFrames = Math.ceil(cliente.processos.length / frameSize);
+  const processos = cliente.processos || [];
+  const totalFrames = Math.ceil(processos.length / frameSize);
+  const mostrarScroll = processos.length > frameSize;
+  const processosVisiveis = processos.slice(frame * frameSize, frame * frameSize + frameSize);
   const [fotoPerfil, setFotoPerfil] = useState(null);
-  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+   // const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+  const [alert, setAlert] = useState();
 
   useEffect(() => {
     async function fetchFoto() {
@@ -46,7 +50,6 @@ export default function CardClientesProcessos({ cliente }) {
     navigate(`/processos-advogado/${clienteId}/${processoId}`);
   };
 
-  const visibleProcessos = cliente.processos.slice(frame * frameSize, frame * frameSize + frameSize);
 
   return (
     <div className="bg-branco rounded-xl shadow px-4 py-4 flex flex-col gap-2 md:gap-0 md:flex-row items-start md:items-center">
@@ -63,19 +66,31 @@ export default function CardClientesProcessos({ cliente }) {
           className="w-16 h-16 rounded-full object-cover"
         />
 
-        <div>
-          <div className="text-preto font-semibold text-lg md:text-xl">{cliente.nome || cliente.nomeFantasia}</div>
-          {(cliente.ativo) === true ? (
+        <div className="min-w-0">
+          {/* Nome e nome fantasia sempre quebram linha se necessário */}
+          <div className="text-preto font-semibold text-lg md:text-xl break-words whitespace-pre-line">
+            {cliente.nome}
+          </div>
+          {cliente.nomeFantasia && (
+            <div className="text-preto font-semibold text-lg flex ">
+              {cliente.nomeFantasia}
+            </div>
+          )}
+          
+          {/* Email e telefone: email quebra linha no mobile */}
+            <div className="flex flex-col gap-1 text-xs md:text-sm text-gray-700 w-full">
+                          {(cliente.ativo) === true ? (
             <div className="text-dourado font-semibold text-sm md:text-base mt-1">Cliente Ativo</div>
           ) : (
             <div className="text-dourado font-semibold text-sm md:text-base mt-1">Cliente Inativo</div>
           )}
-          <div className="flex items-center gap-2 text-preto text-xs mt-1">
-            <FiMail className="inline" /> {cliente.email}
-          </div>
-          <div className="flex items-center gap-2 text-preto text-xs">
-            <FiPhone className="inline" /> {cliente.telefone}
-          </div>
+                           <p className="flex items-center gap-2 w-full whitespace-normal break-all">
+                               <FiMail className="text-base md:text-lg text-black shrink-0" /> {cliente.email}
+                           </p>
+                           <p className="flex items-center gap-2">
+                               <FiPhone className="text-base md:text-lg text-black shrink-0" /> {cliente.telefone}
+                           </p>
+                       </div>
         </div>
       </div>
 
@@ -88,25 +103,11 @@ export default function CardClientesProcessos({ cliente }) {
             )}
       
       <div className="flex-1 flex flex-col mt-4 md:mt-0 md:ml-8">
-        <div className="flex flex-col gap-2">
-          {/* Botão para subir (seta para cima) */}
-          {frame > 0 && (
-            <div className="flex justify-center mb-2">
-              <button
-                type="button"
-                onClick={handlePrevFrame}
-                className="flex justify-center items-center text-AzulEscuro hover:text-dourado transition-colors"
-                aria-label="Voltar processos"
-              >
-                <FiChevronUp size={28} />
-              </button>
-            </div>
-          )}
-          {/* Lista de processos */}
-          {visibleProcessos.map((processo) => (
+        <div className="flex flex-col gap-2 max-h-[9.5rem] pr-4 overflow-y-auto scrollbar-thin scrollbar-thumb-cinzaAzulado scrollbar-track-gray-200">
+          {processos.map((processo) => (
             <div
               key={processo.id}
-              onClick={() => parametrosVisualizarProcesso( cliente.id,processo.id)}
+              onClick={() => parametrosVisualizarProcesso(cliente.id, processo.id)}
               className="bg-cinzaAzulado rounded-lg px-4 py-2 flex items-center justify-between cursor-pointer hover:bg-opacity-80 transition-colors"
               style={{ minHeight: "2.5rem" }}
             >
@@ -116,19 +117,6 @@ export default function CardClientesProcessos({ cliente }) {
               <span className="text-AzulEscuro text-xl font-bold">{'>'}</span>
             </div>
           ))}
-          {/* Botão para descer (seta para baixo) */}
-          {frame < totalFrames - 1 && (
-            <div className="flex justify-center mt-2">
-              <button
-                type="button"
-                onClick={handleNextFrame}
-                className="flex justify-center items-center text-AzulEscuro hover:text-dourado transition-colors"
-                aria-label="Ver mais processos"
-              >
-                <FiChevronDown size={28} />
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>    
