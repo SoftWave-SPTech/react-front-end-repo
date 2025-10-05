@@ -26,7 +26,7 @@ const PesquisarProcessos = () => {
   const [role, setRole] = useState('');
   const [usuarioId, setUsuarioId] = useState('');
   const [filtroAberto, setFiltroAberto] = useState(null);
-  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+  const [alert, setAlert] = useState();
 
   useEffect(() => {
     const id = sessionStorage.getItem('id');
@@ -86,11 +86,14 @@ const PesquisarProcessos = () => {
       setClientes(response.data);
     } catch (error) {
       console.error('Erro ao buscar clientes:', error.status);
+      if (error.response?.data?.message?.includes("Nenhuma pesquisa encontrado")) {
+        setClientes([]);
+      }
       if(error.status >= 500){
-            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
-          }else{
-            setAlert({ show: true, message: error.response.data.message, type: "error" })
-          }
+        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+      }else{
+        setAlert({ show: true, message: error.response.data.message, type: "error" })
+      }
     } finally {
       setLoading(false);
     }
@@ -157,49 +160,29 @@ const PesquisarProcessos = () => {
     setFiltroAberto(filtroAberto === label ? null : label);
   };
 
-  const clientesFiltrados = clientes.filter(cliente => 
+  const clientesFiltrados = Array.isArray(clientes) ? clientes.filter(cliente => 
     (cliente.nome?.toLowerCase() || '').includes(busca.toLowerCase()) ||
     (cliente.nomeFantasia?.toLowerCase() || '').includes(busca.toLowerCase()) ||
     cliente.processos.some(processo => 
       (processo.numeroProcesso?.toLowerCase() || '').includes(busca.toLowerCase())
     )
-  );
+  ) : [];
 
-  return (
-    <LayoutBase backgroundClass="bg-cinzaAzulado">
-      <div className="relative flex flex-col lg:flex-row w-full h-full min-h-screen px-4 md:px-12 gap-6 md:gap-8">
-        {/* Conteúdo principal */}
-        <div className="flex-1 flex flex-col order-2 lg:order-1 w-full">
-          <div className="mb-6">
-            <BarraTitulo>Pesquisar Processos</BarraTitulo>
-          </div>
-
-          {alert && (
-            <AlertStyle
-              type={alert.type}
-              message={alert.message}
-              onClose={() => setAlert(null)}
-            />
-          )}
-
-          <div className="flex flex-col gap-6">
-            {loading ? (
-              <div className="text-center py-8">Carregando...</div>
-            ) : clientesFiltrados.length > 0 ? (
-              clientesFiltrados.map(cliente => (
-                <CardClientesProcessos key={cliente.id} cliente={cliente} />
-              ))
-            ) : filtroAtivo ? (
-              <div className="text-center py-8">Nenhum processo encontrado para o filtro aplicado</div>
-            ) : (
-              <div className="text-center py-8">Nenhum processo encontrado</div>
-            )}
-          </div>
+return (
+  <LayoutBase backgroundClass="bg-cinzaAzulado">
+         <div className="w-full mb-2">
+                     <BarraTitulo largura="full">Pesquisar Processos</BarraTitulo>
         </div>
+    <div className="relative flex flex-col lg:flex-row w-full h-full min-h-screen px-3 right-2 md:gap-8">
 
-        {/* Sidebar de filtros */}
-        <div className="flex flex-col w-full max-w-full lg:max-w-[14rem] mt-2 relative order-1 lg:order-2">
-          <div className="relative w-full mb-6">
+      {/* Conteúdo principal */}
+      <div className="flex-1 flex flex-col order-2 lg:order-1 w-full ">
+
+       
+
+        {/* Barra de pesquisa - MOBILE */}
+        <div className="block lg:hidden mb-4">
+          <div className="w-full max-w-lg mx-auto relative">
             <input
               type="text"
               placeholder="Filtrar por Cliente ou Processo..."
@@ -208,20 +191,95 @@ const PesquisarProcessos = () => {
                 setBusca(e.target.value);
                 handleBusca(e.target.value);
               }}
-              className="w-full rounded-md py-2 pl-4 pr-10 text-base bg-white text-preto focus:outline-none"
+              className="w-full rounded-md py-2 pl-4 pr-10 text-base bg-white text-preto focus:outline-none shadow"
             />
-            <span className="absolute right-3 top-2.5 text-preto opacity-60 pointer-events-none">
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-preto opacity-60 pointer-events-none">
               <svg width="1.25rem" height="1.25rem" fill="none" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/>
-                <path d="M20 20L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+                <path d="M20 20L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </span>
           </div>
+        </div>
+
+        {/* Filtros - MOBILE */}
+        {role !== 'ROLE_ADVOGADO' && (
+          <div className="block lg:hidden flex flex-col gap-4 mb-4 w-full max-w-lg mx-auto">
+            {filtros.map(filtro => (
+              <BotaoFiltros
+                key={filtro.label}
+                label={filtro.label}
+                onClick={(valor) => handleFiltro(filtro, valor)}
+                ativo={filtroAtivo?.label === filtro.label}
+                isOpen={filtroAberto === filtro.label}
+                onToggle={handleToggleFiltro}
+              />
+            ))}
+            {filtroAtivo && (
+              <div className="flex justify-center w-full">
+                <button
+                  className="text-s text-azulEscuro underline mt-2 hover:text-dourado transition-colors font-semibold"
+                  onClick={handleLimparFiltros}
+                  type="button"
+                >
+                  Limpar Filtros
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {alert && (
+          <AlertStyle
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert(null)}
+          />
+        )}
+
+        {/* Cards dos processos */}
+        <div className="flex flex-col gap-6">
+          {loading ? (
+            <div className="text-center py-8">Carregando...</div>
+          ) : clientesFiltrados.length > 0 ? (
+            clientesFiltrados.map(cliente => (
+              <CardClientesProcessos key={cliente.id} cliente={cliente} />
+            ))
+          ) : filtroAtivo ? (
+            <div className="text-center py-8">Nenhum processo encontrado para o filtro aplicado</div>
+          ) : (
+            <div className="text-center py-8">Nenhum processo encontrado</div>
+          )}
+        </div>
+      </div>
+
+      {/* 🔽 Sidebar de filtros (DESKTOP) - agora desce abaixo do título */}
+      <div className="hidden lg:flex flex-col w-full max-w-full lg:max-w-[18rem] relative order-1 lg:order-2 translate-y-2 left-6">
+        <div className="w-full flex flex-col gap-4">
+          <div className="relative w-full mb-4">
+            <input
+              type="text"
+              placeholder="Filtrar por Cliente ou Processo..."
+              value={busca}
+              onChange={(e) => {
+                setBusca(e.target.value);
+                handleBusca(e.target.value);
+              }}
+              className="w-full rounded-md py-2 pl-4 pr-10 text-base bg-white text-preto focus:outline-none shadow"
+            />
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-preto opacity-60 pointer-events-none">
+              <svg width="1.25rem" height="1.25rem" fill="none" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+                <path d="M20 20L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </span>
+          </div>
+
           {role !== 'ROLE_ADVOGADO' && (
             <div className="flex flex-col gap-4">
               {filtros.map(filtro => (
-                <BotaoFiltros 
-                  key={filtro.label} 
+                <BotaoFiltros
+                  key={filtro.label}
                   label={filtro.label}
                   onClick={(valor) => handleFiltro(filtro, valor)}
                   ativo={filtroAtivo?.label === filtro.label}
@@ -242,22 +300,12 @@ const PesquisarProcessos = () => {
               )}
             </div>
           )}
-          {/* Botão Voltar: fixo em telas grandes, fluido em mobile */}
-          <div className="w-full flex justify-end lg:justify-center mt-6 lg:mt-0">
-            <div className="w-full lg:w-auto lg:fixed lg:right-20 lg:bottom-8 z-50">
-              <Botao
-                cor="padrao"
-                tamanho='grande'
-                onClick={() => window.history.back()}
-              >
-                Voltar
-              </Botao>
-            </div>
-          </div>
         </div>
-      </div>
-    </LayoutBase>
-  );
+
+    </div>
+    </div>
+  </LayoutBase>
+);
 };
 
 export default PesquisarProcessos;
