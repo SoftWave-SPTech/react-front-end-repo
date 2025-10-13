@@ -48,9 +48,18 @@ export default function VisualizarDocumentosPessoais() {
     })
       .then(response => {
         console.log("Upload realizado com sucesso:", response.data);
-        setDocumentos((prev) => [...prev, response.data]);
-        fecharModal();
-        window.location.reload()
+        // Recarrega a lista de documentos após upload bem-sucedido
+        api.get(`/documentos-pessoais/usuario/${idUsuario}`, {
+          headers: { "Authorization": TOKEN }
+        })
+        .then(response => {
+          setDocumentos(response.data.reverse());
+          fecharModal();
+        })
+        .catch(error => {
+          console.error("Erro ao recarregar documentos:", error);
+          fecharModal(); // Fecha o modal mesmo se der erro ao recarregar
+        });
       })
       .catch(error => {
         console.error("Erro ao enviar o arquivo:", error);

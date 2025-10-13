@@ -31,10 +31,10 @@ const DocumentosList = ({ documentos = [] }) => {
           <div className="mt-auto flex flex-col items-center w-full">
             <small className="text-gray-400 mb-1">{doc.data}</small>
             <a
-              href={`http://localhost:8080/${doc.urlArquivo}`}
+              href={doc.urlArquivo}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full text-center border-2 border-[#0f1b3e] text-white bg-azulEscuroForte  rounded-lg font-bold py-2 transition-colors duration-200 hover:bg-[#1b2a4e] hover:text-dourado"
+              className="w-full text-center border-2 border-[#0f1b3e] text-white bg-azulEscuroForte rounded-lg font-bold py-2 transition-colors duration-200 hover:bg-[#1b2a4e] hover:text-dourado"
             >
               Visualizar
             </a>

@@ -2,7 +2,7 @@ import React from "react";
 import { FiFileText, FiTrash2, FiDownload } from 'react-icons/fi';
 import 'tailwindcss/tailwind.css';
 
-export default function CardDocumento({ doc, onExcluir }) {
+export default function CardDocumento({ doc, onExcluir, onVisualizar }) {
   function formatBytes(bytes) {
     if (!bytes) return "—";
     const sizes = ['B', 'KB', 'MB', 'GB'];
@@ -23,23 +23,20 @@ export default function CardDocumento({ doc, onExcluir }) {
         <p className="text-sm font-medium text-gray-800 truncate w-full">{doc.nomeArquivo}</p>
       </div>
       <div className="flex gap-3 mt-4 justify-center w-full">
-        <a
-          href={`http://localhost:8080/${doc.urlArquivo}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm text-blue-950 hover:underline flex items-center gap-1 justify-center"
+        <button
+          onClick={onVisualizar}
+          className="text-sm text-blue-950 hover:underline flex items-center gap-1 justify-center cursor-pointer"
         >
           Visualizar
-        </a>
-        <a
-          href={`http://localhost:8080/${doc.urlArquivo}`}
-          download
-          className="text-sm text-blue-950 hover:underline flex items-center gap-1 justify-center"
+        </button>
+        <button
+          onClick={onVisualizar}
+          className="text-sm text-blue-950 hover:underline flex items-center gap-1 justify-center cursor-pointer"
           title="Baixar documento"
         >
           <FiDownload />
           Baixar
-        </a>
+        </button>
       </div>
     </div>
   );
