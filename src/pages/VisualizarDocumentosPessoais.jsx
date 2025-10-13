@@ -11,67 +11,65 @@ export default function VisualizarDocumentosPessoais() {
   const [documentos, setDocumentos] = useState([]);
   const [modalAberto, setModalAberto] = useState(false);
   const [filtro, setFiltro] = useState('');
-  const [modalExcluir, setModalExcluir] = useState({ aberto: false, index: null });
+  const [modalExcluir, setModalExcluir] = useState({ aberto: false, index: null, id: null });
+
   const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
   const idUsuario = sessionStorage.getItem('id');
 
   const abrirModal = () => setModalAberto(true);
   const fecharModal = () => setModalAberto(false);
 
+  // 🔹 Buscar documentos do usuário
   useEffect(() => {
     api.get(`/documentos-pessoais/usuario/${idUsuario}`, {
-      headers: {
-        "Authorization": TOKEN
-      }
+      headers: { "Authorization": TOKEN }
     })
       .then(response => {
-        console.log("Consulta com sucesso:", response.data);
-        setDocumentos(response.data)
+        console.log("Documentos pessoais carregados:", response.data);
+        setDocumentos(response.data.reverse());
       })
       .catch(error => {
-        console.error("Erro ao enviar o arquivo:", error);
+        console.error("Erro ao listar documentos:", error);
       });
+  }, [idUsuario]);
 
-  }, []);
-
+  // 🔹 Upload de novo documento
   const adicionarDocumento = (novoDoc) => {
-    setDocumentos([...documentos, novoDoc]);
-
     const formData = new FormData();
     formData.append("nomeArquivo", novoDoc.nome);
     formData.append("documentoPessoal", novoDoc.file);
-    formData.append("idUsuario", idUsuario)
+    formData.append("idUsuario", idUsuario);
 
     api.post("/documentos-pessoais", formData, {
       headers: {
-        "Authorization": TOKEN
-      }
+        "Authorization": TOKEN,
+        "Content-Type": "multipart/form-data",
+      },
     })
       .then(response => {
         console.log("Upload realizado com sucesso:", response.data);
+        setDocumentos((prev) => [...prev, response.data]);
+        fecharModal();
         window.location.reload()
       })
       .catch(error => {
         console.error("Erro ao enviar o arquivo:", error);
       });
-
-    fecharModal();
   };
 
+  // 🔹 Exclusão de documento
   const excluirDocumento = () => {
     const novaLista = documentos.filter((_, i) => i !== modalExcluir.index);
     setDocumentos(novaLista);
 
     api.delete(`/documentos-pessoais/${modalExcluir.id}`, {
-      headers: {
-        "Authorization": TOKEN
-      }
+      headers: { "Authorization": TOKEN }
     })
-      .then(response => {
-        console.log("Documento Deletado com sucesso");
+      .then(() => {
+        console.log("Documento deletado com sucesso");
       })
       .catch(error => {
-        console.error("Erro ao enviar o arquivo:", error);
+        console.error("Erro ao deletar o documento:", error);
       });
 
     setModalExcluir({ aberto: false, index: null, id: null });
@@ -85,6 +83,20 @@ export default function VisualizarDocumentosPessoais() {
     setModalExcluir({ aberto: false, index: null, id: null });
   };
 
+  // 🔹 Visualizar documento (gera link de download temporário)
+  const visualizarDocumento = (id) => {
+    api.get(`/documentos-pessoais/${id}/download`, {
+      headers: { "Authorization": TOKEN },
+    })
+      .then(response => {
+        window.open(response.data, "_blank"); // Abre o link do S3
+      })
+      .catch(error => {
+        console.error("Erro ao gerar link de download:", error);
+      });
+  };
+
+  // 🔹 Filtro de pesquisa
   const documentosFiltrados = documentos.filter((doc) =>
     doc.nomeArquivo?.toLowerCase().includes(filtro.toLowerCase())
   );
@@ -92,8 +104,11 @@ export default function VisualizarDocumentosPessoais() {
   return (
     <LayoutBase backgroundClass="bg-cinzaAzulado">
       <div className="p-2 relative max-w-7xl mx-auto">
-        <BarraTitulo className="mb-6 text-lg sm:text-xl md:text-2xl">Meus documentos</BarraTitulo>
+        <BarraTitulo className="mb-6 text-lg sm:text-xl md:text-2xl">
+          Meus documentos
+        </BarraTitulo>
 
+        {/* Campo de busca */}
         <div className="flex justify-end mb-6">
           <div className="relative w-full max-w-xs">
             <input
@@ -101,7 +116,7 @@ export default function VisualizarDocumentosPessoais() {
               placeholder="Pesquisar documento..."
               value={filtro}
               onChange={(e) => setFiltro(e.target.value)}
-              className="pl-10 pr-4 py-2 w-full bg-[#ffffff] text-black placeholder-black text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              className="pl-10 pr-4 py-2 w-full bg-white text-black placeholder-black text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-black"
             />
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-black pointer-events-none">
               <svg
@@ -122,29 +137,32 @@ export default function VisualizarDocumentosPessoais() {
           </div>
         </div>
 
+        {/* Grid de documentos */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {documentosFiltrados.length === 0 ? (
-            <p className="text-gray-500 text-sm col-span-full">Nenhum documento encontrado.</p>
+            <p className="text-gray-500 text-sm col-span-full">
+              Nenhum documento encontrado.
+            </p>
           ) : (
             documentosFiltrados.map((doc, idx) => (
               <CardDocumento
                 key={doc.id}
                 doc={doc}
                 onExcluir={() => confirmarExclusao(doc.id, idx)}
+                onVisualizar={() => visualizarDocumento(doc.id)}
               />
             ))
           )}
         </div>
 
+        {/* Botão de adicionar */}
         <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50">
           <BotaoAdicionar onClick={abrirModal} />
         </div>
 
+        {/* Modais */}
         {modalAberto && (
-          <ModalUpload
-            onClose={fecharModal}
-            onUpload={adicionarDocumento}
-          />
+          <ModalUpload onClose={fecharModal} onUpload={adicionarDocumento} />
         )}
         {modalExcluir.aberto && (
           <ModalConfirmacao
