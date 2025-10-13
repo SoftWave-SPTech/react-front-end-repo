@@ -114,8 +114,8 @@ export default function VisualizarDocumentosPessoais() {
 
   return (
     <LayoutBase backgroundClass="bg-cinzaAzulado">
-      <div className="p-2 relative max-w-7xl mx-auto">
-        <BarraTitulo className="mb-6 text-lg sm:text-xl md:text-2xl">Meus documentos</BarraTitulo>
+      <div className="relative max-w-7xl mx-auto px-2 sm:px-4 md:px-8 py-2 min-h-[80vh] flex flex-col">
+        <BarraTitulo className="mb-4 text-lg sm:text-xl md:text-2xl">Meus documentos</BarraTitulo>
 
         {alert && alert.show && (
           <AlertStyle
@@ -125,14 +125,14 @@ export default function VisualizarDocumentosPessoais() {
           />
         )}
 
-        <div className="flex justify-end mb-6">
-          <div className="relative w-full max-w-xs">
+        <div className="flex flex-col sm:flex-row sm:justify-end mb-4 gap-2">
+          <div className="relative w-full sm:w-80 max-w-full">
             <input
               type="text"
               placeholder="Pesquisar documento..."
               value={filtro}
               onChange={(e) => setFiltro(e.target.value)}
-              className="pl-10 pr-4 py-2 w-full bg-[#ffffff] text-black placeholder-black text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              className="pl-10 pr-4 py-2 w-full bg-[#ffffff] text-black placeholder-black text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-black shadow-sm"
             />
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-black pointer-events-none">
               <svg
@@ -153,21 +153,23 @@ export default function VisualizarDocumentosPessoais() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {documentosFiltrados.length === 0 ? (
-            <p className="text-gray-500 text-sm col-span-full">Nenhum documento encontrado.</p>
-          ) : (
-            documentosFiltrados.map((doc, idx) => (
-              <CardDocumento
-                key={doc.id}
-                doc={doc}
-                onExcluir={() => confirmarExclusao(doc.id, idx)}
-              />
-            ))
-          )}
+        <div className="flex-1">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {documentosFiltrados.length === 0 ? (
+              <p className="text-gray-500 text-sm col-span-full">Nenhum documento encontrado.</p>
+            ) : (
+              documentosFiltrados.map((doc, idx) => (
+                <CardDocumento
+                  key={doc.id}
+                  doc={doc}
+                  onExcluir={() => confirmarExclusao(doc.id, idx)}
+                />
+              ))
+            )}
+          </div>
         </div>
 
-        <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50">
+        <div className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-50">
           <BotaoAdicionar onClick={abrirModal} />
         </div>
 
