@@ -13,14 +13,14 @@ const KpiValorCausas = ({ valorTotal }) => {
   }).format(numero);
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 bg-white border rounded-lg shadow-lg flex-1 h-[12rem]">
-      <div className="flex mb-4 items-baseline gap-2">
-        <span className="text-4xl font-medium text-dourado">R$</span>
-        <span className="text-6xl font-semibold text-dourado">
+    <div className="flex flex-col items-center justify-center p-3 md:p-4 bg-white border rounded-lg shadow-lg flex-1 h-auto md:h-[12rem] min-w-0">
+      <div className="flex mb-3 md:mb-4 items-baseline gap-1 md:gap-2 w-full justify-center overflow-hidden">
+        <span className="text-2xl md:text-4xl font-medium text-dourado">R$</span>
+        <span className="text-4xl md:text-6xl font-semibold text-dourado truncate max-w-[10ch] md:max-w-[16ch]">
           {valorFormatado.replace('R$', '').trim()}
         </span>
       </div>
-      <span className="text-xl font-semibold text-center font-quicksand">
+      <span className="text-base md:text-xl font-semibold text-center font-quicksand break-words w-full">
         Valor Total das Causas
       </span>
     </div>
