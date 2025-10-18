@@ -231,6 +231,7 @@ function FormPerfilCliente() {
       };
 
       const errosEncontrados = validarPerfilCliente(dadosParaValidar);
+      console.log(errosEncontrados);
 
       if (Object.keys(errosEncontrados).length > 0) {
         setErrors(errosEncontrados);
@@ -271,6 +272,7 @@ function FormPerfilCliente() {
       };
 
       const errosEncontrados = validarPerfilCliente(dadosParaValidar);
+      console.log(errosEncontrados);
 
       if (Object.keys(errosEncontrados).length > 0) {
         setErrors(errosEncontrados);

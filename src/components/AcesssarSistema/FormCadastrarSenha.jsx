@@ -8,7 +8,7 @@ export default function FormCadastrarSenha() {
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [errors, setErrors] = useState({});
-  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+  const [alert, setAlert] = useState();
 
   const validarFormulario = () => {
     const novosErros = {};
@@ -37,7 +37,7 @@ export default function FormCadastrarSenha() {
 
     try {
       const email = sessionStorage.getItem("email");
-      const response = await api.patch('/auth/cadastrar-senha', {
+      await api.patch('/auth/cadastrar-senha', {
         email: email,
         senha: senha,
         confirmaSenha: confirmarSenha,
@@ -71,7 +71,7 @@ export default function FormCadastrarSenha() {
           }, 1500);
         }
       } catch (loginError) {
-        console.error("Erro ao fazer login:", loginError.status);
+        console.error("Erro ao fazer login:", loginError);
         setAlert({
           type: "warning",
           message: "Senha cadastrada, mas houve um erro ao fazer login. Por favor, tente fazer login manualmente."
@@ -81,11 +81,11 @@ export default function FormCadastrarSenha() {
         }, 2000);
       }
     } catch (error) {
-      console.error("Erro ao atualizar usuários físicos:", error.status);
+      console.error("Erro ao atualizar:", error);
       if(error.status >= 500){
             setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
           }else{
-            setAlert({ show: true, message: error.response.data.message, type: "error" })
+            setAlert({ show: true, message: error.response.data.senha, type: "error" })
           }
     }
   };

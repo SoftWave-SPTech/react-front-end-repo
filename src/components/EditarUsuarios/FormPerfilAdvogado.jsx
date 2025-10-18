@@ -142,6 +142,7 @@ function FormPerfilAdvogado() {
             };
 
             const errosEncontrados = validarPerfilAdvogado(dadosParaValidar);
+            console.log(errosEncontrados);
 
             if (Object.keys(errosEncontrados).length > 0) {
                 setErrors(errosEncontrados);
@@ -185,6 +186,7 @@ function FormPerfilAdvogado() {
             };
 
             const errosEncontrados = validarPerfilAdvogado(dadosParaValidar);
+            console.log(errosEncontrados);
 
             if (Object.keys(errosEncontrados).length > 0) {
                 setErrors(errosEncontrados);
