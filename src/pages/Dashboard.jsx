@@ -14,7 +14,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dadosDashboard, setDadosDashboard] = useState(null);
-  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+  const [alert, setAlert] = useState();
 
   const fetchDados = () => {
     const token = sessionStorage.getItem('token');

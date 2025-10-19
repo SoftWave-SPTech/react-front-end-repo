@@ -17,7 +17,7 @@ export default function VisualizarDocumentosProcesso() {
   const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
   const { idProcesso } = useParams();
   const navigate = useNavigate();
-  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+  const [alert, setAlert] = useState();
 
   const abrirModal = () => setModalAberto(true);
   const fecharModal = () => setModalAberto(false);
