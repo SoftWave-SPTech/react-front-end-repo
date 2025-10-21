@@ -139,18 +139,17 @@ const visualizarDocumento = (id) => {
         </div>
 
         {/* Grid de documentos */}
-        <div className="flex flex-wrap gap-4 sm:gap-6 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 w-full">
           {documentosFiltrados.length === 0 ? (
             <p className="text-gray-500 text-sm col-span-full">Nenhum documento encontrado.</p>
           ) : (
             documentosFiltrados.map((doc, idx) => (
-              <div key={doc.id} className="flex-1 min-w-[220px] max-w-full">
-                <CardDocumento
-                  doc={doc}
-                  onExcluir={() => confirmarExclusao(doc.id, idx)}
-                  onVisualizar={() => visualizarDocumento(doc.id)}
-                />
-              </div>
+              <CardDocumento
+                key={doc.id}
+                doc={doc}
+                onExcluir={() => confirmarExclusao(doc.id, idx)}
+                onVisualizar={() => visualizarDocumento(doc.id)}
+              />
             ))
           )}
         </div>

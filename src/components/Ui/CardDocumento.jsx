@@ -11,7 +11,7 @@ export default function CardDocumento({ doc, onExcluir, onVisualizar }) {
   }
 
   return (
-    <div className="w-72 min-h-56 h-full bg-white rounded-md shadow-md p-4 flex flex-col items-center justify-center text-center relative">
+    <div className="w-full min-h-56 h-full bg-white rounded-md shadow-md p-4 flex flex-col items-center justify-center text-center relative">
       <button
         className="absolute top-2 right-2 text-red-500 hover:text-red-700"
         onClick={onExcluir}

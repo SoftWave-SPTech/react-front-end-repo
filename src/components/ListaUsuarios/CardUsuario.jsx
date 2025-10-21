@@ -39,7 +39,7 @@ export default function CardUsuario(props) {
                 <div className="flex gap-4 items-center">
                     <div className="flex items-center justify-center w-14 h-14 md:w-20 md:h-20 rounded-full overflow-hidden bg-gray-100 shrink-0">
                         <img
-                            src={props.imageUser ? `http://localhost:8080/${props.imageUser}` : boneco}
+                            src={props.imageUser && props.imageUser !== "null" ? props.imageUser : boneco}
                             alt="Foto do usuário"
                             className="object-cover w-full h-full"
                         />

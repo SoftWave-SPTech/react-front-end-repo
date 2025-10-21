@@ -39,7 +39,7 @@ const VisualizarProcessosAdvogado = () => {
       .then(response => {
         console.log("Consulta com sucesso:", response.data);
         if (response.data.foto != null) {
-          setFotoPerfil("http://localhost:8080/" + response.data.foto);
+          setFotoPerfil(response.data.foto);
         }
         // Adiciona número de telefone de teste se não houver telefone
         setDadosUsuario({

@@ -60,7 +60,12 @@ export default function FormCadastrarSenha() {
           sessionStorage.setItem("tipoUsuario", loginResponse.data.tipoUsuario);
           sessionStorage.setItem("role", loginResponse.data.role);
           sessionStorage.setItem("nome", loginResponse.data.nome);
-          sessionStorage.setItem("fotoPerfil", "http://localhost:8080/" + loginResponse.data.foto);
+          // Salva a foto diretamente (já vem como URL pré-assinada do S3 ou null)
+          if (loginResponse.data.foto) {
+              sessionStorage.setItem("fotoPerfil", loginResponse.data.foto);
+          } else {
+              sessionStorage.removeItem("fotoPerfil");
+          }
 
           setTimeout(() => {
             if (loginResponse.data.tipoUsuario === 'UsuarioFisico' || loginResponse.data.tipoUsuario === 'UsuarioJuridico') {

@@ -96,7 +96,13 @@ const MenuLateral = () => {
               transition-all duration-300 hover:border-[#D9B166] hover:text-[#D9B166] text-white no-underline"
             >
               <img
-                src={usuario.fotoPerfil !== "http://localhost:8080/null" ? usuario.fotoPerfil : "/src/assets/images/boneco.png"}
+                src={(() => {
+                  const fotoUrl = usuario.fotoPerfil;
+                  if (fotoUrl && fotoUrl !== "http://localhost:8080/null") {
+                    return fotoUrl;
+                  }
+                  return "/src/assets/images/boneco.png";
+                })()}
                 alt="Foto de perfil"
                 className="w-12 h-12 rounded-full object-cover border border-white"
               />
