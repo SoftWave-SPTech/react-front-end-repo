@@ -4,6 +4,7 @@ import BlocoInformativo from "../Ui/BlocoInformativo";
 import BarraTitulo from "../../components/Ui/BarraTitulo";
 import ModalComentario from "../Ui/ModalComentario";
 import { api } from "../../service/api";
+import { apiGemini } from "../../service/api";
 import { useParams } from "react-router-dom";
 import { formatarData } from "../../Utils/mascaras";
 import Botao from "../Ui/Botao";
@@ -27,7 +28,7 @@ export default function AnaliseMovimentacao() {
   const [movimentacaoData, setMovimentacaoData] = useState("");
 
   useEffect(() => {
-    api.get(`/analise-processo/por-movimentacao/${movimentacaoId}`, {
+    apiGemini.get(`/analise-processo/por-movimentacao/${movimentacaoId}`, {
       headers: { Authorization: TOKEN }
     }).then((response) => {
       console.log("Análise e movimentação recebidas:" , response.data);
