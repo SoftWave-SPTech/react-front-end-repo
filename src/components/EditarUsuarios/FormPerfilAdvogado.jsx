@@ -83,11 +83,12 @@ function FormPerfilAdvogado() {
                     criarAtualizarFisicos(dados)
                 })
                 .catch((erro) => {
-                    console.log(erro)
-                    setAlert({
-                        type: "error",
-                        message: erro.response?.data?.message || 'Erro ao buscar dados do advogado físico'
-                    });
+                    console.error("Erro ao buscar advogados fisicos:", erro.status);
+                    if(erro.status >= 500){
+                        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                    }else{
+                        setAlert({ show: true, message: erro.response.data.message, type: "error" })
+                    }
                 })
 
         } else if (sessionStorage.getItem('tipoUsuario') == "AdvogadoJuridico") {
@@ -120,11 +121,12 @@ function FormPerfilAdvogado() {
 
                 })
                 .catch((erro) => {
-                    console.log(erro)
-                    setAlert({
-                        type: "error",
-                        message: erro.response?.data?.message || 'Erro ao buscar dados do advogado jurídico'
-                    });
+                    console.error("Erro ao buscar advogado juridico:", erro.status);
+                    if(erro.status >= 500){
+                        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                    }else{
+                        setAlert({ show: true, message: erro.response.data.message, type: "error" })
+                    }
                 })
         }
     }, []);
@@ -140,6 +142,7 @@ function FormPerfilAdvogado() {
             };
 
             const errosEncontrados = validarPerfilAdvogado(dadosParaValidar);
+            console.log(errosEncontrados);
 
             if (Object.keys(errosEncontrados).length > 0) {
                 setErrors(errosEncontrados);
@@ -165,10 +168,12 @@ function FormPerfilAdvogado() {
                     setTimeout(() => window.location.reload(), 1500);
                 })
                 .catch((erro) => {
-                    setAlert({
-                        type: "error",
-                        message: erro.response?.data?.message || 'Erro ao atualizar dados do advogado físico'
-                    });
+                    console.error("Erro ao atualizar advogados fisicos:", erro.status);
+                    if(erro.status >= 500){
+                        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                    }else{
+                        setAlert({ show: true, message: erro.response.data.message, type: "error" })
+                    }
                 })
 
         } else if (sessionStorage.getItem('tipoUsuario') == "AdvogadoJuridico") {
@@ -181,6 +186,7 @@ function FormPerfilAdvogado() {
             };
 
             const errosEncontrados = validarPerfilAdvogado(dadosParaValidar);
+            console.log(errosEncontrados);
 
             if (Object.keys(errosEncontrados).length > 0) {
                 setErrors(errosEncontrados);
@@ -206,11 +212,13 @@ function FormPerfilAdvogado() {
                     setTimeout(() => window.location.reload(), 1500);
                 })
                 .catch((erro) => {
-                    setAlert({
-                        type: "error",
-                        message: erro.response?.data?.message || 'Erro ao atualizar dados do advogado jurídico'
-                    });
-                })
+                    console.error("Erro ao atualizar advogados juridicos:", erro.status);
+                    if(erro.status >= 500){
+                        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                    }else{
+                        setAlert({ show: true, message: erro.response.data.message, type: "error" })
+                    }
+                }) 
         }
     }
 
@@ -313,10 +321,12 @@ function FormPerfilAdvogado() {
                     setTimeout(() => window.location.reload(), 1500);
                 })
                 .catch(error => {
-                    setAlert({
-                        type: "error",
-                        message: error.response?.data?.message || "Erro ao enviar o arquivo"
-                    });
+                    console.error("Erro ao atualizar a foto:", error.status);
+                    if(error.status >= 500){
+                        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                    }else{
+                        setAlert({ show: true, message: error.response.data.message, type: "error" })
+                    }
                 });
         }
     }
@@ -336,10 +346,12 @@ function FormPerfilAdvogado() {
                 setTimeout(() => window.location.reload(), 1500);
             })
             .catch(error => {
-                setAlert({
-                    type: "error",
-                    message: error.response?.data?.message || "Erro ao remover a foto"
-                });
+                console.error("Erro ao buscar análise e movimentação:", error.status);
+                if(error.status >= 500){
+                    setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                }else{
+                    setAlert({ show: true, message: error.response.data.message, type: "error" })
+                }
             });
     }
 

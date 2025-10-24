@@ -5,6 +5,7 @@ import CardUsuario from "../components/ListaUsuarios/CardUsuario";
 import { api } from "../service/api";
 import BarraTitulo from "../components/Ui/BarraTitulo";
 import ModalReenvioTokenPrimeiroAcesso from "../components/Ui/ModalReenvioTokenPrimeiroAcesso";
+import AlertStyle from '../components/Ui/AlertStyle';
 
 export default function ListaUsuarios() {
     const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
@@ -13,23 +14,36 @@ export default function ListaUsuarios() {
     const [isModalReenvioOpen, setIsModalReenvioOpen] = useState(false);
     const [emailSelecionado, setEmailSelecionado] = useState("");
     const [reenviando, setReenviando] = useState(false);
+    const [alert, setAlert] = useState();
+    
+    // Estados para paginação
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const itemsPerPage = 6; // Número de itens por página
 
     useEffect(() => {
-        api.get('/usuarios/listar-usarios-e-procesos',
-            // {
-            // headers: {
-            //   "Authorization":  TOKEN
-            // }
-            // }
-        )
-            .then(response => {
-                console.log("Consulta com sucesso:", response.data);
-                setListaUsuarios(response.data);
-            })
-            .catch(error => {
-                console.error("Erro ao enviar o arquivo:", error);
+        fetchUsuarios(currentPage);
+    }, [currentPage]);
+
+    const fetchUsuarios = async (page) => {
+        try {
+            const response = await api.get(`/usuarios/listar-usuarios-e-processos?page=${page}&size=${itemsPerPage}`, {
+                headers: {
+                    "Authorization": TOKEN
+                }
             });
-    }, []);
+            console.log("Consulta com sucesso:", response.data);
+            setListaUsuarios(response.data.content); // Assumindo que a resposta tem a estrutura content
+            setTotalPages(response.data.totalPages); // Total de páginas
+        } catch (error) {
+            console.error("Erro ao buscar usuários e processos:", error.status);
+            if (error.status >= 500) {
+                setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" });
+            } else {
+                setAlert({ show: true, message: error.response.data.message, type: "error" });
+            }
+        }
+    };
 
     // Filtra os usuários de acordo com o nome digitado
     const usuariosFiltrados = listaUsuarios.filter((usuario) => {
@@ -49,7 +63,7 @@ export default function ListaUsuarios() {
     const handleReenviar = async (novoEmail) => {
         try {
             setReenviando(true);
-            await api.put(`/usuarios/editar-email/${emailSelecionado}/${novoEmail}`,{
+            await api.put(`/usuarios/editar-email/${emailSelecionado}/${novoEmail}`, {
                 headers: {
                     "Authorization": TOKEN
                 }
@@ -58,19 +72,37 @@ export default function ListaUsuarios() {
             setIsModalReenvioOpen(false);
         } catch (error) {
             console.error('Erro ao reenviar token:', error);
-            alert(error.response.data.message);
+            if (error.status >= 500) {
+                setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" });
+            } else {
+                setAlert({ show: true, message: error.response.data.message, type: "error" });
+            }
         } finally {
             setReenviando(false);
         }
     };
 
+    // Função para mudar de página
+    const handlePageChange = (newPage) => {
+        if (newPage >= 0 && newPage < totalPages) {
+            setCurrentPage(newPage);
+        }
+    };
+
     return (
         <LayoutBase backgroundClass="bg-cinzaAzulado">
-            {/* Barra de título responsiva */}
             <div className="w-full mb-2 px-2">
                 <BarraTitulo largura="full">Pesquisar Usuários</BarraTitulo>
             </div>
-            {/* Input de busca centralizado e responsivo */}
+
+            {alert && (
+                <AlertStyle
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
+            )}
+
             <div className="flex justify-end mb-6 px-2">
                 <div className="relative w-full max-w-xs ">
                     <input
@@ -86,7 +118,6 @@ export default function ListaUsuarios() {
                 </div>
             </div>
 
-            {/* Cards responsivos */}
             <div className="w-full flex flex-col gap-2 mt-4 px-2">
                 {
                     usuariosFiltrados.length > 0 ? (
@@ -111,6 +142,33 @@ export default function ListaUsuarios() {
                         <div className="text-center text-gray-500">Nenhum usuário encontrado.</div>
                     )
                 }
+            </div>
+
+            {/* Paginação */}
+            <div className="flex justify-center mt-6">
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 0}
+                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded disabled:opacity-50"
+                >
+                    Anterior
+                </button>
+                {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => handlePageChange(index)}
+                        className={`px-4 py-2 ${currentPage === index ? 'bg-AzulEscuro text-white' : 'bg-gray-200 text-AzulEscuro'} rounded mx-1`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+                <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages - 1}
+                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded disabled:opacity-50"
+                >
+                    Próxima
+                </button>
             </div>
 
             <ModalReenvioTokenPrimeiroAcesso

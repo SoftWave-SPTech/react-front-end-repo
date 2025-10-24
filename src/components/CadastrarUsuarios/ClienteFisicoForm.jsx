@@ -81,7 +81,7 @@ export default function ClienteFisicoForm() {
     })
     .then(async () => {
         try {
-          await EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
+          await EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email, setAlert);
           showAlert('success', 'Cadastro realizado com sucesso!');
         } catch (emailError) {
           console.error('Erro ao enviar email:', emailError);
@@ -103,21 +103,11 @@ export default function ClienteFisicoForm() {
         });
     })
     .catch((err) => {
-        console.error(err);
         if (err.response?.data) {
-          const erros = err.response.data;
-          let mensagem = "";
-          Object.keys(erros).forEach(campo => {
-            if(campo === "message" && campo) {
-                mensagem = erros[campo] ;
-              } else if (campo === "status") {
-                if (erros[campo] === 500){
-                  mensagem = "Já existe um cliente cadastrado com esses dados. Por favor, verifique os dados e tente novamente.";
-                }
-              }
-          });
-          showAlert('error', mensagem);
+          console.error("Erro ao cadastrar cliente fisico:", err.status);
+          setAlert({ show: true, message: err.response.data.message, type: "error" })
         } else {
+          console.error("Erro ao cadastrar cliente fisco:", err.status);
           showAlert('error', 'Erro ao cadastrar cliente. Por favor, tente novamente.');
         }
       });

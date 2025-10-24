@@ -88,7 +88,7 @@ export default function AdvogadoJuridicoForm() {
     .then(async () => 
     {
       try {
-        await EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
+        await EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email , setAlert);
         showAlert('success', 'Cadastro realizado com sucesso!');
       } catch (emailError) {
         console.error('Erro ao enviar email:', emailError);
@@ -111,20 +111,9 @@ export default function AdvogadoJuridicoForm() {
       });
     })
     .catch((err) => {
-      console.error(err);
+      console.error("Erro ao cadastraradvogado juridco:", err.status);
       if (err.response?.data) {
-        const erros = err.response.data;
-        let mensagem = "";
-          Object.keys(erros).forEach(campo => {
-            if(campo === "message" && campo) {
-                mensagem = erros[campo] ;
-              } else if (campo === "status") {
-                if (erros[campo] === 500){
-                  mensagem = "Já existe um advogado cadastrado com esses dados. Por favor, verifique os dados e tente novamente.";
-                }
-              }
-          });
-          showAlert('error', mensagem);
+        setAlert({ show: true, message: err.response.data.message, type: "error" })
       } else {
         showAlert('error', 'Erro ao cadastrar advogado. Por favor, tente novamente.');
       }

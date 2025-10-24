@@ -9,7 +9,7 @@ export default function FormLogin() {
     const [email, setEmail] = useState("");
     const [senha, setsenha] = useState("");
     const [errors, setErrors] = useState({});
-    const [alert, setAlert] = useState({ show: false, message: '', type: 'error' }); // Novo estado para alertas
+    const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
     const validarFormulario = () => {
         const novosErros = {};
@@ -62,9 +62,9 @@ export default function FormLogin() {
                 }
 
                 setTimeout(() => {
-                    if (response.data.role == "ROLE_USUARIO") {
+                    if (response.data.role === "ROLE_USUARIO") {
                         window.location.href = "/perfil-cliente";
-                    } else if(response.data.role == "ROLE_ADMIN") {
+                    } else if(response.data.role === "ROLE_ADMIN") {
                         window.location.href = "/dashboard";
                     } else {
                         window.location.href = "/perfil-advogado";
@@ -74,19 +74,20 @@ export default function FormLogin() {
         } catch (error) {
             console.error("Erro ao fazer login:", error);
 
-            if (error.response?.status === 401) {
+            if (error.response?.status === 401) {   
                 setAlert({ show: true, message: "Email ou senha incorretos. Por favor, verifique suas credenciais.", type: "error" });
             } else if (error.response?.status === 400) {
-                const mensagensErro = error.response.data;
+                const mensagensErro = error.response.data.message;
                 if (typeof mensagensErro === 'object') {
-                    // Mostra o primeiro erro encontrado
                     const primeiraMensagem = Object.values(mensagensErro)[0];
                     setAlert({ show: true, message: primeiraMensagem, type: "error" });
                 } else {
                     setAlert({ show: true, message: mensagensErro || "Dados inválidos. Por favor, verifique as informações.", type: "error" });
                 }
+            } else if (error.response?.status >= 500) {
+                setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" });
             } else {
-                setAlert({ show: true, message: "Ocorreu um erro ao tentar fazer login. Por favor, tente novamente mais tarde.", type: "error" });
+                setAlert({ show: true, message: error.response?.data?.message || "Ocorreu um erro ao tentar fazer login. Por favor, tente novamente mais tarde.", type: "error" });
             }
         }
     };

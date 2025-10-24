@@ -46,8 +46,8 @@ const FormRedefinirSenha = () => {
                 navigate("/esqueci-senha");
             }, 2000);
         } catch (error) {
-            console.error("Erro ao solicitar redefinição de senha:", error);
-
+            console.error("Erro ao solicitar redefinição de senha:", error.staus);
+            
             if (error.response?.status === 404) {
                 setAlert({
                     type: "error",
@@ -72,7 +72,7 @@ const FormRedefinirSenha = () => {
             } else {
                 setAlert({
                     type: "error",
-                    message: "Ocorreu um erro ao tentar enviar o email. Por favor, tente novamente mais tarde.",
+                    message: error.response?.data?.message ||"Ocorreu um erro ao tentar enviar o email. Por favor, tente novamente mais tarde.",
                     onClose: () => setAlert(null)
                 });
             }

@@ -6,6 +6,7 @@ import ModalUpload from '../components/Ui/ModalUpload';
 import CardDocumento from '../components/Ui/CardDocumento';
 import ModalConfirmacao from '../components/Ui/ModalConfirmacao';
 import { api } from '../service/api';
+import AlertStyle from '../components/Ui/AlertStyle';
 
 export default function VisualizarDocumentosPessoais() {
   const [documentos, setDocumentos] = useState([]);
@@ -62,7 +63,16 @@ export default function VisualizarDocumentosPessoais() {
         });
       })
       .catch(error => {
-        console.error("Erro ao enviar o arquivo:", error);
+        console.error("Erro ao enviar o arquivo:", error.status);
+        if (error.status >= 500) {
+          setAlert({
+            show: true,
+            message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!",
+            type: "error"
+          });
+        } else {
+          setAlert({ show: true, message: error.response.data.message, type: "error" });
+        }
       });
   };
 
@@ -173,6 +183,7 @@ export default function VisualizarDocumentosPessoais() {
         {modalAberto && (
           <ModalUpload onClose={fecharModal} onUpload={adicionarDocumento} />
         )}
+
         {modalExcluir.aberto && (
           <ModalConfirmacao
             titulo="Excluir Documento"

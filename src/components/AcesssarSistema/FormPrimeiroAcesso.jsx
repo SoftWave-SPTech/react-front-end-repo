@@ -46,7 +46,7 @@ export default function FormPrimeiroAcesso() {
                 window.location.href = "/cadastrar-senha";
             }, 1500);
         } catch (error) {
-            console.error("Erro ao realizar o acesso:", error);
+            console.error("Erro ao realizar o acesso:", error.status);
 
             if (error.response?.status === 404) {
                 setAlert({

@@ -5,20 +5,17 @@ import ItemListaProcesso from '../components/CadastrarProcessos/ItemListaProcess
 import BarraTitulo from '../components/Ui/BarraTitulo';
 
 const CadastrarProcesso = () => {
-  // Estado para edição inline
   const [processoEditando, setProcessoEditando] = useState(null);
-  // Flag para forçar a lista a refazer o fetch após salvar/excluir/editar
   const [reloadKey, setReloadKey] = useState(0);
 
   const handleEdit = (proc) => {
     setProcessoEditando(proc);
-    // sobe a tela pro form
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSalvo = () => {
     setProcessoEditando(null);
-    setReloadKey((k) => k + 1); // força refetch na lista
+    setReloadKey((k) => k + 1);
   };
 
   const handleCancelarEdicao = () => setProcessoEditando(null);
@@ -27,20 +24,68 @@ const CadastrarProcesso = () => {
     <LayoutBase backgroundClass="bg-cinzaAzulado">
       <BarraTitulo>Cadastrar Processos</BarraTitulo>
 
-      <div className="flex flex-col lg:flex-row justify-center items-start gap-8 lg:gap-20 w-full max-w-[1920px] mx-auto px-6 lg:px-12 py-6" style={{ minHeight: 600 }}>
-        <div className="flex justify-center items-start w-full max-w-[500px] lg:max-w-[500px] mb-8 lg:mb-0">
-          <FormularioCadastrarProcesso
-            processoEditando={processoEditando}
-            onSalvo={handleSalvo}
-            onCancelarEdicao={handleCancelarEdicao}
-          />
+      <div
+        className="
+          flex flex-col lg:flex-row 
+          justify-center items-stretch 
+          gap-8 lg:gap-12 
+          w-full max-w-screen-xl mx-auto 
+          px-4 sm:px-6 lg:px-12 py-6
+          min-h-[600px]
+        "
+      >
+        {/* Formulário */}
+        <div
+          className="
+            w-full lg:w-1/2 
+            flex justify-center items-start 
+            mb-8 lg:mb-0
+            order-1 lg:order-none
+          "
+        >
+          <div
+            className="
+              w-full 
+              max-w-md 
+              bg-white 
+              shadow-md 
+              rounded-lg 
+              p-4 sm:p-6 
+              transition-all duration-300 
+              hover:shadow-lg
+            "
+          >
+            <FormularioCadastrarProcesso
+              processoEditando={processoEditando}
+              onSalvo={handleSalvo}
+              onCancelarEdicao={handleCancelarEdicao}
+            />
+          </div>
         </div>
 
-        <div className="flex justify-center items-start w-full max-w-[600px] lg:max-w-[600px]">
-          <ItemListaProcesso
-            onEdit={handleEdit}
-            reloadKey={reloadKey}
-          />
+        {/* Lista de processos */}
+        <div
+          className="
+            w-full lg:w-1/2 
+            flex justify-center items-start
+          "
+        >
+          <div
+            className="
+              w-full 
+              max-w-xl 
+              bg-white 
+              shadow-md 
+              rounded-lg 
+              p-4 sm:p-6 
+              overflow-y-auto 
+              max-h-[80vh] 
+              transition-all duration-300 
+              hover:shadow-lg
+            "
+          >
+            <ItemListaProcesso onEdit={handleEdit} reloadKey={reloadKey} />
+          </div>
         </div>
       </div>
     </LayoutBase>

@@ -14,11 +14,10 @@ import {
 } from "react-icons/fi";
 import { jwtDecode } from "jwt-decode";
 
-const token = sessionStorage.getItem("token") || ""
-console.log("Token:", token);
+const token = sessionStorage.getItem("token") || "";
 let decoded = "";
 if (token) {
- decoded = jwtDecode(token);
+  decoded = jwtDecode(token);
 }
 
 const MenuLateral = () => {
@@ -26,13 +25,25 @@ const MenuLateral = () => {
     const larguraSalva = sessionStorage.getItem("larguraMenu");
     return larguraSalva === "70";
   });
+  const [isTablet, setIsTablet] = useState(window.innerWidth < 1024);
 
   const alternarMenu = () => {
     const novoEstado = !fechado;
     setFechado(novoEstado);
-    const largura = novoEstado ? 70 : window.innerWidth * 0.22;
+    const largura = novoEstado
+      ? 70
+      : isTablet
+      ? window.innerWidth
+      : window.innerWidth * 0.22;
     sessionStorage.setItem("larguraMenu", largura.toString());
   };
+
+  useEffect(() => {
+    const handleResize = () => setIsTablet(window.innerWidth < 1024);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const usuario = {
     id: sessionStorage.getItem("id"),
     email: sessionStorage.getItem("email"),
@@ -61,28 +72,86 @@ const MenuLateral = () => {
     role === "ROLE_USUARIO" ? "/perfil-cliente" : "/perfil-advogado";
 
   const itensMenu = [
-    { rotulo: "Perfil", icone: <FiUser />, rota: rotaPerfil, esconderSeAberto: true, roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Dashboard", icone: <FiBarChart2 />, rota: "/dashboard", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Meus processos", icone: <FiCalendar />, rota: "/processos-cliente", roles: ["ROLE_USUARIO"] },
-    { rotulo: "Pesquisar processos", icone: <FiSearch />, rota: "/pesquisar-processos", roles: ["ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Cadastrar processos", icone: <FiFileText />, rota: "/cadastrar-processos", roles: ["ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Pesquisar usuários", icone: <FiUser />, rota: "/lista-usuarios", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Cadastrar usuários", icone: <FiUserPlus />, rota: "/cadastrar-usuario", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Documentos pessoais", icone: <FiFileText />, rota: "/documentos-pessoais", roles: ["ROLE_USUARIO"] },
-    { rotulo: "Área financeira", icone: <FiDollarSign />, rota: "/registro-pagamentos", roles: ["ROLE_ADMIN", "ROLE_DONO"] },
-    { rotulo: "Podcast", icone: <FiMic />, rota: "/podcast", roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"] },
+    {
+      rotulo: "Perfil",
+      icone: <FiUser />,
+      rota: rotaPerfil,
+      esconderSeAberto: true,
+      roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"],
+    },
+    {
+      rotulo: "Dashboard",
+      icone: <FiBarChart2 />,
+      rota: "/dashboard",
+      roles: ["ROLE_ADMIN", "ROLE_DONO"],
+    },
+    {
+      rotulo: "Meus processos",
+      icone: <FiCalendar />,
+      rota: "/processos-cliente",
+      roles: ["ROLE_USUARIO"],
+    },
+    {
+      rotulo: "Cadastrar usuários",
+      icone: <FiUserPlus />,
+      rota: "/cadastrar-usuario",
+      roles: ["ROLE_ADMIN", "ROLE_DONO"],
+    },
+    {
+      rotulo: "Pesquisar usuários",
+      icone: <FiUser />,
+      rota: "/lista-usuarios",
+      roles: ["ROLE_ADMIN", "ROLE_DONO"],
+    },
+    {
+      rotulo: "Cadastrar processos",
+      icone: <FiFileText />,
+      rota: "/cadastrar-processos",
+      roles: ["ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"],
+    },
+    {
+      rotulo: "Pesquisar processos",
+      icone: <FiSearch />,
+      rota: "/pesquisar-processos",
+      roles: ["ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"],
+    },
+    {
+      rotulo: "Documentos pessoais",
+      icone: <FiFileText />,
+      rota: "/documentos-pessoais",
+      roles: ["ROLE_USUARIO"],
+    },
+    {
+      rotulo: "Área financeira",
+      icone: <FiDollarSign />,
+      rota: "/registro-pagamentos",
+      roles: ["ROLE_ADMIN", "ROLE_DONO"],
+    },
+    {
+      rotulo: "Podcast",
+      icone: <FiMic />,
+      rota: "/podcast",
+      roles: ["ROLE_USUARIO", "ROLE_ADVOGADO", "ROLE_ADMIN", "ROLE_DONO"],
+    },
   ];
 
   return (
     <div
-      className={`menu-lateral sticky top-0 h-screen flex-shrink-0 flex flex-col justify-between
-      bg-[#050e26] text-white overflow-y-auto transition-all duration-300
-      ${fechado ? "w-[70px]" : "w-[clamp(220px,18%,280px)]"}`}
+      className={`menu-lateral sticky top-0 h-screen flex flex-col justify-between
+      bg-[#050e26] text-white transition-all duration-300
+      ${
+        fechado
+          ? "w-[70px]"
+          : isTablet
+          ? "w-full"
+          : "w-[clamp(220px,18%,280px)]"
+      }`}
     >
       <div>
         <div
-          className={`flex items-center ${fechado ? "justify-center mb-6" : "justify-end mb-4"} 
-          cursor-pointer px-3 pt-4 hover:text-[#D9B166]`}
+          className={`flex items-center ${
+            fechado ? "justify-center mb-6" : "justify-end mb-4"
+          } cursor-pointer px-3 pt-4 hover:text-[#D9B166]`}
           onClick={alternarMenu}
         >
           <FiMenu className="text-[1.4rem]" />
@@ -132,9 +201,19 @@ const MenuLateral = () => {
               <li key={item.rotulo}>
                 <Link
                   to={item.rota}
+                  onClick={() => {
+                    if (window.innerWidth < 1024) {
+                      setFechado(true);
+                      sessionStorage.setItem("larguraMenu", "70");
+                    }
+                  }}
                   className={`flex items-center py-2 rounded-md
                   text-[clamp(0.9rem,1.2vw,1.1rem)] transition-colors
-                  ${fechado ? "justify-center px-2" : "justify-start px-3 gap-2"}
+                  ${
+                    fechado
+                      ? "justify-center px-2"
+                      : "justify-start px-3 gap-2"
+                  }
                   hover:text-[#D9B166] hover:bg-[#0F2A5E]`}
                 >
                   <span className="text-[1.3rem]">{item.icone}</span>
