@@ -14,7 +14,7 @@ export default function ListaUsuarios() {
     const [isModalReenvioOpen, setIsModalReenvioOpen] = useState(false);
     const [emailSelecionado, setEmailSelecionado] = useState("");
     const [reenviando, setReenviando] = useState(false);
-    const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+    const [alert, setAlert] = useState();
     
 
     useEffect(() => {

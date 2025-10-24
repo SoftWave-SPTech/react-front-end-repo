@@ -9,7 +9,7 @@ const CatalogoVideos = () => {
     const [videos, setVideos] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const VISIBLE_COUNT = 3;
-    const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+    const [alert, setAlert] = useState();
 
     useEffect(() => {
         const carregarVideos = async () => {

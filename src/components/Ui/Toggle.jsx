@@ -6,7 +6,7 @@ import AlertStyle from '../Ui/AlertStyle';
 
 export default function Toggle(props) {
     const [ligado, setLigado] = useState(props.status);
-    const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+    const [alert, setAlert] = useState();
 
     const idUsuario = props.idUsuario;
     console.log("Id do usuario:"+ idUsuario + props.ativo + "Usuario está Ativou ou Inativo")

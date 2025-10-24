@@ -72,7 +72,7 @@ const FormRedefinirSenha = () => {
             } else {
                 setAlert({
                     type: "error",
-                    message: "Ocorreu um erro ao tentar enviar o email. Por favor, tente novamente mais tarde.",
+                    message: error.response?.data?.message ||"Ocorreu um erro ao tentar enviar o email. Por favor, tente novamente mais tarde.",
                     onClose: () => setAlert(null)
                 });
             }

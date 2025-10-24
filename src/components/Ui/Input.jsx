@@ -1,4 +1,4 @@
-// import { FiAlertCircle } from "react-icons/fi";
+import { FiAlertCircle } from "react-icons/fi";
 import Alert from "./AlertStyle";
 
 export const Input = ({

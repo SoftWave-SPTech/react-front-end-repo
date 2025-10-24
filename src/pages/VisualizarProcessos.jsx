@@ -17,7 +17,7 @@ export default function VisualizarProcessos() {
   const [modalConfirma, setModalConfirma] = useState(false);
   const [processoSelecionado, setProcessoSelecionado] = useState(null);
   const [expandido, setExpandido] = useState(null);
-  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+  const [alert, setAlert] = useState();
 
   const navigate = useNavigate();
 

@@ -88,7 +88,7 @@ export default function AdvogadoJuridicoForm() {
     .then(async () => 
     {
       try {
-        await EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
+        await EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email , setAlert);
         showAlert('success', 'Cadastro realizado com sucesso!');
       } catch (emailError) {
         console.error('Erro ao enviar email:', emailError);

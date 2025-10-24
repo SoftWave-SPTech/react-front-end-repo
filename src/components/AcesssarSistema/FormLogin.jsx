@@ -68,10 +68,10 @@ export default function FormLogin() {
         } catch (error) {
             console.error("Erro ao fazer login:", error);
 
-            if (error.response?.status === 401) {
+            if (error.response?.status === 401) {   
                 setAlert({ show: true, message: "Email ou senha incorretos. Por favor, verifique suas credenciais.", type: "error" });
             } else if (error.response?.status === 400) {
-                const mensagensErro = error.response.data;
+                const mensagensErro = error.response.data.message;
                 if (typeof mensagensErro === 'object') {
                     const primeiraMensagem = Object.values(mensagensErro)[0];
                     setAlert({ show: true, message: primeiraMensagem, type: "error" });

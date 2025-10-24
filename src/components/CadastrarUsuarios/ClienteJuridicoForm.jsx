@@ -87,7 +87,7 @@ export default function ClienteJuridicoForm() {
       })
       .then(async () => {
         try {
-          await EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email);
+          await EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email, setAlert);
           setAlert({
             type: 'success',
             message: 'Cadastro realizado com sucesso!',
