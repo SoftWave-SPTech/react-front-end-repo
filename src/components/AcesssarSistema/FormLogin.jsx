@@ -53,7 +53,13 @@ export default function FormLogin() {
                 sessionStorage.setItem("tipoUsuario", response.data.tipoUsuario);
                 sessionStorage.setItem("role", response.data.role);
                 sessionStorage.setItem("nome", response.data.nome);
-                sessionStorage.setItem("fotoPerfil", "http://localhost:8080/" + response.data.foto);
+
+                // Salva a foto diretamente (já vem como URL pré-assinada do S3 ou null)
+                if (response.data.foto) {
+                    sessionStorage.setItem("fotoPerfil", response.data.foto);
+                } else {
+                    sessionStorage.removeItem("fotoPerfil");
+                }
 
                 setTimeout(() => {
                     if (response.data.role === "ROLE_USUARIO") {

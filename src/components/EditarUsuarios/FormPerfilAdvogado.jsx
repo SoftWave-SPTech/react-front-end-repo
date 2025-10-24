@@ -338,7 +338,7 @@ function FormPerfilAdvogado() {
             }
         })
             .then(response => {
-                sessionStorage.setItem('fotoPerfil', "http://localhost:8080/null");
+                sessionStorage.removeItem('fotoPerfil');
                 setAlert({
                     type: "success",
                     message: "Foto Deletada com sucesso"
@@ -375,7 +375,13 @@ function FormPerfilAdvogado() {
             <div className="w-full max-w-[75%] mx-auto py-3 mb-4 flex flex-col gap-4 shadow-md rounded-lg bg-white">
                 <div className="px-4 py-3 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <img
-                        src={sessionStorage.getItem('fotoPerfil') !== "http://localhost:8080/null" ? sessionStorage.getItem('fotoPerfil') : '/src/assets/images/boneco.png'}
+                        src={(() => {
+                          const fotoUrl = sessionStorage.getItem('fotoPerfil');
+                          if (fotoUrl && fotoUrl !== "http://localhost:8080/null") {
+                            return fotoUrl;
+                          }
+                          return '/src/assets/images/boneco.png';
+                        })()}
                         alt="Foto de perfil"
                         className="w-28 h-28 rounded-full border-2 border-azulEscuroForte shadow-md object-cover bg-gray-100"
                     />

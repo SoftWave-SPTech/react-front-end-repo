@@ -199,9 +199,7 @@ if (!comentarioSelecionado?.id) { // Adiciona o ID do comentário existente para
                   imagem={typeof coment?.fotoUsuario === "string" &&
                     coment.fotoUsuario.trim() !== "" &&
                     coment.fotoUsuario !== "null"
-                      ? coment.fotoUsuario.includes("http")
-                        ? coment.fotoUsuario
-                        : `http://localhost:8080/${coment.fotoUsuario}`
+                      ? coment.fotoUsuario
                       : "/src/assets/images/boneco.png"}
                     onClick={() => {
                     setComentarioSelecionado({

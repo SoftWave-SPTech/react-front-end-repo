@@ -23,11 +23,13 @@ const DocumentosList = ({ documentos = [], filtro = '' }) => {
           <div className="bg-[#0f1b3e] text-white rounded-lg p-4 text-center">
             Nenhum documento encontrado para "{filtro}".
           </div>
-        ) : (
-          documentosFiltrados.map(doc => (
-            <div
-              key={doc.id}
-              className="bg-[#0f1b3e] text-white rounded-lg p-4 flex items-center justify-between"
+          <div className="mt-auto flex flex-col items-center w-full">
+            <small className="text-gray-400 mb-1">{doc.data}</small>
+            <a
+              href={doc.urlArquivo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full text-center border-2 border-[#0f1b3e] text-white bg-azulEscuroForte rounded-lg font-bold py-2 transition-colors duration-200 hover:bg-[#1b2a4e] hover:text-dourado"
             >
               <div className="flex items-center flex-1 mr-3">
                 <FiFileText className="text-2xl text-white flex-shrink-0 mr-3" />

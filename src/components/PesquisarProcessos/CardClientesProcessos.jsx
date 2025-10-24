@@ -56,10 +56,8 @@ export default function CardClientesProcessos({ cliente }) {
       <div className="flex items-center gap-4 w-full md:w-auto">
         <img
           src={
-            fotoPerfil
-              ? fotoPerfil.startsWith('http') || fotoPerfil.startsWith('https')
-                ? fotoPerfil
-                : `http://localhost:8080/${fotoPerfil.replace(/\\\\/g, '/').replace(/\\/g, '/')}`
+            fotoPerfil && fotoPerfil !== "null"
+              ? fotoPerfil
               : "src/assets/images/boneco.png"
           }
           alt="Foto do cliente"

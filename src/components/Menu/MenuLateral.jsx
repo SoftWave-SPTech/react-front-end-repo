@@ -157,41 +157,38 @@ const MenuLateral = () => {
           <FiMenu className="text-[1.4rem]" />
         </div>
 
-        {!fechado && (
-          <a
-            href={rotaPerfil}
-            onClick={() => {
-              if (window.innerWidth < 1024) {
-                setFechado(true);
-                sessionStorage.setItem("larguraMenu", "70");
-              }
-            }}
-            className={`flex items-center gap-2 px-2 py-3 border border-white rounded-lg
-              transition-all duration-300 hover:border-[#D9B166] hover:text-[#D9B166] text-white no-underline
-              ${isTablet ? "w-full justify-start" : "w-[clamp(190px,93%,250px)] mx-auto"}`}
-          >
-            <img
-              src={
-                usuario.fotoPerfil !== "http://localhost:8080/null"
-                  ? usuario.fotoPerfil
-                  : "/src/assets/images/boneco.png"
-              }
-              alt="Foto de perfil"
-              className="w-12 h-12 rounded-full object-cover border border-white"
-            />
-            <div className={`flex flex-col leading-tight ${isTablet ? "max-w-[calc(100%-3rem)]" : "max-w-[calc(100%-3.2rem)]"}`}>
-              <span className="font-semibold text-[clamp(0.9rem,1.2vw,1.1rem)] truncate">
-                {nome}
-              </span>
-              <span
-                title={email}
-                className="text-[clamp(0.7rem,0.95vw,0.85rem)] truncate mt-[3px]"
-              >
-                {email}
-              </span>
-            </div>
-          </a>
-        )}
+        <div className="transition-all duration-300">
+          {!fechado && (
+            <a
+              href={rotaPerfil}
+              className="flex items-center gap-2 px-2 py-3 w-[clamp(190px,93%,250px)] mx-auto border border-white rounded-lg
+              transition-all duration-300 hover:border-[#D9B166] hover:text-[#D9B166] text-white no-underline"
+            >
+              <img
+                src={(() => {
+                  const fotoUrl = usuario.fotoPerfil;
+                  if (fotoUrl && fotoUrl !== "http://localhost:8080/null") {
+                    return fotoUrl;
+                  }
+                  return "/src/assets/images/boneco.png";
+                })()}
+                alt="Foto de perfil"
+                className="w-12 h-12 rounded-full object-cover border border-white"
+              />
+              <div className="flex flex-col leading-tight max-w-[calc(100%-3.2rem)]">
+                <span className="font-semibold text-[clamp(0.9rem,1.2vw,1.1rem)] truncate">
+                  {nome}
+                </span>
+                <span
+                  title={email}
+                  className="text-[clamp(0.7rem,0.95vw,0.85rem)] truncate mt-[3px]"
+                >
+                  {email}
+                </span>
+              </div>
+            </a>
+          )}
+        </div>
 
         <ul className="space-y-3 px-2 mt-4">
           {itensMenu
