@@ -5,7 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import BarraTitulo from '../components/Ui/BarraTitulo';
 import CardDocumento from '../components/Ui/CardDocumento';
 import ModalAguardando from "../components/Ui/ModalAguardando";
-import { api } from "../service/api";
+import { api, apiGemini } from "../service/api";
 import { FiSmile, FiFrown, FiMail, FiPhone } from "react-icons/fi";
 import { FaBalanceScale, FaWhatsapp } from "react-icons/fa"; // Importa o ícone do WhatsApp
 import Alert from '../components/Ui/AlertStyle'; 
@@ -87,7 +87,7 @@ const VisualizarProcessosAdvogado = () => {
 
   function gerarAnaliseIA(processoId, movimentacaoId) {
     setLoading(true);
-    api.post(`/analise-processo/${movimentacaoId}`)
+    apiGemini.post(`/analise-processo/${movimentacaoId}`)
       .then((res) => {
         console.log("Análise IA gerada com sucesso:", res.data);
         setAlert({

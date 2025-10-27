@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { api } from '../../service/api';
+import { api, apiAuthEmail } from '../../service/api';
 import Botao from '../Ui/Botao';
 import { Input } from '../Ui/Input';
 import { Link } from 'react-router-dom';
@@ -38,7 +38,7 @@ export default function FormLogin() {
         }
 
         try {
-            const response = await api.post('/auth/login', {
+            const response = await apiAuthEmail.post('/auth/login', {
                 email: email,
                 senha: senha,
             });

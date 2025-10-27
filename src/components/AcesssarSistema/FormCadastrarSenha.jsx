@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { api } from '../../service/api';
+import { api, apiAuthEmail } from '../../service/api';
 import Botao from "../Ui/Botao";
 import { Input } from "../Ui/Input";
 import Alert from "../Ui/AlertStyle";
@@ -37,7 +37,7 @@ export default function FormCadastrarSenha() {
 
     try {
       const email = sessionStorage.getItem("email");
-      await api.patch('/auth/cadastrar-senha', {
+      await apiAuthEmail.patch('/auth/cadastrar-senha', {
         email: email,
         senha: senha,
         confirmaSenha: confirmarSenha,
@@ -48,7 +48,7 @@ export default function FormCadastrarSenha() {
       });
 
       try {
-        const loginResponse = await api.post('/auth/login', {
+        const loginResponse = await apiAuthEmail.post('/auth/login', {
           email: email,
           senha: senha,
         });

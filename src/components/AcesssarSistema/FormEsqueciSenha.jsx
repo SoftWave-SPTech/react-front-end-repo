@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Botao from '../Ui/Botao';
 import { Input } from '../Ui/Input';
-import { api } from '../../service/api';
+import { api, apiAuthEmail } from '../../service/api';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../Ui/AlertStyle';
 
@@ -45,7 +45,7 @@ const FormRedefinirSenha = () => {
         }
 
         try {
-            const response = await api.post(`/auth/resetar-senha`, {
+            const response = await apiAuthEmail.post(`/auth/resetar-senha`, {
                 token: chave,
                 novaSenha: senha,
                 novaSenhaConfirma: confirmarSenha

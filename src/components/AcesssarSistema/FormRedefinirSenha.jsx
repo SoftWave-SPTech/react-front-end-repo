@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Botao from '../Ui/Botao';
 import { Input } from '../Ui/Input';
-import { api } from '../../service/api';
+import { api, apiAuthEmail } from '../../service/api';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../Ui/AlertStyle';
 
@@ -32,7 +32,7 @@ const FormRedefinirSenha = () => {
         }
 
         try {
-            await api.post(`/auth/solicitar-reset-senha?email=${email}`);
+            await apiAuthEmail.post(`/auth/solicitar-reset-senha?email=${email}`);
             setAlert({
                 type: "success",
                 message: "E-mail com Token enviado com sucesso!",

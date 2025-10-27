@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import { api } from '../../service/api';
+import { api, apiGemini } from '../../service/api';
 import ModalAguardando from './ModalAguardando';
 import AlertStyle from '../Ui/AlertStyle';
 
@@ -30,7 +30,7 @@ const ProcessoAndamento = ({ andamentos = [], processoId, filtro = '' }) => {
 
   function gerarAnaliseIA(item) {
     setLoading(true);
-    api.post(`/analise-processo/${item.id}`)
+    apiGemini.post(`/analise-processo/${item.id}`)
       .then((res) =>{ 
         console.log("Análise IA gerada com sucesso:", res.data);
         setLoading(false);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { api } from '../../service/api';
+import { api, apiAuthEmail } from '../../service/api';
 import Botao from "../Ui/Botao";
 import { Input } from "../Ui/Input";
 import Alert from "../Ui/AlertStyle"; // importação do Alert
@@ -35,7 +35,7 @@ export default function FormPrimeiroAcesso() {
         }
 
         try {
-            const response = await api.post('/auth/primeiro-acesso', {
+            const response = await apiAuthEmail.post('/auth/primeiro-acesso', {
                 email: email,
                 tokenPrimeiroAcesso: chave,
             });
