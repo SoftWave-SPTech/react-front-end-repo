@@ -28,7 +28,7 @@ export default function AnaliseMovimentacao() {
   const [movimentacaoData, setMovimentacaoData] = useState("");
 
   useEffect(() => {
-    apiGemini.get(`/analise-processo/por-movimentacao/${movimentacaoId}`, {
+    api.get(`/analise-processo/por-movimentacao/${movimentacaoId}`, {
       headers: { Authorization: TOKEN }
     }).then((response) => {
       console.log("Análise e movimentação recebidas:" , response.data);
