@@ -125,7 +125,7 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
   const podeEditar = role === 'ROLE_ADMIN' || role === 'ROLE_DONO';
 
   return (
-    <div className="bg-AzulEscuro rounded-lg p-[2.5rem] font-sans w-full max-w-[56.25rem] mx-auto min-h-[45.8rem] flex flex-col" style={{ height: "70vh" }}>
+    <div className="bg-AzulEscuro rounded-lg p-4 sm:p-6 md:p-[2.5rem] font-sans w-full max-w-[56.25rem] mx-auto min-h-[45.8rem] flex flex-col" style={{ height: "70vh" }}>
       
       {/* ALERT */}
       {alert.show && (
@@ -134,15 +134,15 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
         </Alert>
       )}
 
-      <div className="flex items-center mb-6 pb-4">
-        <h2 className="text-3xl font-normal text-dourado flex-1">Processos</h2>
-        <div className="relative w-[16rem] max-w-full">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-6 pb-4">
+        <h2 className="text-2xl sm:text-3xl font-normal text-dourado flex-shrink-0">Processos</h2>
+        <div className="relative w-full sm:w-[16rem] max-w-full">
           <input
             type="text"
             placeholder="Número ou descrição"
             value={busca}
             onChange={e => setBusca(e.target.value)}
-            className="w-full rounded-md py-[0.5rem] pl-3 pr-8 text-lg bg-branco text-preto focus:outline-none"
+            className="w-full rounded-md py-[0.5rem] pl-3 pr-8 text-base sm:text-lg bg-branco text-preto focus:outline-none"
           />
           <span className="absolute right-2 top-2 text-preto opacity-60 pointer-events-none">
             <svg width="1.125rem" height="1.125rem" fill="none" viewBox="0 0 24 24">
@@ -165,21 +165,21 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
           {processosFiltrados.map((processo) => (
             <div
               key={processo.id}
-              className="bg-azulClaro rounded-lg flex justify-between items-center px-6 py-4"
+              className="bg-azulClaro rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-3 gap-3"
             >
-              <div className="flex flex-col min-w-0">
-                <p className="font-sans text-branco text-2xl truncate">{processo.numeroProcesso}</p>
-                <p className="text-branco text-base truncate">{processo.descricao}</p>
+              <div className="flex flex-col min-w-0 flex-1">
+                <p className="font-sans text-branco text-lg sm:text-xl md:text-2xl break-words">{processo.numeroProcesso}</p>
+                <p className="text-branco text-sm sm:text-base break-words">{processo.descricao}</p>
               </div>
 
-              <div className="flex space-x-6">
+              <div className="flex space-x-4 sm:space-x-6 flex-shrink-0">
                 {podeEditar && (
                   <button
                     onClick={() => onEdit && onEdit(processo)}
                     className="text-branco hover:text-dourado transition-colors"
                     title="Editar processo"
                   >
-                    <FiEdit2 size={24} className="md:w-6 md:h-6" />
+                    <FiEdit2 size={20} className="sm:w-6 sm:h-6" />
                   </button>
                 )}
                 <button
@@ -187,7 +187,7 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
                   className="text-branco hover:text-dourado transition-colors"
                   title="Visualizar processo"
                 >
-                  <FiFileText size={24} className="md:w-6 md:h-6" />
+                  <FiFileText size={20} className="sm:w-6 sm:h-6" />
                 </button>
                 {podeEditar && (
                   <button
@@ -195,7 +195,7 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
                     className="text-branco hover:text-dourado transition-colors"
                     title="Excluir processo"
                   >
-                    <FiTrash size={24} className="md:w-6 md:h-6" />
+                    <FiTrash size={20} className="sm:w-6 sm:h-6" />
                   </button>
                 )}
               </div>

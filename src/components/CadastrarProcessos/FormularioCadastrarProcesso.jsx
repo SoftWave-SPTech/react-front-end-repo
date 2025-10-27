@@ -199,9 +199,9 @@ export default function FormularioCadastrarProcesso({
   const emEdicao = Boolean(processoEditando);
 
   return (
-    <div className="bg-white rounded-md w-full max-w-[500px] min-w-[28rem] px-[4rem] sm:px-[5rem] md:px-[6rem] pt-[2.5rem] pb-[2.5rem] shadow-[0.375rem_0.375rem_0_0_rgb(1,13,38)] ml-4 lg:ml-8"
+    <div className="bg-white rounded-md w-full min-w-0 px-4 sm:px-8 md:px-12 lg:px-16 pt-6 pb-6 sm:pt-8 sm:pb-8 shadow-[0.375rem_0.375rem_0_0_rgb(1,13,38)]"
          style={{ minHeight: "25rem", boxSizing: "border-box" }}>
-      <h1 className="text-2xl md:text-3xl text-dourado text-center mb-6 font-normal">
+      <h1 className="text-xl sm:text-2xl md:text-3xl text-dourado text-center mb-4 sm:mb-6 font-normal">
         {emEdicao ? 'Editar Processo' : 'Novo Processo'}
       </h1>
 
@@ -215,48 +215,51 @@ export default function FormularioCadastrarProcesso({
       )}
 
       <form onSubmit={handleSubmit}>
-        {/* Número */}
-        <div className="mb-4">
-          <label className="block text-preto text-lg md:text-xl mb-1 font-normal" htmlFor="numero">
-            Número:
-          </label>
-          <input
-            id="numero"
-            type="text"
-            placeholder="0000005-27.2025.8.26.0008"
-            value={numero}
-            onChange={(e) => setNumero(e.target.value)}
-            className="border border-preto rounded-lg w-full py-[0.5rem] px-[0.75rem] text-preto text-base md:text-lg focus:outline-none focus:shadow-outline font-sans"
-            required
-          />
-        </div>
+        {/* Número e Descrição lado a lado em telas maiores */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
+          {/* Número */}
+          <div>
+            <label className="block text-preto text-base sm:text-lg md:text-xl mb-1 font-normal" htmlFor="numero">
+              Número:
+            </label>
+            <input
+              id="numero"
+              type="text"
+              placeholder="0000005-27.2025.8.26.0008"
+              value={numero}
+              onChange={(e) => setNumero(e.target.value)}
+              className="border border-preto rounded-lg w-full py-2 px-3 text-preto text-sm sm:text-base md:text-lg focus:outline-none focus:shadow-outline font-sans"
+              required
+            />
+          </div>
 
-        {/* Descrição */}
-        <div className="mb-4">
-          <label className="block text-preto text-lg md:text-xl mb-1 font-normal" htmlFor="descricao">
-            Descrição:
-          </label>
-          <input
-            id="descricao"
-            type="text"
-            placeholder="Casos Criminais envolvendo código penal..."
-            value={descricao}
-            onChange={(e) => setDescricao(e.target.value)}
-            className="border border-preto rounded-lg w-full py-[0.5rem] px-[0.75rem] text-preto text-base md:text-lg focus:outline-none truncate font-sans"
-            required
-          />
+          {/* Descrição */}
+          <div>
+            <label className="block text-preto text-base sm:text-lg md:text-xl mb-1 font-normal" htmlFor="descricao">
+              Descrição:
+            </label>
+            <input
+              id="descricao"
+              type="text"
+              placeholder="Casos Criminais envolvendo código penal..."
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
+              className="border border-preto rounded-lg w-full py-2 px-3 text-preto text-sm sm:text-base md:text-lg focus:outline-none font-sans"
+              required
+            />
+          </div>
         </div>
 
         {/* Advogados */}
-        <div className="mb-6">
-          <label className="block text-preto text-lg md:text-xl mb-1 font-normal">Advogados</label>
+        <div className="mb-4 sm:mb-6">
+          <label className="block text-preto text-base sm:text-lg md:text-xl mb-1 font-normal">Advogados</label>
           <div className="mb-2">
             <input
               type="text"
               placeholder="Digite para pesquisar advogado..."
               value={buscaAdvogado}
               onChange={e => setBuscaAdvogado(e.target.value)}
-              className="border border-preto rounded-lg w-full py-[0.5rem] px-[0.75rem] text-preto text-base md:text-lg focus:outline-none mb-2"
+              className="border border-preto rounded-lg w-full py-2 px-3 text-preto text-sm sm:text-base md:text-lg focus:outline-none mb-2"
             />
           </div>
           <div className="border border-preto rounded-lg bg-branco max-h-[8rem] min-h-[2.5rem] overflow-y-auto px-[0.5rem] py-[0.25rem] flex items-center">
@@ -284,14 +287,14 @@ export default function FormularioCadastrarProcesso({
         </div>
 
         {/* Clientes */}
-        <div className="mb-6">
-          <label className="block text-preto text-lg md:text-xl mb-1 font-normal">Clientes</label>
+        <div className="mb-4 sm:mb-6">
+          <label className="block text-preto text-base sm:text-lg md:text-xl mb-1 font-normal">Clientes</label>
           <input
             type="text"
             placeholder="Digite para pesquisar cliente..."
             value={buscaCliente}
             onChange={e => setBuscaCliente(e.target.value)}
-            className="border border-preto rounded-lg w-full py-[0.5rem] px-[0.75rem] text-preto text-base md:text-lg focus:outline-none mb-2"
+            className="border border-preto rounded-lg w-full py-2 px-3 text-preto text-sm sm:text-base md:text-lg focus:outline-none mb-2"
           />
           <div className="border border-preto rounded-lg bg-branco max-h-[8rem] min-h-[2.5rem] overflow-y-auto px-[0.5rem] py-[0.25rem] flex items-center">
             {clientesFiltrados.length > 0 ? (
@@ -318,10 +321,10 @@ export default function FormularioCadastrarProcesso({
         </div>
 
         {/* Ações */}
-        <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center mt-4 sm:mt-6">
           <button
             type="submit"
-            className="w-full sm:w-auto bg-AzulEscuro text-branco text-base md:text-lg font-sans font-semibold rounded-lg py-2 px-4 hover:bg-azulClaro transition-colors"
+            className="w-full sm:w-auto bg-AzulEscuro text-branco text-sm sm:text-base md:text-lg font-sans font-semibold rounded-lg py-2 px-4 hover:bg-azulClaro transition-colors"
           >
             {emEdicao ? 'SALVAR ALTERAÇÕES' : 'CADASTRAR'}
           </button>
@@ -330,7 +333,7 @@ export default function FormularioCadastrarProcesso({
             <button
               type="button"
               onClick={onCancelarEdicao}
-              className="w-full sm:w-auto border border-AzulEscuro text-AzulEscuro text-base md:text-lg font-sans font-semibold rounded-lg py-2 px-4 hover:bg-AzulEscuro hover:text-white transition-colors"
+              className="w-full sm:w-auto border border-AzulEscuro text-AzulEscuro text-sm sm:text-base md:text-lg font-sans font-semibold rounded-lg py-2 px-4 hover:bg-AzulEscuro hover:text-white transition-colors"
             >
               CANCELAR EDIÇÃO
             </button>
