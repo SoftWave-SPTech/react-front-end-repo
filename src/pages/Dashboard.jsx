@@ -95,7 +95,7 @@ const Dashboard = () => {
             <Clientes dados={dadosDashboard?.clientesInativosAndAtivos} />
           </div>
           <div className="flex-1 min-w-[200px] mt-2 md:mt-0">
-            <Receita valor={dadosDashboard?.valorTotalProcessos} />
+            <Receita dados={dadosDashboard?.receitaUltimos6Meses} />
           </div>
         </div>
 
