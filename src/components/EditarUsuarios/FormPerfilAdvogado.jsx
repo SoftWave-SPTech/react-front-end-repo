@@ -129,6 +129,22 @@ function FormPerfilAdvogado() {
                     }
                 })
         }
+
+        // Buscar foto do perfil da AWS
+        api.get(`${URLFOTO}/${sessionStorage.getItem('id')}`, {
+            headers: {
+                Authorization: TOKEN,
+            },
+        })
+            .then((resposta) => {
+                if (resposta.data) {
+                    sessionStorage.setItem('fotoPerfil', resposta.data);
+                }
+            })
+            .catch((erro) => {
+                console.error("Erro ao buscar foto do perfil:", erro.status);
+                // Não precisa mostrar erro para o usuário, apenas log
+            })
     }, []);
 
     function enviarDadosParaAtualizacao() {

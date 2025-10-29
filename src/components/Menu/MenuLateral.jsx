@@ -26,6 +26,7 @@ const MenuLateral = () => {
     return larguraSalva === "70";
   });
   const [isTablet, setIsTablet] = useState(window.innerWidth < 1024);
+  const [fotoPerfil, setFotoPerfil] = useState(sessionStorage.getItem("fotoPerfil"));
 
   const alternarMenu = () => {
     const novoEstado = !fechado;
@@ -44,13 +45,36 @@ const MenuLateral = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Atualiza a foto quando o sessionStorage mudar
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setFotoPerfil(sessionStorage.getItem("fotoPerfil"));
+    };
+    
+    // Listener para mudanças no sessionStorage
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Polling para detectar mudanças no sessionStorage (já que storage event só funciona em outras abas)
+    const interval = setInterval(() => {
+      const novaFoto = sessionStorage.getItem("fotoPerfil");
+      if (novaFoto !== fotoPerfil) {
+        setFotoPerfil(novaFoto);
+      }
+    }, 500);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [fotoPerfil]);
+
   const usuario = {
     id: sessionStorage.getItem("id"),
     email: sessionStorage.getItem("email"),
     role: sessionStorage.getItem("role"),
     tipoUsuario: sessionStorage.getItem("tipoUsuario"),
     token: sessionStorage.getItem("token"),
-    fotoPerfil: sessionStorage.getItem("fotoPerfil"),
+    fotoPerfil: fotoPerfil,
     nome: decoded?.nome || "Usuário Padrão",
   };
 
