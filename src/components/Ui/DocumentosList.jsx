@@ -1,11 +1,50 @@
 import React from 'react';
 import { FiFileText } from 'react-icons/fi';
+import { api } from '../../service/api';
 
 const DocumentosList = ({ documentos = [], filtro = '' }) => {
   const documentosFiltrados = documentos.filter(doc =>
     doc.nomeArquivo?.toLowerCase().includes(filtro.toLowerCase()) ||
     doc.data?.toLowerCase().includes(filtro.toLowerCase())
   );
+
+  // Função para visualizar documento - igual nas outras telas
+  const visualizarDocumento = (doc) => {
+    const urlArquivo = doc.urlArquivo;
+    
+    if (!urlArquivo) {
+      console.error("URL do arquivo não encontrada");
+      return;
+    }
+
+    // Se é URL do S3 (começa com https://), precisa chamar endpoint de download
+    // porque URLs do S3 não podem ser acessadas diretamente (dão Access Denied)
+    if (urlArquivo.startsWith("https://") || urlArquivo.startsWith("http://")) {
+      // Se tem ID, chama a API de download como nas outras telas
+      if (doc.id) {
+        const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
+        api.get(`/documentos-processos/${doc.id}/download`, {
+          headers: { "Authorization": TOKEN },
+        })
+        .then(response => {
+          // Se o back devolve um objeto { url: "..." } ou a URL diretamente
+          const fileUrl = response.data.url || response.data;
+          window.open(fileUrl, "_blank");
+        })
+        .catch(error => {
+          console.error("Erro ao gerar link de download:", error);
+          // Se o endpoint não existir ou falhar, mostra mensagem
+          alert("Erro ao abrir documento. O endpoint de download pode não estar disponível no backend.");
+        });
+      } else {
+        // Se não tem ID mas é URL completa, tenta abrir (vai dar Access Denied se for S3)
+        window.open(urlArquivo, "_blank");
+      }
+    } else {
+      // Se é um caminho relativo, constrói a URL completa com localhost:8080
+      window.open(`http://localhost:8080/${urlArquivo}`, "_blank");
+    }
+  };
 
   if (!documentos || documentos.length === 0) {
     return (
@@ -38,14 +77,12 @@ const DocumentosList = ({ documentos = [], filtro = '' }) => {
                   </div>
                 </div>
               </div>
-              <a
-                href={`http://localhost:8080/${doc.urlArquivo}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => visualizarDocumento(doc)}
                 className="bg-white text-[#0f1b3e] rounded-lg font-bold py-2 px-4 transition-colors duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#0f1b3e] flex-shrink-0 w-full text-center mt-2"
               >
                 Visualizar
-              </a>
+              </button>
             </div>
           ))
         )}

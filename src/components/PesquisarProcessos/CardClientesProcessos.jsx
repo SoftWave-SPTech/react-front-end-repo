@@ -3,6 +3,7 @@ import { FiMail, FiPhone, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../service/api'; 
 import AlertStyle from '../Ui/AlertStyle';
+import boneco from '../../assets/images/boneco.png';
 
 export default function CardClientesProcessos({ cliente }) {
   const navigate = useNavigate();
@@ -13,26 +14,32 @@ export default function CardClientesProcessos({ cliente }) {
   const mostrarScroll = processos.length > frameSize;
   const processosVisiveis = processos.slice(frame * frameSize, frame * frameSize + frameSize);
   const [fotoPerfil, setFotoPerfil] = useState(null);
+  const [imageError, setImageError] = useState(false);
    // const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
   const [alert, setAlert] = useState();
 
   useEffect(() => {
     async function fetchFoto() {
       try {
+        setImageError(false); // Reseta o erro quando buscar nova foto
         const response = await api.get(`/usuarios/foto-perfil/${cliente.id}`, {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem('token')}`
           }
         });
-        setFotoPerfil(response.data); 
+        if (response.data && response.data !== "null") {
+          // Constroi a URL completa se necessário, igual nas páginas de perfil
+          const fotoUrl = response.data.startsWith("http://") || response.data.startsWith("https://")
+            ? response.data
+            : `http://localhost:8080/${response.data}`;
+          setFotoPerfil(fotoUrl);
+        } else {
+          setFotoPerfil(null);
+        }
       } catch (error) {
-        console.error("Erro ao buscar foto de perfil", error.status);
-        if(error.status >= 500){
-            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
-          }else{
-            setAlert({ show: true, message: error.response.data.message, type: "error" })
-          }
+        console.error("Erro ao buscar foto de perfil", error);
         setFotoPerfil(null);
+        setImageError(false); // Garante que mostrará a imagem padrão
       }
     }
     fetchFoto();
@@ -50,18 +57,22 @@ export default function CardClientesProcessos({ cliente }) {
     navigate(`/processos-advogado/${clienteId}/${processoId}`);
   };
 
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  const imageSrc = imageError || !fotoPerfil || fotoPerfil === "null"
+    ? boneco
+    : fotoPerfil;
 
   return (
     <div className="bg-branco rounded-xl shadow px-4 py-4 flex flex-col gap-2 md:gap-0 md:flex-row items-start md:items-center">
       <div className="flex items-center gap-4 w-full md:w-auto">
         <img
-          src={
-            fotoPerfil && fotoPerfil !== "null"
-              ? fotoPerfil
-              : "src/assets/images/boneco.png"
-          }
+          src={imageSrc}
           alt="Foto do cliente"
           className="w-16 h-16 rounded-full object-cover"
+          onError={handleImageError}
         />
 
         <div className="min-w-0">

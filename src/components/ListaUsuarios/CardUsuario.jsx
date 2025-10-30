@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import boneco from '../../assets/images/boneco.png';
 import 'tailwindcss/tailwind.css';
 import Toggle from "../Ui/Toggle";
@@ -6,12 +6,52 @@ import MenuLista from "../Ui/MenuLista";
 import CardProcesso from "../ListaUsuarios/CardProcesso";
 import { FiSmile, FiFrown, FiMail, FiPhone } from "react-icons/fi";
 import Botao from "../Ui/Botao";
+import { api } from '../../service/api';
 
 export default function CardUsuario(props) {
     const [processos] = useState(props.processos || []);
+    const [fotoPerfil, setFotoPerfil] = useState(null);
+    const [imageError, setImageError] = useState(false);
 
     const mostrarScroll = processos.length > 2;
     const processosVisiveis = mostrarScroll ? processos : processos.slice(0, 2);
+
+    // Busca a foto do perfil via API, igual nas páginas de perfil
+    useEffect(() => {
+        async function fetchFoto() {
+            try {
+                setImageError(false);
+                const token = `Bearer ${sessionStorage.getItem('token')}`;
+                const response = await api.get(`/usuarios/foto-perfil/${props.idUsuario}`, {
+                    headers: {
+                        Authorization: token
+                    }
+                });
+                if (response.data && response.data !== "null") {
+                    // Constroi a URL completa se necessário
+                    const fotoUrl = response.data.startsWith("http://") || response.data.startsWith("https://")
+                        ? response.data
+                        : `http://localhost:8080/${response.data}`;
+                    setFotoPerfil(fotoUrl);
+                } else {
+                    setFotoPerfil(null);
+                }
+            } catch (error) {
+                console.error("Erro ao buscar foto de perfil", error);
+                setFotoPerfil(null);
+                setImageError(false);
+            }
+        }
+        fetchFoto();
+    }, [props.idUsuario]);
+
+    const handleImageError = () => {
+        setImageError(true);
+    };
+
+    const imageSrc = imageError || !fotoPerfil || fotoPerfil === "null"
+        ? boneco
+        : fotoPerfil;
 
     return (
         <div className="relative flex flex-col md:flex-row w-full bg-white rounded-lg shadow-md p-4 gap-4">
@@ -39,9 +79,10 @@ export default function CardUsuario(props) {
                 <div className="flex gap-4 items-center">
                     <div className="flex items-center justify-center w-14 h-14 md:w-20 md:h-20 rounded-full overflow-hidden bg-gray-100 shrink-0">
                         <img
-                            src={props.imageUser && props.imageUser !== "null" ? props.imageUser : boneco}
+                            src={imageSrc}
                             alt="Foto do usuário"
                             className="object-cover w-full h-full"
+                            onError={handleImageError}
                         />
                     </div>
                     <div className="flex flex-col justify-center w-full">
