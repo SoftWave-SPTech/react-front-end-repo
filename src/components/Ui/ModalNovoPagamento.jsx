@@ -33,7 +33,7 @@ const RANGE = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
 const currentYear = new Date().getFullYear();
 const ANOS = RANGE(currentYear - 5, currentYear + 5);
 
-export default function ModalNovoPagamento({ open, onClose, onSave, initialData = null, mode = 'create' }) {
+export default function ModalNovoPagamento({ open, onClose, initialData = null, mode = 'create' }) {
   const [clientes, setClientes] = useState([]);
   const [processos, setProcessos] = useState([]);
   const [form, setForm] = useState({
@@ -63,45 +63,43 @@ export default function ModalNovoPagamento({ open, onClose, onSave, initialData 
       .catch(err => console.error('Erro ao buscar clientes:', err));
   }, [open]);
 
-  // ===== Buscar processos quando cliente mudar =====
-  useEffect(() => {
-    if (!form.cliente) {
-      setProcessos([]);
-      setForm(prev => ({ ...prev, processo: '' }));
-      return;
-    }
-
-    api.get(`/processos/usuario-id/${form.cliente}`, {
-      headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
-    })
-      .then(res => setProcessos(res.data || []))
-      .catch(err => {
-        console.error('Erro ao buscar processos:', err);
-        setProcessos([]);
-      });
-  }, [form.cliente]);
-
   // ===== Preencher formulário ao abrir modal =====
   useEffect(() => {
     if (!open) return;
 
-    if (initialData) {
-      setForm({
-        cliente: initialData.clienteId || '',
-        processo: initialData.processoId || '',
-        metodo: initialData.metodo || '',
-        tipo: initialData.tipo || '',
-        parcelaAtual: initialData.parcelaAtual || 1,
-        parcelaTotal: initialData.parcelas || 1,
-        valorParcela: initialData.valorParcela ?? '',
-        valorPago: initialData.valorPago ?? '',
-        valorPagar: initialData.valorPagar ?? '',
-        mes: initialData.mes || '',
-        ano: initialData.ano || currentYear,
-        honorarioSucumbencia: initialData.honorarioSucumbencia || 0,
-      });
-      setErros({});
+    if (initialData && mode === 'edit') {
+      // Busca processos do cliente antes de setar o form
+      const fetchProcessos = async () => {
+        try {
+          const res = await api.get(`/processos/usuario-id/${initialData.clienteId}`, {
+            headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+          });
+          const processosCliente = res.data || [];
+          setProcessos(processosCliente);
+
+          setForm({
+            cliente: initialData.clienteId || '',
+            processo: initialData.processoId || (processosCliente[0]?.id || ''),
+            metodo: initialData.metodo || '',
+            tipo: initialData.tipo || '',
+            parcelaAtual: initialData.parcelaAtual || 1,
+            parcelaTotal: initialData.parcelas || 1,
+            valorParcela: initialData.valorParcela ?? '',
+            valorPago: initialData.valorPago ?? '',
+            valorPagar: initialData.valorPagar ?? '',
+            mes: initialData.mes || '',
+            ano: initialData.ano || currentYear,
+            honorarioSucumbencia: initialData.honorarioSucumbencia || 0,
+          });
+          setErros({});
+        } catch (err) {
+          console.error('Erro ao buscar processos do cliente:', err);
+        }
+      };
+
+      fetchProcessos();
     } else {
+      // Modo create ou sem initialData
       setForm({
         cliente: '',
         processo: '',
@@ -116,9 +114,31 @@ export default function ModalNovoPagamento({ open, onClose, onSave, initialData 
         ano: currentYear,
         honorarioSucumbencia: 0,
       });
+      setProcessos([]);
       setErros({});
     }
-  }, [open, initialData]);
+  }, [open, initialData, mode]);
+
+  // ===== Buscar processos quando cliente mudar (modo create ou troca de cliente) =====
+  useEffect(() => {
+    if (!form.cliente) {
+      setProcessos([]);
+      setForm(prev => ({ ...prev, processo: '' }));
+      return;
+    }
+
+    // Não sobrescrever processo se estiver no modo edit e initialData já foi carregada
+    if (mode === 'edit' && initialData && form.cliente === initialData.clienteId) return;
+
+    api.get(`/processos/usuario-id/${form.cliente}`, {
+      headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+    })
+      .then(res => setProcessos(res.data || []))
+      .catch(err => {
+        console.error('Erro ao buscar processos:', err);
+        setProcessos([]);
+      });
+  }, [form.cliente, mode, initialData]);
 
   // ===== Reset parcelas se tipo mudar para À vista =====
   useEffect(() => {
@@ -127,7 +147,6 @@ export default function ModalNovoPagamento({ open, onClose, onSave, initialData 
     }
   }, [form.tipo]);
 
-  // ===== Handlers =====
   const handleChange = (field) => (e) => setForm(prev => ({ ...prev, [field]: e.target.value }));
   const handleCurrencyChange = (field) => ({ value }) => setForm(prev => ({ ...prev, [field]: value }));
 
@@ -170,21 +189,20 @@ export default function ModalNovoPagamento({ open, onClose, onSave, initialData 
     };
 
     try {
-      let res;
       if (mode === 'edit' && initialData?.id) {
-        res = await api.put(`/registros-financeiros/${initialData.id}`, payload, {
+        await api.put(`/registros-financeiros/${initialData.id}`, payload, {
           params: { cliente: payload.cliente, processo: payload.processo },
           headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         });
       } else {
-        res = await api.post('/registros-financeiros', payload, {
+        await api.post('/registros-financeiros', payload, {
           params: { cliente: payload.cliente, processo: payload.processo },
           headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         });
       }
 
-      onSave(res.data);
-      onClose();
+      // ✅ Força recarregar toda a página
+      window.location.reload();
     } catch (err) {
       console.error('Erro ao salvar registro financeiro:', err);
     }
@@ -293,20 +311,15 @@ export default function ModalNovoPagamento({ open, onClose, onSave, initialData 
             <div>
               <label className="block text-sm font-medium">Ano</label>
               <select value={form.ano} onChange={handleChange('ano')} className="border rounded w-full px-3 py-2">
-                {ANOS.map(y => <option key={y} value={y}>{y}</option>)}
+                {ANOS.map(a => <option key={a} value={a}>{a}</option>)}
               </select>
               {erros.ano && <p className="text-red-500 text-xs">{erros.ano}</p>}
             </div>
           </div>
 
-          {/* Botões */}
-          <div className="flex justify-end gap-3 mt-4">
-            <button type="button" onClick={onClose} className="bg-white px-4 py-2 rounded hover:bg-azulClaro hover:text-white">
-              Cancelar
-            </button>
-            <button type="submit" className="bg-AzulEscuro text-white px-4 py-2 rounded hover:bg-azulClaro">
-              {mode === 'edit' ? 'Salvar alterações' : 'Salvar'}
-            </button>
+          <div className="flex justify-end gap-2 mt-4">
+            <button type="button" onClick={onClose} className="px-4 py-2 rounded-md border border-AzulEscuro text-AzulEscuro hover:bg-AzulClaro hover:bg-azulClaro hover:text-dourado transition-colors duration-200 ">Cancelar</button>
+            <button type="submit" className="px-4 py-2 rounded-md bg-AzulEscuro text-white hover:bg-azulClaro hover:text-dourado">Salvar</button>
           </div>
         </form>
       </div>

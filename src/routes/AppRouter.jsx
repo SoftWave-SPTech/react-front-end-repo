@@ -1,5 +1,6 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
+
 import SiteInstitucional from "../pages/SiteInstitucional";
 import CadastrarUsuarios from "../pages/CadastrarUsuarios";
 import Login from "../pages/Login";
@@ -22,101 +23,77 @@ import RedefinirSenha from "../pages/RedefinirSenha";
 import EsqueciSenha from "../pages/EsqueciSenha";
 import RegistroPagamentos from "../pages/RegistroPagamentos";
 
+import RequireAuth from "../components/Auth/RequireAuth";
+import RequireRole from "../components/Auth/RequireRole";
+
+
+const ROLES =
+{
+  USUARIO: "ROLE_USUARIO",
+  ADVOGADO: "ROLE_ADVOGADO",
+  ADMIN: "ROLE_ADMIN",
+};
 
 export const AppRouter = createBrowserRouter([
+  // Rotas públicas (sem login)
+  { path: "/", element: <SiteInstitucional /> },
+  { path: "/login", element: <Login /> },
+  { path: "/primeiro-acesso", element: <PrimeiroAcesso /> },
+  { path: "/cadastrar-senha", element: <CadastrarSenha /> },
+  { path: "/redefinir-senha", element: <RedefinirSenha /> },
+  { path: "/esqueci-senha", element: <EsqueciSenha /> },
+
+  // Rotas privadas (usuário precisa estar logado)
   {
-    path: "/",
-    element: <SiteInstitucional/>,
+    element: <RequireAuth />,
+    children: [
+
+      {
+        element: <RequireRole allowedRoles={[ROLES.USUARIO, ROLES.ADVOGADO, ROLES.ADMIN]} />,
+        children: [
+          { path: "/podcast", element: <Podcast /> },
+          { path: "/analise-ia/:processoId/:movimentacaoId", element: <AnaliseComIa /> },
+          { path: "/documentos-processo", element: <VisualizarDocumentosProcesso /> },
+          { path: "/documentos-processo/:idProcesso", element: <VisualizarDocumentosProcesso /> },
+        ],
+      },
+
+      {
+        element: <RequireRole allowedRoles={[ROLES.ADVOGADO, ROLES.ADMIN]} />,
+        children: [
+          { path: "/perfil-advogado", element: <FormEditPerfilAdvogado /> },
+          { path: "/processos-advogado/:idUsuario/:idProcesso", element: <VisualizarProcessosAdvogado /> },
+          { path: "/processos-advogado", element: <VisualizarProcessosAdvogado /> },
+          { path: "/cadastrar-processos", element: <CadastrarProcesso /> },
+          { path: "/pesquisar-processos", element: <PesquisarProcessos /> },
+        ],
+      },
+
+      // 🧍 USUÁRIO
+      {
+        element: <RequireRole allowedRoles={[ROLES.USUARIO]} />,
+        children: [
+          { path: "/perfil-cliente", element: <FormEditPerfilCliente /> },
+          { path: "/documentos-pessoais", element: <VisualizarDocumentosPessoais /> },
+          { path: "/processos-cliente", element: <VisualizarProcessos /> },
+          { path: "/area-cliente/processo/:processoId", element: <AreaCliente /> },
+          { path: "/analise-ia/:processoId/:movimentacaoId", element: <AnaliseComIa /> },
+          { path: "/documentos-processo", element: <VisualizarDocumentosProcesso /> },
+          { path: "/documentos-processo/:idProcesso", element: <VisualizarDocumentosProcesso /> },
+          { path: "/podcast", element: <Podcast /> },
+        ],
+      },
+
+      // 👑 ADMIN
+      {
+        element: <RequireRole allowedRoles={[ROLES.ADMIN]} />,
+        children: [
+          { path: "/lista-usuarios", element: <ListaUsuarios /> },
+          { path: "/cadastrar-usuario", element: <CadastrarUsuarios /> },
+          { path: "/dashboard", element: <Dashboard /> },
+          { path: "/registro-pagamentos", element: <RegistroPagamentos /> },
+        ],
+      },
+    ],
   },
-  {
-    path: "/cadastrar-usuario",
-    element: <CadastrarUsuarios/>,
-  },
-  {
-    path: "/login",
-    element: <Login/>
-  },
-  {
-    path: "/primeiro-acesso",
-    element: <PrimeiroAcesso/>
-  },
-  {
-    path: "/cadastrar-senha",
-    element: <CadastrarSenha/>
-  },
-  {
-    path: "/redefinir-senha",
-    element: <RedefinirSenha/>
-  },
-  {
-    path: "/esqueci-senha",
-    element: <EsqueciSenha/>
-  },
-  {
-    path: "/perfil-cliente",
-    element: <FormEditPerfilCliente/> 
-  },
-  {
-    path: "/perfil-advogado",
-    element: <FormEditPerfilAdvogado/>
-  },
-  {
-    path: "/documentos-processo",
-    element: <VisualizarDocumentosProcesso/>
-  },
-  {
-    path: "/documentos-pessoais",
-    element: <VisualizarDocumentosPessoais/>
-  },
-  {
-    path: "/analise-ia/:processoId/:movimentacaoId",
-    element: <AnaliseComIa/>
-  },
-  {
-    path: "/processos-cliente",
-    element: <VisualizarProcessos/>
-  },
-  {
-    path: "/cadastrar-processos",
-    element: <CadastrarProcesso/>
-  },
-  {
-    path: "/area-cliente/processo/:processoId",
-    element: <AreaCliente/>
-  },
-  {
-    path: "/pesquisar-processos",
-    element: <PesquisarProcessos/>
-  },
-  {
-    path: "/processos-advogado",
-    element: <VisualizarProcessosAdvogado/>
-  },
-  {
-    path: "/podcast",
-    element: <Podcast/>
-  },
-  {
-    path: "/lista-usuarios",
-    element: <ListaUsuarios/>
-  },{
-    path: "/pesquisar-processos",
-    element: <PesquisarProcessos/>
-  },
-  {
-    path: "/dashboard",
-    element: <Dashboard/>
-  },
-  {
-    path:"/processos-advogado/:idUsuario/:idProcesso", 
-    element:<VisualizarProcessosAdvogado /> 
-  },
-  {
-    path:"/documentos-processo/:idProcesso", 
-    element:<VisualizarDocumentosProcesso /> 
-  },
-  {
-    path: "/registro-pagamentos",
-    element: <RegistroPagamentos/>
-  }
 ]);

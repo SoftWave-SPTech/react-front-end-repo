@@ -4,10 +4,6 @@ export const api = axios.create({
     baseURL: 'http://localhost:8080',
 });
 
-export const apiDocumentos = axios.create({
-    baseURL: 'http://localhost:8081',
-});
-
 export const apiGemini = axios.create({
     baseURL: 'http://localhost:8082',
 });

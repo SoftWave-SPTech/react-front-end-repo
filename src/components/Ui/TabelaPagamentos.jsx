@@ -60,7 +60,7 @@ export default function TabelaPagamentos({
                   className="w-8 h-8 flex items-center justify-center rounded-full bg-white text-blue-900 hover:bg-gray-100"
                   title={hasSelection ? 'Editar registro' : 'Adicionar novo pagamento'}
                 >
-                  {hasSelection ? '✎' : '+'}
+                  {hasSelection ? '✎' : '✎'}
                 </button>
               </th>
               <th className="py-3 px-3">Código</th>
