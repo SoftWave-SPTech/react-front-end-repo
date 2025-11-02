@@ -19,6 +19,27 @@ const AreaCliente = () => {
     const [filtroDocumentos, setFiltroDocumentos] = useState('');
     const [filtroAndamentos, setFiltroAndamentos] = useState('');
     const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+    const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
+
+    // Função para visualizar documento (obtém URL pré-assinada)
+    const visualizarDocumento = (idDocumento) => {
+        api.get(`/documentos-processos/${idDocumento}/download`, {
+            headers: { "Authorization": TOKEN }
+        })
+        .then(response => {
+            // Se o back devolve um objeto { url: "..." }
+            const fileUrl = response.data.url || response.data;
+            window.open(fileUrl, "_blank");
+        })
+        .catch(error => {
+            console.error("Erro ao gerar link de download:", error);
+            setAlert({ 
+                show: true, 
+                message: error.response?.data?.message || "Erro ao visualizar documento.", 
+                type: "error" 
+            });
+        });
+    };
 
     useEffect(() => {
         // Buscar dados completos do processo (inclui advogados)
@@ -160,7 +181,11 @@ const AreaCliente = () => {
                                     </svg>
                                 </div>
                             </div>
-                            <DocumentosList documentos={documentos} filtro={filtroDocumentos} />
+                            <DocumentosList 
+                              documentos={documentos} 
+                              filtro={filtroDocumentos} 
+                              onVisualizar={visualizarDocumento}
+                            />
                         </div>
                         {/* Andamento */}
                         <div className="bg-[#020E29] rounded-2xl shadow-lg p-4 flex flex-col h-[400px] text-white">

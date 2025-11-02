@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import boneco from '../../assets/images/boneco.png';
 import 'tailwindcss/tailwind.css';
 import Toggle from "../Ui/Toggle";
@@ -6,9 +6,28 @@ import MenuLista from "../Ui/MenuLista";
 import CardProcesso from "../ListaUsuarios/CardProcesso";
 import { FiSmile, FiFrown, FiMail, FiPhone } from "react-icons/fi";
 import Botao from "../Ui/Botao";
+import { api } from "../../service/api";
 
 export default function CardUsuario(props) {
     const [processos] = useState(props.processos || []);
+    const [fotoPerfil, setFotoPerfil] = useState(null);
+
+    useEffect(() => {
+        async function fetchFoto() {
+            try {
+                const response = await api.get(`/usuarios/foto-perfil/${props.idUsuario}`, {
+                    headers: {
+                        Authorization: `Bearer ${sessionStorage.getItem('token')}`
+                    }
+                });
+                setFotoPerfil(response.data);
+            } catch (error) {
+                console.error("Erro ao buscar foto de perfil", error.status);
+                setFotoPerfil(null);
+            }
+        }
+        fetchFoto();
+    }, [props.idUsuario]);
 
     const mostrarScroll = processos.length > 2;
     const processosVisiveis = mostrarScroll ? processos : processos.slice(0, 2);
@@ -39,7 +58,7 @@ export default function CardUsuario(props) {
                 <div className="flex gap-4 items-center">
                     <div className="flex items-center justify-center w-14 h-14 md:w-20 md:h-20 rounded-full overflow-hidden bg-gray-100 shrink-0">
                         <img
-                            src={props.imageUser && props.imageUser !== "null" ? props.imageUser : boneco}
+                            src={fotoPerfil && fotoPerfil !== "null" ? fotoPerfil : boneco}
                             alt="Foto do usuário"
                             className="object-cover w-full h-full"
                         />

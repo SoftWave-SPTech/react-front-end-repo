@@ -13,6 +13,7 @@ import {
   FiSearch,
 } from "react-icons/fi";
 import { jwtDecode } from "jwt-decode";
+import { api } from "../../service/api";
 
 const token = sessionStorage.getItem("token") || "";
 let decoded = "";
@@ -26,7 +27,14 @@ const MenuLateral = () => {
     return larguraSalva === "70";
   });
   const [isTablet, setIsTablet] = useState(window.innerWidth < 1024);
-  const [fotoPerfil, setFotoPerfil] = useState(sessionStorage.getItem("fotoPerfil"));
+  const [fotoPerfil, setFotoPerfil] = useState(() => {
+    const foto = sessionStorage.getItem("fotoPerfil");
+    // Retorna null se a foto for inválida
+    if (!foto || foto === "null" || foto === "http://localhost:8080/null") {
+      return null;
+    }
+    return foto;
+  });
 
   const alternarMenu = () => {
     const novoEstado = !fechado;
@@ -43,6 +51,41 @@ const MenuLateral = () => {
     const handleResize = () => setIsTablet(window.innerWidth < 1024);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Busca a foto da API quando o componente monta
+  useEffect(() => {
+    const userId = sessionStorage.getItem("id");
+    const token = sessionStorage.getItem("token");
+    
+    if (userId && token) {
+      // Sempre busca a foto da API para garantir que está atualizada
+      api.get(`/usuarios/foto-perfil/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then((response) => {
+        if (response.data && response.data !== "null" && response.data !== "http://localhost:8080/null") {
+          sessionStorage.setItem("fotoPerfil", response.data);
+          setFotoPerfil(response.data);
+        } else {
+          // Se não houver foto válida, remove do sessionStorage
+          sessionStorage.removeItem("fotoPerfil");
+          setFotoPerfil(null);
+        }
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar foto de perfil:", error);
+        // Se der erro, tenta usar o que está no sessionStorage
+        const fotoNoStorage = sessionStorage.getItem("fotoPerfil");
+        if (fotoNoStorage && fotoNoStorage !== "null" && fotoNoStorage !== "http://localhost:8080/null") {
+          setFotoPerfil(fotoNoStorage);
+        } else {
+          setFotoPerfil(null);
+        }
+      });
+    }
   }, []);
 
   // Atualiza a foto quando o sessionStorage mudar
@@ -189,13 +232,7 @@ const MenuLateral = () => {
               transition-all duration-300 hover:border-[#D9B166] hover:text-[#D9B166] text-white no-underline"
             >
               <img
-                src={(() => {
-                  const fotoUrl = usuario.fotoPerfil;
-                  if (fotoUrl && fotoUrl !== "http://localhost:8080/null") {
-                    return fotoUrl;
-                  }
-                  return "/src/assets/images/boneco.png";
-                })()}
+                src={fotoPerfil && fotoPerfil !== "null" && fotoPerfil !== "http://localhost:8080/null" ? fotoPerfil : "/src/assets/images/boneco.png"}
                 alt="Foto de perfil"
                 className="w-12 h-12 rounded-full object-cover border border-white"
               />

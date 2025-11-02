@@ -52,6 +52,7 @@ function FormPerfilAdvogado() {
     const [errors, setErrors] = useState({});
     const [cepAnterior, setCepAnterior] = useState('');
     const [alert, setAlert] = useState(null); // Estado para o Alert
+    const [fotoPerfil, setFotoPerfil] = useState(null); // Estado para a foto do perfil
     const URL = sessionStorage.getItem('tipoUsuario') == 'UsuarioFisico' ? "/usuarios-fisicos/" : "/usuarios-juridicos/"
     const URLFOTO = "/usuarios/foto-perfil"
 
@@ -137,12 +138,16 @@ function FormPerfilAdvogado() {
             },
         })
             .then((resposta) => {
-                if (resposta.data) {
+                if (resposta.data && resposta.data !== "null") {
                     sessionStorage.setItem('fotoPerfil', resposta.data);
+                    setFotoPerfil(resposta.data);
+                } else {
+                    setFotoPerfil(null);
                 }
             })
             .catch((erro) => {
                 console.error("Erro ao buscar foto do perfil:", erro.status);
+                setFotoPerfil(null);
                 // Não precisa mostrar erro para o usuário, apenas log
             })
     }, []);
@@ -330,6 +335,7 @@ function FormPerfilAdvogado() {
             })
                 .then(response => {
                     sessionStorage.setItem('fotoPerfil', response.data);
+                    setFotoPerfil(response.data);
                     setAlert({
                         type: "success",
                         message: "Foto Atualizada com sucesso!"
@@ -355,6 +361,7 @@ function FormPerfilAdvogado() {
         })
             .then(response => {
                 sessionStorage.removeItem('fotoPerfil');
+                setFotoPerfil(null);
                 setAlert({
                     type: "success",
                     message: "Foto Deletada com sucesso"
@@ -391,13 +398,7 @@ function FormPerfilAdvogado() {
             <div className="w-full max-w-[75%] mx-auto py-3 mb-4 flex flex-col gap-4 shadow-md rounded-lg bg-white">
                 <div className="px-4 py-3 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <img
-                        src={(() => {
-                          const fotoUrl = sessionStorage.getItem('fotoPerfil');
-                          if (fotoUrl && fotoUrl !== "http://localhost:8080/null") {
-                            return fotoUrl;
-                          }
-                          return '/src/assets/images/boneco.png';
-                        })()}
+                        src={fotoPerfil && fotoPerfil !== "null" && fotoPerfil !== "http://localhost:8080/null" ? fotoPerfil : minhaImagem}
                         alt="Foto de perfil"
                         className="w-28 h-28 rounded-full border-2 border-azulEscuroForte shadow-md object-cover bg-gray-100"
                     />

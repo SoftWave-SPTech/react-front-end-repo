@@ -201,7 +201,7 @@ function SiteInstitucional() {
           className="relative w-full bg-azulEscuroForte"
           style={{ background: 'linear-gradient(to top, #181e36 10%, rgba(7,17,43,0) 100%)', minHeight: '43rem' }}
         >
-          <div ref={carouselRef} className="flex w-full overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-none lg:overflow-x-visible lg:justify-center lg:gap-8 lg:p-8" style={{ height: '43rem' }}>
+          <div ref={carouselRef} className="flex w-full overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-none lg:overflow-x-visible lg:justify-center lg:gap-8 lg:p-8" style={{ height: '45rem' }}>
             <div className="flex-shrink-0 w-full lg:w-auto lg:flex-1 lg:max-w-[48%] flex flex-col bg-transparent p-6 lg:p-8 snap-center">
               <h2 className="text-dourado text-2xl md:text-3xl font-bold text-center mb-6">Sobre nós</h2>
               <div className="flex-1 overflow-y-auto pr-2">

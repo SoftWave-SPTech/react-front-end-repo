@@ -134,7 +134,7 @@ export default function FormLogin() {
                 />
 
                 <p className="mb-6 block text-left">
-                    <Link to="/redefinir-senha" className="text-azulEscuroForte hover:underline hover:text-dourado">
+                    <Link to="/redefinir-senha" className="font-bold  text-azulEscuroForte hover:underline hover:text-dourado">
                         ESQUECI MINHA SENHA
                     </Link>
                 </p>
