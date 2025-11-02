@@ -32,7 +32,7 @@ export default function CardUsuario(props) {
                 {props.role !== "ROLE_USUARIO" && (
                     <MenuLista idUsuario={props.idUsuario} role={props.role} />
                 )}
-                <Toggle idUsuario={props.idUsuario} ativo={props.ativo} className="w-12 h-6 md:w-14 md:h-7" />
+                <Toggle idUsuario={props.idUsuario} ativo={props.ativo} className="w-12 h-6 md:w-14 md:h-7" onStatusChange={props.onStatusChange} />
             </div>
 
             <div className="flex flex-col gap-4 w-full md:w-1/3">
@@ -57,11 +57,11 @@ export default function CardUsuario(props) {
                 <div className="flex flex-col gap-1 text-xs md:text-sm text-gray-700 w-full">
                     {props.usuarioPrimeiroAcesso ? (
                         <p className="flex items-center gap-2">
-                            <FiSmile className="text-base md:text-lg text-black shrink-0" /> Usuário Ativo em Sistema
+                            <FiSmile className="text-base md:text-lg text-black shrink-0" /> Já realizou o primeiro acesso
                         </p>
                     ) : (
                         <p className="flex items-center gap-2">
-                            <FiFrown className="text-base md:text-lg text-black shrink-0" /> Ainda Não Realizou Primeiro Acesso
+                            <FiFrown className="text-base md:text-lg text-black shrink-0" /> Ainda não realizou o primeiro acesso
                         </p>
                     )}
                     <p className="flex items-center gap-2 w-full whitespace-normal break-all">
@@ -91,7 +91,7 @@ export default function CardUsuario(props) {
                 {props.role !== "ROLE_USUARIO" && (
                     <MenuLista idUsuario={props.idUsuario} role={props.role} />
                 )}
-                <Toggle idUsuario={props.idUsuario} status={props.status} className="w-12 h-6" />
+                <Toggle idUsuario={props.idUsuario} ativo={props.ativo} className="w-12 h-6"  onStatusChange={props.onStatusChange} />
             </div>
 
 

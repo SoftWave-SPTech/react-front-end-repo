@@ -50,6 +50,11 @@ export default function ModalReenvioTokenPrimeiroAcesso({
       setErroEmail("Informe um e-mail válido.");
       return;
     }
+    // Nova validação: se o email editado for igual ao atual, mostra erro no modal
+    if (emailAtual && email.trim().toLowerCase() === emailAtual.trim().toLowerCase()) {
+      setErroEmail("O novo e-mail deve ser diferente do e-mail atual.");
+      return;
+    }
     onReenviar?.(email);
   };
 

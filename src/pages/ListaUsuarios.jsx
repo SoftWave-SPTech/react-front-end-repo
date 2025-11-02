@@ -68,7 +68,14 @@ export default function ListaUsuarios() {
                     "Authorization": TOKEN
                 }
             });
-            console.log('Reenviar token para:', novoEmail);
+            // Atualiza o email do usuário na lista sem recarregar a página
+            setListaUsuarios(prev =>
+                prev.map(usuario =>
+                    usuario.email === emailSelecionado
+                        ? { ...usuario, email: novoEmail }
+                        : usuario
+                )
+            );
             setIsModalReenvioOpen(false);
         } catch (error) {
             console.error('Erro ao reenviar token:', error);
@@ -87,6 +94,16 @@ export default function ListaUsuarios() {
         if (newPage >= 0 && newPage < totalPages) {
             setCurrentPage(newPage);
         }
+    };
+
+    const handleStatusChange = (idUsuario, novoStatus) => {
+        setListaUsuarios(prev =>
+            prev.map(usuario =>
+                usuario.id === idUsuario
+                    ? { ...usuario, ativo: novoStatus }
+                    : usuario
+            )
+        );
     };
 
     return (
@@ -128,7 +145,7 @@ export default function ListaUsuarios() {
                                 imageUser={usuario.foto}
                                 nomeUser={usuario.nome ? usuario.nome : usuario.nomeFantasia}
                                 identificadorUser={usuario.oab}
-                                usuarioPrimeiroAcesso={usuario.ativo}
+                                usuarioPrimeiroAcesso={usuario.tokenPrimeiroAcesso === null} 
                                 token={usuario.tokenPrimeiroAcesso}
                                 email={usuario.email}
                                 telefone={usuario.telefone}
@@ -136,6 +153,7 @@ export default function ListaUsuarios() {
                                 ativo={usuario.ativo}
                                 processos={usuario.procesos}
                                 onClickEmail={abrirModalReenvio}
+                                onStatusChange={handleStatusChange} 
                             />
                         ))
                     ) : (
