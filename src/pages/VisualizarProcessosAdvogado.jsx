@@ -306,7 +306,13 @@ const VisualizarProcessosAdvogado = () => {
                     key={movimentacao.id}
                     className="flex-shrink-0 w-32 md:w-36 bg-branco rounded-lg shadow flex flex-col items-center justify-between py-2"
                   >
-                    <p className="mb-1 text-xs text-center">Atualização<br />{movimentacao.data}</p>
+                    <p className="mb-1 text-xs text-center">
+                      Atualização<br />
+                      {Array.isArray(movimentacao.data) 
+                        ? `${String(movimentacao.data[2]).padStart(2, '0')}/${String(movimentacao.data[1]).padStart(2, '0')}/${movimentacao.data[0]}` 
+                        : movimentacao.data}
+                    </p>
+
                     {/* <div className="w-10 h-10 bg-preto rounded-full mb-2"></div> */}
                     <FaBalanceScale className="text-3xl text-AzulEscuro mb-2" />
                     <button
