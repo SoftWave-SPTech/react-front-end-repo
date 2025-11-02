@@ -68,10 +68,12 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
       const response = await api.get(`/clientes/com-processos`, {
         headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
       });
-      const listaClientes = response.data;
+      
+      const listaClientes = Array.isArray(response.data.content) ? response.data.content : [];
+      
 
       for (let cliente of listaClientes) {
-        const processoEncontrado = cliente.processos.find(p => p.id === processo.id);
+        const processoEncontrado = cliente.processos.find(p => Number(p.id) === Number(processo.id));
         if (processoEncontrado) {
           navigate(`/processos-advogado/${cliente.id}/${processo.id}`, {
             state: { tipoUsuario: cliente.tipoUsuario }
