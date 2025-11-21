@@ -37,13 +37,24 @@ const Dashboard = () => {
         setLoading(false);
       })
       .catch((err) => {
-        setError('Erro ao buscar dados: ' + err.data.message);
-        console.error("Erro ao buscar dados da dashboard:", err.status);
-        if(err.status >= 500){
-            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
-          }else{
-            setAlert({ show: true, message: err.response.data.message, type: "error" })
-          }
+        console.error("Erro ao buscar dados da dashboard:", err);
+        const status = err?.response?.status;
+        const msgBackend = err?.response?.data?.message;
+        setError('Erro ao buscar dados: ' + (msgBackend || 'tente novamente mais tarde.'));
+
+        if (status >= 500) {
+          setAlert({
+            show: true,
+            message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!",
+            type: "error"
+          });
+        } else {
+          setAlert({
+            show: true,
+            message: msgBackend || "Erro ao buscar dados da dashboard.",
+            type: "error"
+          });
+        }
         setLoading(false);
       });
   };
@@ -59,7 +70,6 @@ const Dashboard = () => {
   }, []);
 
   if (loading) return <div>Carregando dados...</div>;
-  if (error) return <div>Erro: {error}</div>;
 
   return (
     <LayoutBase backgroundClass="bg-cinzaAzulado">

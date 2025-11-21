@@ -38,10 +38,19 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
           headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
         });
       }
-      if (response) setProcessos(response.data);
+      if (response) {
+        const data = response.data;
+        // Garante que sempre teremos um array, mesmo se o backend mudar o formato
+        const lista = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.content)
+            ? data.content
+            : [];
+        setProcessos(lista);
+      }
     } catch (error) {
       console.error('Erro ao buscar processos:', error);
-      if (error.status >= 500) {
+      if (error?.response?.status >= 500) {
         setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte.", type: "error" });
       } else {
         setAlert({ show: true, message: error.response?.data?.message || "Erro ao buscar processos.", type: "error" });
@@ -56,8 +65,9 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
     }
   }, [role, usuarioId, reloadKey]);
 
-  // Filtra processos pelo número ou descrição
-  const processosFiltrados = processos.filter((proc) =>
+  // Filtra processos pelo número ou descrição (garantindo array)
+  const listaProcessos = Array.isArray(processos) ? processos : [];
+  const processosFiltrados = listaProcessos.filter((proc) =>
     (proc.numeroProcesso?.toLowerCase().includes(busca.toLowerCase()) || "") ||
     (proc.descricao?.toLowerCase().includes(busca.toLowerCase()) || "")
   );
@@ -115,7 +125,7 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
       setAlert({ show: true, type: "success", message: "Processo excluído com sucesso!" });
     } catch (error) {
       console.error("Erro ao excluir processo:", error);
-      if (error.status >= 500) {
+      if (error?.response?.status >= 500) {
         setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte.", type: "error" });
       } else {
         setAlert({ show: true, message: error.response?.data?.message || "Erro ao excluir processo.", type: "error" });
