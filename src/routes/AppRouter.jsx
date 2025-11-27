@@ -25,6 +25,7 @@ import RegistroPagamentos from "../pages/RegistroPagamentos";
 
 import RequireAuth from "../components/Auth/RequireAuth";
 import RequireRole from "../components/Auth/RequireRole";
+import ComentarioAdvogado from "../components/Ui/ComentarioAdvogado";
 
 
 const ROLES =
@@ -66,6 +67,7 @@ export const AppRouter = createBrowserRouter([
           { path: "/processos-advogado", element: <VisualizarProcessosAdvogado /> },
           { path: "/cadastrar-processos", element: <CadastrarProcesso /> },
           { path: "/pesquisar-processos", element: <PesquisarProcessos /> },
+          { path: "/comentarios-processos", element: <ComentarioAdvogado/> },
         ],
       },
 
