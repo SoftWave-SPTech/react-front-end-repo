@@ -47,12 +47,10 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
     valorPago: '',
     valorPagar: '',
     mes: '',
-    ano: currentYear,
-    honorarioSucumbencia: 0,
+    ano: currentYear
   });
   const [erros, setErros] = useState({});
 
-  // ===== Buscar clientes =====
   useEffect(() => {
     if (!open) return;
 
@@ -63,34 +61,33 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
       .catch(err => console.error('Erro ao buscar clientes:', err));
   }, [open]);
 
-  // ===== Preencher formulário ao abrir modal =====
   useEffect(() => {
     if (!open) return;
 
     if (initialData && mode === 'edit') {
-      // Busca processos do cliente antes de setar o form
       const fetchProcessos = async () => {
         try {
           const res = await api.get(`/processos/usuario-id/${initialData.clienteId}`, {
             headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
           });
+
           const processosCliente = res.data || [];
           setProcessos(processosCliente);
 
           setForm({
             cliente: initialData.clienteId || '',
             processo: initialData.processoId || (processosCliente[0]?.id || ''),
-            metodo: initialData.metodo || '',
-            tipo: initialData.tipo || '',
+            metodo: initialData.metodoPagamento || '',
+            tipo: initialData.tipoPagamento || '',
             parcelaAtual: initialData.parcelaAtual || 1,
-            parcelaTotal: initialData.parcelas || 1,
+            parcelaTotal: initialData.totalParcelas || 1,
             valorParcela: initialData.valorParcela ?? '',
             valorPago: initialData.valorPago ?? '',
             valorPagar: initialData.valorPagar ?? '',
             mes: initialData.mes || '',
-            ano: initialData.ano || currentYear,
-            honorarioSucumbencia: initialData.honorarioSucumbencia || 0,
+            ano: initialData.ano || currentYear
           });
+
           setErros({});
         } catch (err) {
           console.error('Erro ao buscar processos do cliente:', err);
@@ -99,7 +96,6 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
 
       fetchProcessos();
     } else {
-      // Modo create ou sem initialData
       setForm({
         cliente: '',
         processo: '',
@@ -111,15 +107,14 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
         valorPago: '',
         valorPagar: '',
         mes: '',
-        ano: currentYear,
-        honorarioSucumbencia: 0,
+        ano: currentYear
       });
+
       setProcessos([]);
       setErros({});
     }
   }, [open, initialData, mode]);
 
-  // ===== Buscar processos quando cliente mudar (modo create ou troca de cliente) =====
   useEffect(() => {
     if (!form.cliente) {
       setProcessos([]);
@@ -127,7 +122,6 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
       return;
     }
 
-    // Não sobrescrever processo se estiver no modo edit e initialData já foi carregada
     if (mode === 'edit' && initialData && form.cliente === initialData.clienteId) return;
 
     api.get(`/processos/usuario-id/${form.cliente}`, {
@@ -140,15 +134,14 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
       });
   }, [form.cliente, mode, initialData]);
 
-  // ===== Reset parcelas se tipo mudar para À vista =====
   useEffect(() => {
     if (form.tipo === 'A_VISTA') {
       setForm(prev => ({ ...prev, parcelaAtual: 1, parcelaTotal: 1, valorParcela: '' }));
     }
   }, [form.tipo]);
 
-  const handleChange = (field) => (e) => setForm(prev => ({ ...prev, [field]: e.target.value }));
-  const handleCurrencyChange = (field) => ({ value }) => setForm(prev => ({ ...prev, [field]: value }));
+  const handleChange = field => e => setForm(prev => ({ ...prev, [field]: e.target.value }));
+  const handleCurrencyChange = field => ({ value }) => setForm(prev => ({ ...prev, [field]: value }));
 
   const validar = () => {
     const e = {};
@@ -158,9 +151,9 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
     if (!form.tipo) e.tipo = 'Informe o tipo';
     if (!form.mes) e.mes = 'Informe o mês';
     if (!form.ano) e.ano = 'Informe o ano';
-    if (form.tipo === 'PARCELADO' && !form.valorParcela) e.valorParcela = 'Informe o valor da parcela';
     if (!form.valorPago) e.valorPago = 'Informe o valor pago';
     if (!form.valorPagar) e.valorPagar = 'Informe o valor a pagar';
+    if (form.tipo === 'PARCELADO' && !form.valorParcela) e.valorParcela = 'Informe o valor da parcela';
     if (form.tipo === 'PARCELADO' && Number(form.parcelaAtual) > Number(form.parcelaTotal)) {
       e.parcelaAtual = 'Parcela atual não pode exceder o total';
     }
@@ -168,14 +161,12 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
     return Object.keys(e).length === 0;
   };
 
-  // ===== Submit =====
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validar()) return;
 
+    // BODY → somente o DTO do backend
     const payload = {
-      cliente: Number(form.cliente),
-      processo: Number(form.processo),
       metodoPagamento: form.metodo,
       tipoPagamento: form.tipo,
       parcelaAtual: Number(form.parcelaAtual),
@@ -184,24 +175,28 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
       valorPago: Number(form.valorPago || 0),
       valorPagar: Number(form.valorPagar || 0),
       mes: form.mes,
-      ano: Number(form.ano),
-      honorarioSucumbencia: Number(form.honorarioSucumbencia || 0),
+      ano: Number(form.ano)
     };
 
     try {
       if (mode === 'edit' && initialData?.id) {
         await api.put(`/registros-financeiros/${initialData.id}`, payload, {
-          params: { cliente: payload.cliente, processo: payload.processo },
+          params: {
+            cliente: Number(form.cliente),
+            processo: Number(form.processo),
+          },
           headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         });
       } else {
-        await api.post('/registros-financeiros', payload, {
-          params: { cliente: payload.cliente, processo: payload.processo },
+        await api.post(`/registros-financeiros`, payload, {
+          params: {
+            cliente: Number(form.cliente),
+            processo: Number(form.processo),
+          },
           headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         });
       }
 
-      // ✅ Força recarregar toda a página
       window.location.reload();
     } catch (err) {
       console.error('Erro ao salvar registro financeiro:', err);
@@ -218,6 +213,7 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          
           {/* Cliente */}
           <div>
             <label className="block text-sm font-medium">Cliente</label>
@@ -282,18 +278,41 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
             {form.tipo === 'PARCELADO' && (
               <div>
                 <label className="block text-sm font-medium">Valor da Parcela</label>
-                <NumericFormat value={form.valorParcela} onValueChange={handleCurrencyChange('valorParcela')} thousandSeparator="." decimalSeparator="," prefix="R$ " className="border rounded w-full px-3 py-2" />
+                <NumericFormat
+                  value={form.valorParcela}
+                  onValueChange={handleCurrencyChange('valorParcela')}
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  prefix="R$ "
+                  className="border rounded w-full px-3 py-2"
+                />
                 {erros.valorParcela && <p className="text-red-500 text-xs">{erros.valorParcela}</p>}
               </div>
             )}
+
             <div>
               <label className="block text-sm font-medium">Valor Pago</label>
-              <NumericFormat value={form.valorPago} onValueChange={handleCurrencyChange('valorPago')} thousandSeparator="." decimalSeparator="," prefix="R$ " className="border rounded w-full px-3 py-2" />
+              <NumericFormat
+                value={form.valorPago}
+                onValueChange={handleCurrencyChange('valorPago')}
+                thousandSeparator="."
+                decimalSeparator=","
+                prefix="R$ "
+                className="border rounded w-full px-3 py-2"
+              />
               {erros.valorPago && <p className="text-red-500 text-xs">{erros.valorPago}</p>}
             </div>
+
             <div>
               <label className="block text-sm font-medium">Valor a Pagar</label>
-              <NumericFormat value={form.valorPagar} onValueChange={handleCurrencyChange('valorPagar')} thousandSeparator="." decimalSeparator="," prefix="R$ " className="border rounded w-full px-3 py-2" />
+              <NumericFormat
+                value={form.valorPagar}
+                onValueChange={handleCurrencyChange('valorPagar')}
+                thousandSeparator="."
+                decimalSeparator=","
+                prefix="R$ "
+                className="border rounded w-full px-3 py-2"
+              />
               {erros.valorPagar && <p className="text-red-500 text-xs">{erros.valorPagar}</p>}
             </div>
           </div>
@@ -308,6 +327,7 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
               </select>
               {erros.mes && <p className="text-red-500 text-xs">{erros.mes}</p>}
             </div>
+
             <div>
               <label className="block text-sm font-medium">Ano</label>
               <select value={form.ano} onChange={handleChange('ano')} className="border rounded w-full px-3 py-2">
@@ -318,9 +338,14 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
           </div>
 
           <div className="flex justify-end gap-2 mt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 rounded-md border border-AzulEscuro text-AzulEscuro hover:bg-AzulClaro hover:bg-azulClaro hover:text-dourado transition-colors duration-200 ">Cancelar</button>
-            <button type="submit" className="px-4 py-2 rounded-md bg-AzulEscuro text-white hover:bg-azulClaro hover:text-dourado">Salvar</button>
+            <button type="button" onClick={onClose} className="px-4 py-2 rounded-md border border-AzulEscuro text-AzulEscuro hover:bg-AzulClaro hover:text-dourado transition-colors duration-200">
+              Cancelar
+            </button>
+            <button type="submit" className="px-4 py-2 rounded-md bg-AzulEscuro text-white hover:bg-AzulClaro hover:text-dourado">
+              Salvar
+            </button>
           </div>
+
         </form>
       </div>
     </div>
