@@ -38,8 +38,8 @@ export default function SelectFiltro({
             aria-label={label || placeholder}
           />
           <datalist id={datalistId}>
-            {options.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            {options.map((opt, index) => (
+              <option key={opt.value || `datalist-opt-${index}`} value={opt.value || ''}>{opt.label}</option>
             ))}
           </datalist>
         </>
@@ -51,9 +51,9 @@ export default function SelectFiltro({
           className="border border-gray-300 rounded px-3 py-2 text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
           aria-label={label || placeholder}
         >
-          <option value="">{placeholder}</option>
-          {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
+          <option key="placeholder" value="">{placeholder}</option>
+          {options.map((opt, index) => (
+            <option key={opt.value || `opt-${index}`} value={opt.value || ''}>
               {opt.label}
             </option>
           ))}

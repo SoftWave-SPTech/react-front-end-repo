@@ -40,12 +40,22 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
         });
       }
 
-      if (response) setProcessos(response.data);
+      if (response) {
+        const data = response.data;
+
+        const lista = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.content)
+            ? data.content
+            : [];
+
+        setProcessos(lista);
+      }
 
     } catch (error) {
       console.error('Erro ao buscar processos:', error);
 
-      if (error.status >= 500) {
+      if (error?.response?.status >= 500) {
         setAlert({
           show: true,
           message: "O serviço não está disponível! Por favor, contate o nosso suporte.",
@@ -68,12 +78,13 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
     }
   }, [role, usuarioId, reloadKey]);
 
-  // Filtro de busca — corrigido para evitar null.toLowerCase()
-  const processosFiltrados = processos.filter((proc) => {
-    const numero = proc.numeroProcesso ? proc.numeroProcesso.toLowerCase() : "";
-    const desc = proc.descricao ? proc.descricao.toLowerCase() : "";
-    const termo = busca.toLowerCase();
+  // Filtro
+  const listaProcessos = Array.isArray(processos) ? processos : [];
 
+  const processosFiltrados = listaProcessos.filter((proc) => {
+    const numero = proc.numeroProcesso?.toLowerCase() || "";
+    const desc = proc.descricao?.toLowerCase() || "";
+    const termo = busca.toLowerCase();
     return numero.includes(termo) || desc.includes(termo);
   });
 
@@ -87,7 +98,7 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
       const listaClientes =
         Array.isArray(response.data)
           ? response.data
-          : Array.isArray(response.data.content)
+          : Array.isArray(response.data?.content)
             ? response.data.content
             : [];
 
@@ -113,7 +124,7 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
     } catch (error) {
       console.error("Erro ao buscar cliente do processo:", error);
 
-      if (error.status >= 500) {
+      if (error?.response?.status >= 500) {
         setAlert({
           show: true,
           message: "O serviço não está disponível! Por favor, contate o nosso suporte.",
@@ -167,7 +178,7 @@ export default function ItemListaProcesso({ onEdit, reloadKey = 0 }) {
     } catch (error) {
       console.error("Erro ao excluir processo:", error);
 
-      if (error.status >= 500) {
+      if (error?.response?.status >= 500) {
         setAlert({
           show: true,
           message: "O serviço não está disponível! Por favor, contate o nosso suporte.",
