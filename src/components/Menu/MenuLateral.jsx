@@ -191,7 +191,8 @@ const MenuLateral = () => {
               <img
                 src={(() => {
                   const fotoUrl = usuario.fotoPerfil;
-                  if (fotoUrl && fotoUrl !== "http://localhost:8080/null") {
+                  const FILE_BASE_URL = import.meta.env.VITE_FILE_BASE_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+                  if (fotoUrl && fotoUrl !== `${FILE_BASE_URL}/null` && fotoUrl !== "http://localhost:8080/null") {
                     return fotoUrl;
                   }
                   return "/src/assets/images/boneco.png";

@@ -39,7 +39,7 @@ const DocumentosList = ({ documentos = [], filtro = '' }) => {
                 </div>
               </div>
               <a
-                href={`http://localhost:8080/${doc.urlArquivo}`}
+                href={`${import.meta.env.VITE_FILE_BASE_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/${doc.urlArquivo}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-white text-[#0f1b3e] rounded-lg font-bold py-2 px-4 transition-colors duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#0f1b3e] flex-shrink-0 w-full text-center mt-2"

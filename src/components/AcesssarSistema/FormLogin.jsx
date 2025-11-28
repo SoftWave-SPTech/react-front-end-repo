@@ -46,7 +46,23 @@ export default function FormLogin() {
             console.log("Resposta da API:", response.data);
 
             if (response.status === 200) {
+                // Verificar se todos os campos obrigatórios estão presentes
+                const requiredFields = ['id', 'email', 'token', 'tipoUsuario', 'role', 'nome'];
+                const missingFields = requiredFields.filter(field => !response.data[field]);
+                
+                if (missingFields.length > 0) {
+                    console.error("Campos obrigatórios ausentes:", missingFields);
+                    setAlert({ 
+                        show: true, 
+                        message: "Dados de login incompletos. Tente novamente.", 
+                        type: "error" 
+                    });
+                    return;
+                }
+
                 setAlert({ show: true, message: "Login realizado com sucesso!", type: "success" });
+                
+                // Salvar dados no sessionStorage
                 sessionStorage.setItem("id", response.data.id);
                 sessionStorage.setItem("email", response.data.email);
                 sessionStorage.setItem("token", response.data.token);
@@ -61,13 +77,33 @@ export default function FormLogin() {
                     sessionStorage.removeItem("fotoPerfil");
                 }
 
+                // Log dos dados salvos para debug
+                console.log("Dados salvos no sessionStorage:", {
+                    id: sessionStorage.getItem("id"),
+                    email: sessionStorage.getItem("email"),
+                    token: sessionStorage.getItem("token") ? "***TOKEN_PRESENTE***" : null,
+                    tipoUsuario: sessionStorage.getItem("tipoUsuario"),
+                    role: sessionStorage.getItem("role"),
+                    nome: sessionStorage.getItem("nome")
+                });
+
                 setTimeout(() => {
-                    if (response.data.role === "ROLE_USUARIO") {
+                    const role = response.data.role;
+                    console.log("Redirecionando para role:", role);
+                    
+                    if (role === "ROLE_USUARIO") {
                         window.location.href = "/perfil-cliente";
-                    } else if(response.data.role === "ROLE_ADMIN") {
+                    } else if (role === "ROLE_ADMIN") {
                         window.location.href = "/dashboard";
-                    } else {
+                    } else if (role === "ROLE_ADVOGADO") {
                         window.location.href = "/perfil-advogado";
+                    } else {
+                        console.error("Role desconhecida:", role);
+                        setAlert({ 
+                            show: true, 
+                            message: "Tipo de usuário não reconhecido.", 
+                            type: "error" 
+                        });
                     }
                 }, 1200); 
             }

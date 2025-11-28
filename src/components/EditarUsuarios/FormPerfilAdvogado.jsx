@@ -11,8 +11,11 @@ import { validarPerfilAdvogado } from '../../Utils/validacoes.jsx';
 import Alert from "../Ui/AlertStyle.jsx"; // Importa o AlertStyle
 
 function FormPerfilAdvogado() {
-    const TOKEN = `Bearer ${sessionStorage.getItem('token')}`
     const fileInputRef = useRef(null);
+    
+    // Função helper para obter o token
+    const getAuthToken = () => `Bearer ${sessionStorage.getItem('token')}`;
+    
     const [usuario, setUsuario] = useState({
         email: '',
         telefone: '',
@@ -56,7 +59,16 @@ function FormPerfilAdvogado() {
     const URLFOTO = "/usuarios/foto-perfil"
 
     useEffect(() => {
+        const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
+        
+        console.log("FormPerfilAdvogado - Iniciando carregamento, dados do session:", {
+            tipoUsuario: sessionStorage.getItem('tipoUsuario'),
+            id: sessionStorage.getItem('id'),
+            token: sessionStorage.getItem('token') ? "***PRESENTE***" : null
+        });
+
         if (sessionStorage.getItem('tipoUsuario') == "AdvogadoFisico") {
+            console.log("FormPerfilAdvogado - Carregando dados de AdvogadoFisico");
 
             api.get(`/advogados-fisicos/${sessionStorage.getItem('id')}`, {
                 headers: {
@@ -64,6 +76,7 @@ function FormPerfilAdvogado() {
                 },
             })
                 .then((resposta) => {
+                    console.log("FormPerfilAdvogado - Dados carregados com sucesso:", resposta.data);
                     const dados = {
                         "id": resposta.data.id,
                         "nome": resposta.data.nome,
@@ -92,6 +105,7 @@ function FormPerfilAdvogado() {
                 })
 
         } else if (sessionStorage.getItem('tipoUsuario') == "AdvogadoJuridico") {
+            console.log("FormPerfilAdvogado - Carregando dados de AdvogadoJuridico");
 
             api.get(`/advogados-juridicos/${sessionStorage.getItem('id')}`, {
                 headers: {
@@ -99,7 +113,7 @@ function FormPerfilAdvogado() {
                 },
             })
                 .then((resposta) => {
-                    console.log("Dados recebidos para usuário físico:", resposta.data);
+                    console.log("FormPerfilAdvogado - Dados de AdvogadoJuridico carregados:", resposta.data);
                     const dados = {
                         "id": resposta.data.id,
                         "nomeFantasia": resposta.data.nomeFantasia,
@@ -171,7 +185,7 @@ function FormPerfilAdvogado() {
 
             api.put(`/advogados-fisicos/${usuario.id}`, usuarioParaAtualizar, {
                 headers: {
-                    Authorization: TOKEN,
+                    Authorization: getAuthToken(),
                 },
             })
                 .then((resposta) => {
@@ -215,7 +229,7 @@ function FormPerfilAdvogado() {
 
             api.put(`/advogados-juridicos/${usuario.id}`, usuarioParaAtualizar, {
                 headers: {
-                    Authorization: TOKEN,
+                    Authorization: getAuthToken(),
                 },
             })
                 .then((resposta) => {
@@ -325,7 +339,7 @@ function FormPerfilAdvogado() {
             api.put(`${URLFOTO}/${sessionStorage.getItem('id')}`, arquivoFormatado, {
                 headers:
                 {
-                    "Authorization": TOKEN
+                    "Authorization": getAuthToken()
                 }
             })
                 .then(response => {
@@ -350,7 +364,7 @@ function FormPerfilAdvogado() {
     function excluirFotoPerfil() {
         api.delete(`${URLFOTO}/${sessionStorage.getItem('id')}`, {
             headers: {
-                "Authorization": TOKEN,
+                "Authorization": getAuthToken(),
             }
         })
             .then(response => {
@@ -393,7 +407,8 @@ function FormPerfilAdvogado() {
                     <img
                         src={(() => {
                           const fotoUrl = sessionStorage.getItem('fotoPerfil');
-                          if (fotoUrl && fotoUrl !== "http://localhost:8080/null") {
+                          const FILE_BASE_URL = import.meta.env.VITE_FILE_BASE_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+                          if (fotoUrl && fotoUrl !== `${FILE_BASE_URL}/null` && fotoUrl !== "http://localhost:8080/null") {
                             return fotoUrl;
                           }
                           return '/src/assets/images/boneco.png';

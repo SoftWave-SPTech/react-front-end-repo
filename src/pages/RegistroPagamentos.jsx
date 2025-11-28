@@ -5,7 +5,7 @@ import TabelaPagamentos from '../components/Ui/TabelaPagamentos';
 import ResumoValores from '../components/Ui/ResumoValores';
 import ModalNovoPagamento from '../components/Ui/ModalNovoPagamento';
 import BarraTitulo from '../components/Ui/BarraTitulo';
-import axios from 'axios';
+import { api } from '../service/api';
 
 export default function RegistroPagamentos() {
   const [pagamentos, setPagamentos] = useState([]);
@@ -28,7 +28,7 @@ export default function RegistroPagamentos() {
 
   const fetchPagamentos = async () => {
     try {
-      const res = await axios.get('http://localhost:8080/registros-financeiros', {
+      const res = await api.get('/registros-financeiros', {
         headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
       });
 
@@ -66,7 +66,7 @@ export default function RegistroPagamentos() {
   useEffect(() => {
     const fetchClientesComProcessos = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/clientes/com-processos', {
+        const res = await api.get('/clientes/com-processos', {
           headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         });
 
@@ -145,11 +145,11 @@ export default function RegistroPagamentos() {
   const handleSave = async (dados) => {
     try {
       if (modalMode === 'create') {
-        await axios.post('http://localhost:8080/registros-financeiros', dados, {
+        await api.post('/registros-financeiros', dados, {
           headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         });
       } else if (modalMode === 'edit') {
-        await axios.put(`http://localhost:8080/registros-financeiros/${dados.id}`, dados, {
+        await api.put(`/registros-financeiros/${dados.id}`, dados, {
           headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         });
       }
@@ -163,7 +163,7 @@ export default function RegistroPagamentos() {
     if (!selectedItem) return;
     const registroAlvo = selectedItem.id;
     setPagamentos((prev) => prev.map((p) => (p.id === registroAlvo ? { ...p, resultado } : p)));
-    axios.put('http://localhost:8080/registros-financeiros/status', null, {
+    api.put('/registros-financeiros/status', null, {
       params: { id: registroAlvo, status: resultado === 'vitoria' ? 'DEFERIDO' : 'INDEFERIDO' },
       headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
     }).catch((err) => console.error('Erro ao atualizar status financeiro:', err));
