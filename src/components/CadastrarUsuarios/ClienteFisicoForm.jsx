@@ -9,6 +9,7 @@ import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG } from '../../Utils/
 import { buscarCep } from '../../service/buscarCep';
 import { validarClienteFisico } from '../../Utils/validacoes';
 import EnviarChaveAcesso from './EnvioEmail.jsx';
+import Alert from '../Ui/AlertStyle';
 
 export default function ClienteFisicoForm() {
   const [formData, setFormData] = useState({
@@ -26,6 +27,11 @@ export default function ClienteFisicoForm() {
   });
 
   const [errors, setErrors] = useState({});
+  const [alert, setAlert] = useState({ show: false, type: 'info', message: '' });
+
+  const showAlert = (type, message) => {
+    setAlert({ show: true, type, message });
+  };
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -48,7 +54,7 @@ export default function ClienteFisicoForm() {
           }));
         } catch (error) {
           console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
-          alert('CEP inválido ou não encontrado.');
+          showAlert('error', 'CEP inválido ou não encontrado.');
         }
       }
     }
@@ -65,19 +71,23 @@ export default function ClienteFisicoForm() {
     }
 
     setErrors({});
-    const novaSenha = nanoid(8);
-    const dadosParaEnviar = { ...formData, senha: novaSenha };
+    const tokenPrimeiroAcesso = nanoid(8);
+    const dadosParaEnviar = { ...formData, tokenPrimeiroAcesso: tokenPrimeiroAcesso };
 
     api.post('/usuarios-fisicos', dadosParaEnviar, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
-    .then(() => {
-
-        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
-
-        alert('Cadastro realizado com sucesso!');
+    .then(async () => {
+        try {
+          await EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email, setAlert);
+          showAlert('success', 'Cadastro realizado com sucesso!');
+        } catch (emailError) {
+          console.error('Erro ao enviar email:', emailError);
+          showAlert('success', 'Cadastro realizado com sucesso! (Email não pôde ser enviado)');
+        }
+        
         setFormData({
           nome: '',
           cpf: '',
@@ -93,28 +103,25 @@ export default function ClienteFisicoForm() {
         });
     })
     .catch((err) => {
-        console.error(err);
         if (err.response?.data) {
-          const erros = err.response.data;
-          let mensagem = "";
-          Object.keys(erros).forEach(campo => {
-            if(campo === "message" && campo) {
-                mensagem = erros[campo] ;
-              } else if (campo === "status") {
-                if (erros[campo] === 500){
-                  mensagem = "Já existe um cliente cadastrado com esses dados. Por favor, verifique os dados e tente novamente.";
-                }
-              }
-          });
-          alert(mensagem)
+          console.error("Erro ao cadastrar cliente fisico:", err.status);
+          setAlert({ show: true, message: err.response.data.message, type: "error" })
         } else {
-          alert('Erro ao cadastrar cliente. Por favor, tente novamente.');
+          console.error("Erro ao cadastrar cliente fisco:", err.status);
+          showAlert('error', 'Erro ao cadastrar cliente. Por favor, tente novamente.');
         }
       });
   };
 
   return (
     <form className="bg-white p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
+      {alert.show && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert({ ...alert, show: false })}
+        />
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <Input

@@ -1,12 +1,14 @@
 import { Input } from "../Ui/Input.jsx";
 import Botao from "../Ui/Botao.jsx";
 import BarraTitulo from "../Ui/BarraTitulo.jsx";
+import minhaImagem from '../../assets/images/boneco.png'
 import { useEffect, useState, useRef } from "react";
 import { FiUpload, FiTrash } from 'react-icons/fi';
 import { api } from '../../service/api.js';
 import { buscarCep } from "../../service/buscarCep.js";
 import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG, mascaraCNPJ } from '../../Utils/mascaras';
 import { validarPerfilCliente } from '../../Utils/validacoes.jsx';
+import Alert from "../Ui/AlertStyle.jsx"; // Importa o AlertStyle
 
 function FormPerfilCliente() {
   const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
@@ -48,6 +50,8 @@ function FormPerfilCliente() {
 
   const [errors, setErrors] = useState({});
   const [cepAnterior, setCepAnterior] = useState('');
+  const [alert, setAlert] = useState(null); // Estado para o Alert
+  const [fotoPerfil, setFotoPerfil] = useState(null); // Estado para a foto do perfil
   const URL = sessionStorage.getItem('tipoUsuario') === 'UsuarioFisico' ? "/usuarios-fisicos/" : "/usuarios-juridicos/";
   const URLFOTO = "/usuarios/foto-perfil";
 
@@ -77,7 +81,12 @@ function FormPerfilCliente() {
           criarAtualizarFisicos(dados);
         })
         .catch((erro) => {
-          console.log(erro);
+          if(erro.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: erro.response.data.message, type: "error" })
+          }
+          console.error("Erro ao buscar usuários físicos:", erro.status);
         });
 
     } else if (sessionStorage.getItem('tipoUsuario') === "UsuarioJuridico") {
@@ -105,9 +114,34 @@ function FormPerfilCliente() {
           criarAtualizarJuridicos(dados);
         })
         .catch((erro) => {
-          console.log(erro);
+          console.error("Erro ao buscar usuários jurídicos:", erro.status);
+          if(erro.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: erro.response.data.message, type: "error" })
+          }
         });
     }
+
+    // Buscar foto do perfil da AWS
+    api.get(`${URLFOTO}/${sessionStorage.getItem('id')}`, {
+      headers: {
+        Authorization: TOKEN,
+      },
+    })
+      .then((resposta) => {
+        if (resposta.data && resposta.data !== "null") {
+          sessionStorage.setItem('fotoPerfil', resposta.data);
+          setFotoPerfil(resposta.data);
+        } else {
+          setFotoPerfil(null);
+        }
+      })
+      .catch((erro) => {
+        console.error("Erro ao buscar foto do perfil:", erro.status);
+        setFotoPerfil(null);
+        // Não precisa mostrar erro para o usuário, apenas log
+      })
   }, []);
 
   //TODO avaliar utilidade dessa função
@@ -140,46 +174,14 @@ function FormPerfilCliente() {
             cidade: endereco.localidade || '',
           }));
         } catch (error) {
-          console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
-          alert('CEP inválido ou não encontrado.');
+          setAlert({
+            type: "error",
+            message: "CEP inválido ou não encontrado."
+          });
         }
       }
     }
   };
-
-  //TODO Avaliar FUncionalidade desta função  
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   const errosEncontrados = validarPerfilCliente(usuario);
-
-  //   if (Object.keys(errosEncontrados).length > 0) {
-  //     setErrors(errosEncontrados);
-  //     return;
-  //   }
-
-  //   setErrors({});
-
-  //   api.put(`/usuarios-${sessionStorage.getItem('tipoUsuario') === 'UsuarioFisico' ? 'fisicos' : 'juridicos'}/${usuario.id}`, usuario, {
-  //     headers: {
-  //       Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-  //     },
-  //   })
-  //   .then(() => {
-  //     alert('Dados atualizados com sucesso!');
-  //   })
-  //   .catch((err) => {
-  //     console.error(err);
-  //     if (err.response?.data) {
-  //       const erros = err.response.data;
-  //       Object.keys(erros).forEach(campo => {
-  //         alert(`${campo}: ${erros[campo]}`);
-  //       });
-  //     } else {
-  //       alert('Erro ao atualizar dados. Por favor, tente novamente.');
-  //     }
-  //   });
-  // };
 
   function criarAtualizarFisicos(dados) {
     setUsuario(dados);
@@ -232,7 +234,10 @@ function FormPerfilCliente() {
         cidade: endereco.localidade,
       }));
     } catch (error) {
-      alert('CEP inválido ou não encontrado.');
+      setAlert({
+        type: "error",
+        message: "CEP inválido ou não encontrado."
+      });
     }
   }
 
@@ -241,21 +246,17 @@ function FormPerfilCliente() {
 
       const tipoUsuario = sessionStorage.getItem('tipoUsuario');
 
-      console.log("Dados enviados:", usuarioParaAtualizar);
-
       const dadosParaValidar =
       {
         ...usuarioParaAtualizar,
         tipoUsuario: tipoUsuario,
       };
 
-      console.log("Dados para validação:", dadosParaValidar);
-
       const errosEncontrados = validarPerfilCliente(dadosParaValidar);
+      console.log(errosEncontrados);
 
       if (Object.keys(errosEncontrados).length > 0) {
         setErrors(errosEncontrados);
-        console.log(errosEncontrados)
         return;
       }
 
@@ -265,20 +266,26 @@ function FormPerfilCliente() {
         },
       })
         .then((resposta) => {
-          alert("Dados Atualizados com sucesso!");
+          setAlert({
+            type: "success",
+            message: "Dados Atualizados com sucesso!"
+          });
           sessionStorage.setItem('nome', usuarioParaAtualizar.nome);
           sessionStorage.setItem('email', usuarioParaAtualizar.email);
-          window.location.reload();
+          setTimeout(() => window.location.reload(), 1500);
         })
         .catch((erro) => {
-          alert("Ocorreu um erro, tente novamente!");
+          console.error("Erro ao atualizar usuários físicos:", erro.status);
+          if(erro.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: erro.response.data.message, type: "error" })
+          }
         });
 
     } else if (sessionStorage.getItem('tipoUsuario') === "UsuarioJuridico") {
 
       const tipoUsuario = sessionStorage.getItem('tipoUsuario');
-
-      console.log("Dados enviados:", usuarioParaAtualizar);
 
       const dadosParaValidar =
       {
@@ -286,15 +293,11 @@ function FormPerfilCliente() {
         tipoUsuario: tipoUsuario,
       };
 
-      console.log("Dados para validação:", dadosParaValidar);
-
-      console.log(usuarioParaAtualizar);
-
       const errosEncontrados = validarPerfilCliente(dadosParaValidar);
+      console.log(errosEncontrados);
 
       if (Object.keys(errosEncontrados).length > 0) {
         setErrors(errosEncontrados);
-        console.log(errosEncontrados)
         return;
       }
 
@@ -304,13 +307,21 @@ function FormPerfilCliente() {
         },
       })
         .then((resposta) => {
-          alert("Dados Atualizados com sucesso!");
+          setAlert({
+            type: "success",
+            message: "Dados Atualizados com sucesso!"
+          });
           sessionStorage.setItem('nome', usuarioParaAtualizar.nomeFantasia);
           sessionStorage.setItem('email', usuarioParaAtualizar.email);
-          window.location.reload();
+          setTimeout(() => window.location.reload(), 1500);
         })
         .catch((erro) => {
-          alert("Ocorreu um erro, tente novamente!");
+          if(erro.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: erro.response.data.message, type: "error" })
+          }
+          console.error("Erro ao atualizar usuários jurídicos:", erro.status);
         });
     }
   }
@@ -321,7 +332,10 @@ function FormPerfilCliente() {
 
   function atualizarFoto(file) {
     if (!file) {
-      alert("Escolha uma foto primeiro!");
+      setAlert({
+        type: "warning",
+        message: "Escolha uma foto primeiro!"
+      });
     } else {
       const arquivoFormatado = new FormData();
       arquivoFormatado.append("fotoPerfil", file);
@@ -333,11 +347,20 @@ function FormPerfilCliente() {
       })
         .then(response => {
           sessionStorage.setItem('fotoPerfil', response.data);
-          alert("Foto Atualizada com sucesso!");
-          window.location.reload();
+          setFotoPerfil(response.data);
+          setAlert({
+            type: "success",
+            message: "Foto Atualizada com sucesso!"
+          });
+          setTimeout(() => window.location.reload(), 1500);
         })
         .catch(error => {
-          console.error("Erro ao enviar o arquivo:", error);
+          console.error("Erro ao atualizar foto de perfil:", error.status);
+          if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
         });
     }
   }
@@ -349,16 +372,36 @@ function FormPerfilCliente() {
       }
     })
       .then(response => {
-        sessionStorage.setItem('fotoPerfil', "http://localhost:8080/null");
-        window.location.reload();
+        sessionStorage.removeItem('fotoPerfil');
+        setFotoPerfil(null);
+        setAlert({
+          type: "success",
+          message: "Foto removida com sucesso!"
+        });
+        setTimeout(() => window.location.reload(), 1500);
       })
       .catch(error => {
-        console.error("Erro ao excluir a foto:", error);
+        console.error("Erro ao excluuir foto de perfil:", error.status);
+        if(error.status >= 500){
+            setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+          }else{
+            setAlert({ show: true, message: error.response.data.message, type: "error" })
+          }
       });
   }
 
   return (
     <>
+      {alert && (
+        <div className="w-full max-w-[75%] mx-auto">
+          <Alert
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert(null)}
+          />
+        </div>
+      )}
+
       <div className="flex justify-center">
         <BarraTitulo tamanho="grande" cor="escuro" className="rounded-lg w-full max-w-[75%] text-base">
           Foto do usuário
@@ -368,7 +411,7 @@ function FormPerfilCliente() {
       <div className="w-full max-w-[75%] mx-auto py-3 mb-4 flex flex-col gap-4 shadow-md rounded-lg bg-white">
         <div className="px-4 py-3 flex flex-col sm:flex-row items-center justify-center gap-4">
           <img
-            src={sessionStorage.getItem('fotoPerfil') !== "http://localhost:8080/null" ? sessionStorage.getItem('fotoPerfil') : '/src/assets/images/boneco.png'}
+            src={fotoPerfil && fotoPerfil !== "null" && fotoPerfil !== "http://localhost:8080/null" ? fotoPerfil : minhaImagem}
             alt="Foto de perfil"
             className="w-28 h-28 rounded-full border-2 border-azulEscuroForte shadow-md object-cover bg-gray-100"
           />

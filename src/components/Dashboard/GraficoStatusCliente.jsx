@@ -6,12 +6,12 @@ const GraficoStatusCliente = ({ dados }) => {
 
   if (!dados || dados.length === 0) {
     return (
-      <div className="p-2 bg-white border border-gold-500 rounded-lg shadow-lg w-full h-[100%]">
-        <h2 className="text-[1.2em] font-semibold text-black font-quicksand mb-0">
+      <div className="p-2 md:p-4 bg-white border border-gold-500 rounded-lg shadow-lg w-full h-full min-w-0">
+        <h2 className="text-base md:text-[1.2em] font-semibold text-black font-quicksand mb-2 text-center">
           Status dos Clientes
         </h2>
-        <div className="h-[220px] flex items-center justify-center">
-          <p className="text-gray-500 text-sm">Sem dados para exibir</p>
+        <div className="h-[180px] md:h-[220px] flex items-center justify-center">
+          <p className="text-gray-500 text-sm md:text-base">Sem dados para exibir</p>
         </div>
       </div>
     );
@@ -27,7 +27,7 @@ const GraficoStatusCliente = ({ dados }) => {
     return (
       <ul className="flex flex-col gap-1">
         {payload.map((entry, index) => (
-          <li key={`item-${index}`} className="flex items-center text-sm text-black">
+          <li key={`item-${index}`} className="flex items-center text-sm md:text-base text-black">
             <span
               className="w-3 h-3 mr-2"
               style={{ backgroundColor: COLORS[index], borderRadius: '50%' }}
@@ -40,11 +40,11 @@ const GraficoStatusCliente = ({ dados }) => {
   };
 
   return (
-    <div className="p-2 bg-white border border-gold-500 rounded-lg shadow-lg w-full h-[100%]">
-      <h2 className="text-[1.2em] font-semibold text-black font-quicksand mb-0">
+    <div className="p-2 md:p-4 bg-white border border-gold-500 rounded-lg shadow-lg w-full h-full min-w-0">
+      <h2 className="text-base md:text-[1.2em] font-semibold text-black font-quicksand mb-2 text-center">
         Status dos Clientes
       </h2>
-      <div className="h-[220px] flex flex-col items-center justify-center">
+      <div className="h-[180px] md:h-[220px] flex flex-col items-center justify-center">
         <ResponsiveContainer width="100%" height="95%">
           <PieChart>
             <Pie
@@ -59,11 +59,11 @@ const GraficoStatusCliente = ({ dados }) => {
                 <Cell key={index} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <Tooltip contentStyle={{ fontSize: 16 }} />
+            <Tooltip contentStyle={{ fontSize: 14 }} />
             <Legend
               verticalAlign="bottom"
               align="center"
-              contentStyle={{ fontSize: 16 }}
+              contentStyle={{ fontSize: 14 }}
               content={renderLegend}
             />
           </PieChart>

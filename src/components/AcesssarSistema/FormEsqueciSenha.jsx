@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import Botao from '../Ui/Botao';
 import { Input } from '../Ui/Input';
-import { api } from '../../service/api';
+import { api, apiAuthEmail } from '../../service/api';
 import { useNavigate } from 'react-router-dom';
+import Alert from '../Ui/AlertStyle';
 
 const FormRedefinirSenha = () => {
 
@@ -11,6 +12,7 @@ const FormRedefinirSenha = () => {
     const [senha, setSenha] = useState("");
     const [confirmarSenha, setConfirmarSenha] = useState("");
     const [errors, setErrors] = useState({});
+    const [alert, setAlert] = useState(null);
 
     const validarFormulario = () => {
         const novosErros = {};
@@ -43,16 +45,22 @@ const FormRedefinirSenha = () => {
         }
 
         try {
-            const response = await api.post(`/auth/resetar-senha`, {
+            const response = await apiAuthEmail.post(`/auth/resetar-senha`, {
                 token: chave,
                 novaSenha: senha,
                 novaSenhaConfirma: confirmarSenha
             });
 
-            alert("Senha redefinida com sucesso!");
-            navigate("/login");
+            setAlert({
+                type: "success",
+                message: "Senha redefinida com sucesso!"
+            });
+            setTimeout(() => {
+                setAlert(null);
+                navigate("/login");
+            }, 2000);
         } catch (error) {
-            console.error("Erro ao redefinir senha:", error);
+            console.error("Erro ao redefinir senha:", error.status);
             if (error.response?.status === 400) {
                 const mensagensErro = error.response.data;
                 if (typeof mensagensErro === 'object') {
@@ -63,13 +71,25 @@ const FormRedefinirSenha = () => {
                         }));
                     });
                 } else {
-                    alert(mensagensErro || "Dados inválidos. Por favor, verifique as informações.");
+                    setAlert({
+                        type: "error",
+                        message: mensagensErro || "Dados inválidos. Por favor, verifique as informações."
+                    });
                 }
             } else if (error.response?.status === 401) {
-                alert("Token inválido ou expirado. Por favor, solicite um novo token.");
-                navigate("/redefinir-senha");
+                setAlert({
+                    type: "error",
+                    message: "Token inválido ou expirado. Por favor, solicite um novo token."
+                });
+                setTimeout(() => {
+                    setAlert(null);
+                    navigate("/redefinir-senha");
+                }, 2500);
             } else {
-                alert("Ocorreu um erro ao tentar redefinir a senha. Por favor, tente novamente mais tarde.");
+                setAlert({
+                    type: "error",
+                    message: "Ocorreu um erro ao tentar redefinir a senha. Por favor, tente novamente mais tarde."
+                });
             }
         }
     };
@@ -89,6 +109,14 @@ const FormRedefinirSenha = () => {
                     <h2 className="text-2xl">ESQUECI A SENHA</h2>
                     <p className="text-base mt-1 mb-1">Informe o Token que recebeu e a nova senha.</p>
                 </div>
+
+                {alert && (
+                    <Alert
+                        type={alert.type}
+                        message={alert.message}
+                        onClose={() => setAlert(null)}
+                    />
+                )}
 
                 <Input
                     label="TOKEN DE SENHA"

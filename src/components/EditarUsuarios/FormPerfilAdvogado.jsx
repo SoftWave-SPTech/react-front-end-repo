@@ -8,6 +8,7 @@ import { api } from '../../service/api.js';
 import { buscarCep } from "../../service/buscarCep.js";
 import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG, mascaraCNPJ, mascaraOAB } from '../../Utils/mascaras';
 import { validarPerfilAdvogado } from '../../Utils/validacoes.jsx';
+import Alert from "../Ui/AlertStyle.jsx"; // Importa o AlertStyle
 
 function FormPerfilAdvogado() {
     const TOKEN = `Bearer ${sessionStorage.getItem('token')}`
@@ -48,13 +49,12 @@ function FormPerfilAdvogado() {
         cnpj: '',
     });
 
-
     const [errors, setErrors] = useState({});
     const [cepAnterior, setCepAnterior] = useState('');
+    const [alert, setAlert] = useState(null); // Estado para o Alert
+    const [fotoPerfil, setFotoPerfil] = useState(null); // Estado para a foto do perfil
     const URL = sessionStorage.getItem('tipoUsuario') == 'UsuarioFisico' ? "/usuarios-fisicos/" : "/usuarios-juridicos/"
     const URLFOTO = "/usuarios/foto-perfil"
-
-
 
     useEffect(() => {
         if (sessionStorage.getItem('tipoUsuario') == "AdvogadoFisico") {
@@ -84,8 +84,12 @@ function FormPerfilAdvogado() {
                     criarAtualizarFisicos(dados)
                 })
                 .catch((erro) => {
-                    console.log(erro)
-                    console.log(erro.response?.data?.message || 'Erro ao buscar dados do advogado físico');
+                    console.error("Erro ao buscar advogados fisicos:", erro.status);
+                    if(erro.status >= 500){
+                        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                    }else{
+                        setAlert({ show: true, message: erro.response.data.message, type: "error" })
+                    }
                 })
 
         } else if (sessionStorage.getItem('tipoUsuario') == "AdvogadoJuridico") {
@@ -118,14 +122,37 @@ function FormPerfilAdvogado() {
 
                 })
                 .catch((erro) => {
-                    console.log(erro)
-                    console.log(erro.response?.data?.message || 'Erro ao buscar dados do advogado jurídico');
+                    console.error("Erro ao buscar advogado juridico:", erro.status);
+                    if(erro.status >= 500){
+                        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                    }else{
+                        setAlert({ show: true, message: erro.response.data.message, type: "error" })
+                    }
                 })
         }
+
+        // Buscar foto do perfil da AWS
+        api.get(`${URLFOTO}/${sessionStorage.getItem('id')}`, {
+            headers: {
+                Authorization: TOKEN,
+            },
+        })
+            .then((resposta) => {
+                if (resposta.data && resposta.data !== "null") {
+                    sessionStorage.setItem('fotoPerfil', resposta.data);
+                    setFotoPerfil(resposta.data);
+                } else {
+                    setFotoPerfil(null);
+                }
+            })
+            .catch((erro) => {
+                console.error("Erro ao buscar foto do perfil:", erro.status);
+                setFotoPerfil(null);
+                // Não precisa mostrar erro para o usuário, apenas log
+            })
     }, []);
 
     function enviarDadosParaAtualizacao() {
-        console.log(usuarioParaAtualizar)
         if (sessionStorage.getItem('tipoUsuario') == "AdvogadoFisico") {
             const tipoUsuario = sessionStorage.getItem('tipoUsuario');
 
@@ -136,10 +163,14 @@ function FormPerfilAdvogado() {
             };
 
             const errosEncontrados = validarPerfilAdvogado(dadosParaValidar);
+            console.log(errosEncontrados);
 
             if (Object.keys(errosEncontrados).length > 0) {
                 setErrors(errosEncontrados);
-                console.log(errosEncontrados)
+                setAlert({
+                    type: "error",
+                    message: "Corrija os campos destacados antes de salvar."
+                });
                 return;
             }
 
@@ -149,18 +180,21 @@ function FormPerfilAdvogado() {
                 },
             })
                 .then((resposta) => {
-                    console.log(resposta)
-
-                    alert("Dados Atualizados com sucesso!");
-
+                    setAlert({
+                        type: "success",
+                        message: "Dados Atualizados com sucesso!"
+                    });
                     sessionStorage.setItem('nome', usuarioParaAtualizar.nome);
                     sessionStorage.setItem('email', usuarioParaAtualizar.email);
-                    window.location.reload();
+                    setTimeout(() => window.location.reload(), 1500);
                 })
                 .catch((erro) => {
-                    console.log(erro)
-                    console.log(erro.response?.data?.message || 'Erro ao atualizar dados do advogado físico');
-                    alert("Ocorreu um erro, tente novamente!");
+                    console.error("Erro ao atualizar advogados fisicos:", erro.status);
+                    if(erro.status >= 500){
+                        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                    }else{
+                        setAlert({ show: true, message: erro.response.data.message, type: "error" })
+                    }
                 })
 
         } else if (sessionStorage.getItem('tipoUsuario') == "AdvogadoJuridico") {
@@ -173,10 +207,14 @@ function FormPerfilAdvogado() {
             };
 
             const errosEncontrados = validarPerfilAdvogado(dadosParaValidar);
+            console.log(errosEncontrados);
 
             if (Object.keys(errosEncontrados).length > 0) {
                 setErrors(errosEncontrados);
-                console.log(errosEncontrados)
+                setAlert({
+                    type: "error",
+                    message: "Corrija os campos destacados antes de salvar."
+                });
                 return;
             }
 
@@ -186,17 +224,22 @@ function FormPerfilAdvogado() {
                 },
             })
                 .then((resposta) => {
-                    console.log(resposta)
-                    alert("Dados Atualizados com sucesso!");
+                    setAlert({
+                        type: "success",
+                        message: "Dados Atualizados com sucesso!"
+                    });
                     sessionStorage.setItem('nome', usuarioParaAtualizar.nomeFantasia);
                     sessionStorage.setItem('email', usuarioParaAtualizar.email);
-                    window.location.reload();
+                    setTimeout(() => window.location.reload(), 1500);
                 })
                 .catch((erro) => {
-                    console.log(erro)
-                    console.log(erro.response?.data?.message || 'Erro ao atualizar dados do advogado jurídico');
-                    alert("Ocorreu um erro, tente novamente!");
-                })
+                    console.error("Erro ao atualizar advogados juridicos:", erro.status);
+                    if(erro.status >= 500){
+                        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                    }else{
+                        setAlert({ show: true, message: erro.response.data.message, type: "error" })
+                    }
+                }) 
         }
     }
 
@@ -254,7 +297,10 @@ function FormPerfilAdvogado() {
                 cidade: endereco.localidade,
             }));
         } catch (error) {
-            alert('CEP inválido ou não encontrado.');
+            setAlert({
+                type: "error",
+                message: "CEP inválido ou não encontrado."
+            });
         }
     }
 
@@ -263,22 +309,20 @@ function FormPerfilAdvogado() {
     }
 
     function atualizarFoto(file) {
-        console.log(file)
         if (!file) {
-            alert("Escolha uma foto primeiro!");
+            setAlert({
+                type: "warning",
+                message: "Escolha uma foto primeiro!"
+            });
         } else {
             const tiposPermitidos = ["image/png", "image/jpg", "image/jpeg"];
             if (!tiposPermitidos.includes(file.type)) {
-                alert("Por favor, selecione uma imagem PNG, JPG ou JPEG.");
+                setAlert({
+                    type: "warning",
+                    message: "Por favor, selecione uma imagem PNG, JPG ou JPEG."
+                });
                 return;
             }
-
-
-            // FormData é um objeto nativo do JavaScript (existe mesmo sem React).
-            // Ele foi criado para simular um formulário HTML em JavaScript, para que a gente possa enviar arquivos e outros dados para o servidor via código.
-            // Ele embala o arquivo certinho no formato multipart/form-data, que é um formato especial para enviar:
-
-            // Arquivos (.png, .jpg, .pdf, etc).
 
             const arquivoFormatado = new FormData();
             arquivoFormatado.append("fotoPerfil", file);
@@ -289,18 +333,22 @@ function FormPerfilAdvogado() {
                     "Authorization": TOKEN
                 }
             })
-                //.catch(error => {
-                //   console.error("Erro ao enviar o arquivo:", error.response?.data?.message || 'Erro ao enviar o arquivo');
-                //  console.error("Erro ao enviar o arquivo:", error);
-                //});
                 .then(response => {
-                    console.log("Upload realizado com sucesso:", response.data);
                     sessionStorage.setItem('fotoPerfil', response.data);
-                    alert("Foto Atualizada com sucesso!");
-                    window.location.reload()
+                    setFotoPerfil(response.data);
+                    setAlert({
+                        type: "success",
+                        message: "Foto Atualizada com sucesso!"
+                    });
+                    setTimeout(() => window.location.reload(), 1500);
                 })
                 .catch(error => {
-                    console.error("Erro ao enviar o arquivo:", error);
+                    console.error("Erro ao atualizar a foto:", error.status);
+                    if(error.status >= 500){
+                        setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                    }else{
+                        setAlert({ show: true, message: error.response.data.message, type: "error" })
+                    }
                 });
         }
     }
@@ -312,19 +360,36 @@ function FormPerfilAdvogado() {
             }
         })
             .then(response => {
-                console.log("Foto Deletada com sucesso");
-                sessionStorage.setItem('fotoPerfil', "http://localhost:8080/null");
-                window.location.reload()
-
+                sessionStorage.removeItem('fotoPerfil');
+                setFotoPerfil(null);
+                setAlert({
+                    type: "success",
+                    message: "Foto Deletada com sucesso"
+                });
+                setTimeout(() => window.location.reload(), 1500);
             })
             .catch(error => {
-                console.error("Erro ao enviar o arquivo:", error);
-                console.error("Erro ao enviar o arquivo:", error.response?.data?.message || 'Erro ao enviar o arquivo');
+                console.error("Erro ao buscar análise e movimentação:", error.status);
+                if(error.status >= 500){
+                    setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                }else{
+                    setAlert({ show: true, message: error.response.data.message, type: "error" })
+                }
             });
     }
 
     return (
         <>
+            {alert && (
+                <div className="w-full max-w-[75%] mx-auto mt-4">
+                    <Alert
+                        type={alert.type}
+                        message={alert.message}
+                        onClose={() => setAlert(null)}
+                    />
+                </div>
+            )}
+
             <div className="flex justify-center">
                 <BarraTitulo tamanho="grande" cor="escuro" className="rounded-lg w-full max-w-[75%] text-base">
                     Foto do usuário
@@ -333,7 +398,7 @@ function FormPerfilAdvogado() {
             <div className="w-full max-w-[75%] mx-auto py-3 mb-4 flex flex-col gap-4 shadow-md rounded-lg bg-white">
                 <div className="px-4 py-3 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <img
-                        src={sessionStorage.getItem('fotoPerfil') !== "http://localhost:8080/null" ? sessionStorage.getItem('fotoPerfil') : '/src/assets/images/boneco.png'}
+                        src={fotoPerfil && fotoPerfil !== "null" && fotoPerfil !== "http://localhost:8080/null" ? fotoPerfil : minhaImagem}
                         alt="Foto de perfil"
                         className="w-28 h-28 rounded-full border-2 border-azulEscuroForte shadow-md object-cover bg-gray-100"
                     />

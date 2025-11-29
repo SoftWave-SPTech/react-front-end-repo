@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import AlertStyle from '../Ui/AlertStyle';
 
 const API_KEY = "AIzaSyA6nQ2oCiJP5x6jNHewGHKJYpKRBV2Nok8";
 const CHANNEL_ID = "UCaqPFDHprzt6pUNBjyda87Q";
@@ -8,6 +9,7 @@ const CatalogoVideos = () => {
     const [videos, setVideos] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const VISIBLE_COUNT = 3;
+    const [alert, setAlert] = useState();
 
     useEffect(() => {
         const carregarVideos = async () => {
@@ -23,8 +25,12 @@ const CatalogoVideos = () => {
 
                 setVideos(dataVideos.items.reverse());
             } catch (error) {
-                console.error("Erro ao carregar vídeos:", error);
-                console.error(error.response?.data?.message || "Erro desconhecido ao carregar vídeos.");
+                console.error("Erro ao carregar vídeos:", error.status);
+                if(error.status >= 500){
+                    setAlert({ show: true, message: "O serviço não está disponível! Por favor, contate o nosso suporte para que possamos ajudá-lo!", type: "error" })
+                }else{
+                    setAlert({ show: true, message: error.response.data.message, type: "error" })
+                }
             }
         };
 
@@ -47,6 +53,14 @@ const CatalogoVideos = () => {
 
     return (
         <div className="p-5 bg-azulEscuroFraco rounded-lg shadow-lg w-full">
+
+            {alert && (
+                <AlertStyle
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
+            )}
 
             <div className="flex items-center justify-center gap-4">
                 {/* Seta esquerda */}

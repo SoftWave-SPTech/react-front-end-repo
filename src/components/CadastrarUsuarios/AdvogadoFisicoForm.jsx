@@ -9,6 +9,7 @@ import { buscarCep } from '../../service/buscarCep';
 import { validarAdvogadoFisico } from '../../Utils/validacoes';
 import { mascaraCEP, mascaraTelefone, mascaraCPF, mascaraRG,mascaraOAB } from '../../Utils/mascaras';
 import EnviarChaveAcesso from './EnvioEmail.jsx';
+import Alert from '../Ui/AlertStyle'; // Importa o AlertStyle
 
 export default function AdvogadoFisicoForm() {
   const [formData, setFormData] = useState({
@@ -27,6 +28,7 @@ export default function AdvogadoFisicoForm() {
   });
 
   const [errors, setErrors] = useState({});
+  const [alert, setAlert] = useState(null); // Estado para o Alert
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -49,7 +51,10 @@ export default function AdvogadoFisicoForm() {
           }));
         } catch (error) {
           console.error('Erro ao buscar CEP:', error, error.response?.data?.message);
-          alert('CEP inválido ou não encontrado.');
+          setAlert({
+            type: 'error',
+            message: 'CEP inválido ou não encontrado.',
+          });
         }
       }
     }
@@ -66,8 +71,8 @@ export default function AdvogadoFisicoForm() {
     }
 
     setErrors({});
-    const novaSenha = nanoid(8);
-    const dadosParaEnviar = { ...formData, senha: novaSenha };
+   const tokenPrimeiroAcesso = nanoid(8);
+    const dadosParaEnviar = { ...formData, tokenPrimeiroAcesso: tokenPrimeiroAcesso };
 
     console.log("Dados enviados para o backend:", dadosParaEnviar);
 
@@ -77,11 +82,21 @@ export default function AdvogadoFisicoForm() {
           Authorization: `Bearer ${sessionStorage.getItem('token')}`,
         },
       })
-      .then(() => {
-
-        EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.senha, dadosParaEnviar.email);
-        
-        alert('Cadastro realizado com sucesso!');
+      .then(async () => {
+        try {
+          await EnviarChaveAcesso(dadosParaEnviar.nome, dadosParaEnviar.tokenPrimeiroAcesso, dadosParaEnviar.email , setAlert);
+          setAlert({
+            type: 'success',
+            message: 'Cadastro realizado com sucesso!',
+          });
+        } catch (emailError) {
+          console.error('Erro ao enviar email:', emailError);
+          setAlert({
+            type: 'success',
+            message: 'Cadastro realizado com sucesso! (Email não pôde ser enviado)',
+          });
+        }
+       
         setFormData({
           nome: '',
           cpf: '',
@@ -99,22 +114,14 @@ export default function AdvogadoFisicoForm() {
       })
       .catch((err) => {
 
-        console.error(err);
+        console.error("Erro ao cadastrar advogado fisico:", err.status);
         if (err.response?.data) {
-          const erros = err.response.data;
-          let mensagem = "";
-          Object.keys(erros).forEach(campo => {
-            if(campo === "message" && campo) {
-                mensagem = erros[campo] ;
-              } else if (campo === "status") {
-                if (erros[campo] === 500){
-                  mensagem = "Já existe um advogado cadastrado com esses dados. Por favor, verifique os dados e tente novamente.";
-                }
-              }
-          });
-          alert(mensagem)
+          setAlert({ show: true, message: err.response.data.message, type: "error" })
         } else {
-          alert('Erro ao cadastrar advogado. Por favor, tente novamente.');
+          setAlert({
+            type: 'error',
+            message: 'Erro ao cadastrar advogado. Por favor, tente novamente.'
+          });
         }
         //alert(err.response?.data?.message || 'Erro ao cadastrar');
 
@@ -123,6 +130,13 @@ export default function AdvogadoFisicoForm() {
 
   return (
     <form className="bg-white p-6 rounded-b-lg shadow-md mt-0" onSubmit={handleSubmit}>
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <Input
