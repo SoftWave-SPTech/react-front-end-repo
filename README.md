@@ -51,8 +51,8 @@ Crie um arquivo `.env` na raiz do projeto:
 ```env
 VITE_API_BASE_URL=http://localhost:8080
 VITE_AUTH_API_URL=http://localhost:8083
-VITE_S3_API_URL=http://localhost:8091
-VITE_GEMINI_API_URL=http://localhost:8092
+VITE_S3_API_URL=http://localhost:8081
+VITE_GEMINI_API_URL=http://localhost:8082
 VITE_CONSULTAS_API_URL=http://localhost:8084
 ```
 
@@ -148,8 +148,8 @@ Certifique-se de que os seguintes serviços estejam rodando:
 
 - **Backend Principal**: http://localhost:8080
 - **Auth Service**: http://localhost:8083
-- **S3 Service**: http://localhost:8091
-- **Gemini Service**: http://localhost:8092
+- **S3 Service**: http://localhost:8081
+- **Gemini Service**: http://localhost:8082
 - **Consultas Service**: http://localhost:8084
 
 ## Troubleshooting
