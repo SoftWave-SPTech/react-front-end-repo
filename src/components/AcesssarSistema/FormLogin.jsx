@@ -4,6 +4,7 @@ import Botao from '../Ui/Botao';
 import { Input } from '../Ui/Input';
 import { Link } from 'react-router-dom';
 import AlertStyle from '../Ui/AlertStyle';
+import  {syncAuthSessionFromCookie} from '../../Utils/auth';
 
 export default function FormLogin() {
     const [email, setEmail] = useState("");
@@ -47,19 +48,8 @@ export default function FormLogin() {
 
             if (response.status === 200) {
                 setAlert({ show: true, message: "Login realizado com sucesso!", type: "success" });
-                sessionStorage.setItem("id", response.data.id);
-                sessionStorage.setItem("email", response.data.email);
-                sessionStorage.setItem("token", response.data.token);
-                sessionStorage.setItem("tipoUsuario", response.data.tipoUsuario);
-                sessionStorage.setItem("role", response.data.role);
-                sessionStorage.setItem("nome", response.data.nome);
-
-                // Salva a foto diretamente (já vem como URL pré-assinada do S3 ou null)
-                if (response.data.foto) {
-                    sessionStorage.setItem("fotoPerfil", response.data.foto);
-                } else {
-                    sessionStorage.removeItem("fotoPerfil");
-                }
+               
+                 syncAuthSessionFromCookie()
 
                 setTimeout(() => {
                     if (response.data.role === "ROLE_USUARIO") {
