@@ -22,7 +22,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend-repo:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/react-front-end-repo:latest
 
   deploy:
     needs: build-and-push
@@ -44,7 +44,7 @@ jobs:
             fi
             
             # Atualiza container
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frontend-repo:latest
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/react-front-end-repo:latest
             docker stop frontend-container || true
             docker rm frontend-container || true
-            docker run -d --name frontend-container -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/frontend-repo:latest
+            docker run -d --name frontend-container -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/react-front-end-repo:latest
