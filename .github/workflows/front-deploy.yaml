@@ -3,6 +3,9 @@ name: Deploy Frontend
 on:
   push:
     branches: [ "realese/sprint-5" ]
+    
+  pull_request:
+    branches: [ "realese/sprint-5" ]
 
 jobs:
   build-and-push:
