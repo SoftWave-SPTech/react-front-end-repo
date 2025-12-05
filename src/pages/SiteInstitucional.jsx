@@ -4,7 +4,7 @@ import CarroselAdvogados from '../components/SiteInstitucional/CarroselAdvogados
 import PlayerVideo from '../components/SiteInstitucional/playerVideo.jsx';
 import MidiaSocial from '../components/SiteInstitucional/midiaSocial.jsx';
 import CatalogoVideos from '../components/SiteInstitucional/catalogoVideos.jsx';
-import logo from '../assets/images/SiteInstitucional/leaologo.png';
+import logo from '../assets/images/SiteInstitucional/leaoLogo.png';
 import estatuaJustica from '../assets/images/SiteInstitucional/EstatuaJustica.png';
 import { GiScales, GiBriefcase, GiFamilyHouse, GiShoppingBag, GiHouseKeys, GiQuillInk, GiTalk } from "react-icons/gi";
 
