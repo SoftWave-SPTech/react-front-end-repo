@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import CarroselAdvogados from '../components/SiteInstitucional/CarroselAdvogados.jsx';
-import PlayerVideo from '../components/SiteInstitucional/PlayerVideo.jsx';
+import PlayerVideo from '../components/SiteInstitucional/playerVideo.jsx';
 import MidiaSocial from '../components/SiteInstitucional/MidiaSocial.jsx';
 import CatalogoVideos from '../components/SiteInstitucional/CatalogoVideos.jsx';
 import logo from '../assets/images/SiteInstitucional/leaologo.png';
