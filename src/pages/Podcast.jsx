@@ -1,6 +1,6 @@
 import React from 'react';
 import LayoutBase from '../layouts/LayoutBase';
-import MidiaSocial from '../components/Podcast/midiaSocial';
+import MidiaSocial from '../components/Podcast/MidiaSocial';
 import PlayerVideo from '../components/Podcast/playerVideo';
 import CatalogoVideos from '../components/Podcast/catalogoVideos';
 
