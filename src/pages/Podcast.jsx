@@ -1,8 +1,8 @@
 import React from 'react';
 import LayoutBase from '../layouts/LayoutBase';
 import MidiaSocial from '../components/Podcast/MidiaSocial';
-import PlayerVideo from '../components/Podcast/playerVideo';
-import CatalogoVideos from '../components/Podcast/catalogoVideos';
+import PlayerVideo from '../components/Podcast/PlayerVideo';
+import CatalogoVideos from '../components/Podcast/CatalogoVideos';
 
 const Podcast = () => {
     return (
