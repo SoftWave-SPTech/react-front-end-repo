@@ -31,23 +31,71 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Public EC2
-        uses: appleboy/ssh-action@v1.0.0
+           # --- Deploy frontend on EC2_A ---
+      - name: Deploy frontend on EC2_A
+        uses: appleboy/ssh-action@v0.1.8
         with:
-          host: ${{ secrets.EC2_HOST_PUBLIC }}
-          username: ${{ secrets.EC2_USER }}
+          host: ${{ secrets.EC2_IP_A }}
+          username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          timeout: 10m
+          command_timeout: 10m
           script: |
-            # Instala Docker se não existir
-            if ! command -v docker &> /dev/null; then
-                sudo yum update -y
-                sudo yum install docker -y
-                sudo service docker start
-                sudo usermod -a -G docker ${{ secrets.EC2_USER }}
+            set -euo pipefail
+            if command -v docker >/dev/null 2>&1; then DOCKER_CMD="$(command -v docker)"; SUDO_PREFIX=""; else
+              CANDS="/usr/bin/docker /usr/local/bin/docker /snap/bin/docker /bin/docker /usr/sbin/docker"
+              FOUND=""
+              for p in $CANDS; do if [ -x "$p" ]; then FOUND="$p" && break; fi; done
+              if [ -n "$FOUND" ]; then DOCKER_CMD="$FOUND"; SUDO_PREFIX="sudo"; else
+                if sudo -n docker info >/dev/null 2>&1; then DOCKER_CMD="docker"; SUDO_PREFIX="sudo"; else echo "::error::docker not found"; exit 2; fi
+              fi
             fi
-            
-            # Atualiza container
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/react-front-end-repo:latest
-            docker stop frontend-container || true
-            docker rm frontend-container || true
-            docker run -d --name frontend-container -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/react-front-end-repo:latest
+            echo "Using: ${SUDO_PREFIX:+$SUDO_PREFIX }$DOCKER_CMD"
+            run_docker() {
+              if [ -n "${SUDO_PREFIX:-}" ]; then
+                if [ "${DOCKER_CMD#/}" != "$DOCKER_CMD" ]; then sudo "$DOCKER_CMD" "$@"; else sudo docker "$@"; fi
+              else
+                "$DOCKER_CMD" "$@"
+              fi
+            }
+            run_docker pull "${{ env.FRONT_IMG }}"
+            run_docker stop frontend || true
+            run_docker rm frontend || true
+            run_docker run -d --name frontend -p 8080:80 --restart unless-stopped "${{ env.FRONT_IMG }}"
+            run_docker ps --filter "name=frontend" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+      # --- Deploy frontend on EC2_B ---
+      - name: Deploy frontend on EC2_B
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.EC2_IP_B }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          timeout: 10m
+          command_timeout: 10m
+          script: |
+            set -euo pipefail
+            if command -v docker >/dev/null 2>&1; then DOCKER_CMD="$(command -v docker)"; SUDO_PREFIX=""; else
+              CANDS="/usr/bin/docker /usr/local/bin/docker /snap/bin/docker /bin/docker /usr/sbin/docker"
+              FOUND=""
+              for p in $CANDS; do if [ -x "$p" ]; then FOUND="$p" && break; fi; done
+              if [ -n "$FOUND" ]; then DOCKER_CMD="$FOUND"; SUDO_PREFIX="sudo"; else
+                if sudo -n docker info >/dev/null 2>&1; then DOCKER_CMD="docker"; SUDO_PREFIX="sudo"; else echo "::error::docker not found"; exit 2; fi
+              fi
+            fi
+            echo "Using: ${SUDO_PREFIX:+$SUDO_PREFIX }$DOCKER_CMD"
+            run_docker() {
+              if [ -n "${SUDO_PREFIX:-}" ]; then
+                if [ "${DOCKER_CMD#/}" != "$DOCKER_CMD" ]; then sudo "$DOCKER_CMD" "$@"; else sudo docker "$@"; fi
+              else
+                "$DOCKER_CMD" "$@"
+              fi
+            }
+            run_docker pull "${{ env.FRONT_IMG }}"
+            run_docker stop frontend || true
+            run_docker rm frontend || true
+            run_docker run -d --name frontend -p 8080:80 --restart unless-stopped "${{ env.FRONT_IMG }}"
+            run_docker ps --filter "name=frontend" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
