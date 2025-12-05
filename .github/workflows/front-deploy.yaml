@@ -15,7 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: fetch-depth: 0
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -40,7 +41,6 @@ jobs:
           push: true
           tags: ${{ env.FRONT_IMG }}
 
-
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
@@ -60,35 +60,49 @@ jobs:
 
             # detecta docker e configura run_docker
             if command -v docker >/dev/null 2>&1; then
-              DOCKER_CMD="$(command -v docker)"; SUDO_PREFIX=""
+              DOCKER_CMD="$(command -v docker)"
+              SUDO_PREFIX=""
             else
               CANDS="/usr/bin/docker /usr/local/bin/docker /snap/bin/docker /bin/docker /usr/sbin/docker"
               FOUND=""
-              for p in $CANDS; do if [ -x "$p" ]; then FOUND="$p" && break; fi; done
-              if [ -n "$FOUND" ]; then DOCKER_CMD="$FOUND"; SUDO_PREFIX="sudo"; else
-                if sudo -n docker info >/dev/null 2>&1; then DOCKER_CMD="docker"; SUDO_PREFIX="sudo"; else
-                  echo "::error::docker not found"; exit 2
+              for p in $CANDS; do
+                if [ -x "$p" ]; then FOUND="$p" && break; fi
+              done
+              if [ -n "$FOUND" ]; then
+                DOCKER_CMD="$FOUND"
+                SUDO_PREFIX="sudo"
+              else
+                if sudo -n docker info >/dev/null 2>&1; then
+                  DOCKER_CMD="docker"
+                  SUDO_PREFIX="sudo"
+                else
+                  echo "::error::docker not found"
+                  exit 2
                 fi
               fi
             fi
 
             run_docker() {
               if [ -n "${SUDO_PREFIX:-}" ]; then
-                if [ "${DOCKER_CMD#/}" != "$DOCKER_CMD" ]; then sudo "$DOCKER_CMD" "$@"; else sudo docker "$@"; fi
+                if [ "${DOCKER_CMD#/}" != "$DOCKER_CMD" ]; then
+                  sudo "$DOCKER_CMD" "$@"
+                else
+                  sudo docker "$@"
+                fi
               else
                 "$DOCKER_CMD" "$@"
               fi
             }
 
-            # login docker hub
-            run_docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}" || true
+            # login docker hub (mais seguro: password-stdin)
+            printf '%s' "${{ secrets.DOCKERHUB_TOKEN }}" | run_docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin || true
 
             # pull -> stop -> rm -> run
             run_docker pull "${{ env.FRONT_IMG }}"
             run_docker stop frontend || true
             run_docker rm frontend || true
             run_docker run -d --name frontend -p 8080:80 --restart unless-stopped "${{ env.FRONT_IMG }}"
-            run_docker ps
+            run_docker ps --filter "name=frontend" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
       - name: Deploy frontend on EC2_B
         uses: appleboy/ssh-action@v0.1.8
@@ -102,31 +116,47 @@ jobs:
           script: |
             set -euo pipefail
 
+            # detecta docker e configura run_docker
             if command -v docker >/dev/null 2>&1; then
-              DOCKER_CMD="$(command -v docker)"; SUDO_PREFIX=""
+              DOCKER_CMD="$(command -v docker)"
+              SUDO_PREFIX=""
             else
               CANDS="/usr/bin/docker /usr/local/bin/docker /snap/bin/docker /bin/docker /usr/sbin/docker"
               FOUND=""
-              for p in $CANDS; do if [ -x "$p" ]; then FOUND="$p" && break; fi; done
-              if [ -n "$FOUND" ]; then DOCKER_CMD="$FOUND"; SUDO_PREFIX="sudo"; else
-                if sudo -n docker info >/dev/null 2>&1; then DOCKER_CMD="docker"; SUDO_PREFIX="sudo"; else
-                  echo "::error::docker not found"; exit 2
+              for p in $CANDS; do
+                if [ -x "$p" ]; then FOUND="$p" && break; fi
+              done
+              if [ -n "$FOUND" ]; then
+                DOCKER_CMD="$FOUND"
+                SUDO_PREFIX="sudo"
+              else
+                if sudo -n docker info >/dev/null 2>&1; then
+                  DOCKER_CMD="docker"
+                  SUDO_PREFIX="sudo"
+                else
+                  echo "::error::docker not found"
+                  exit 2
                 fi
               fi
             fi
 
             run_docker() {
               if [ -n "${SUDO_PREFIX:-}" ]; then
-                if [ "${DOCKER_CMD#/}" != "$DOCKER_CMD" ]; then sudo "$DOCKER_CMD" "$@"; else sudo docker "$@"; fi
+                if [ "${DOCKER_CMD#/}" != "$DOCKER_CMD" ]; then
+                  sudo "$DOCKER_CMD" "$@"
+                else
+                  sudo docker "$@"
+                fi
               else
                 "$DOCKER_CMD" "$@"
               fi
             }
 
-            run_docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}" || true
+            # login docker hub (mais seguro: password-stdin)
+            printf '%s' "${{ secrets.DOCKERHUB_TOKEN }}" | run_docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin || true
 
             run_docker pull "${{ env.FRONT_IMG }}"
             run_docker stop frontend || true
             run_docker rm frontend || true
             run_docker run -d --name frontend -p 8080:80 --restart unless-stopped "${{ env.FRONT_IMG }}"
-            run_docker ps
+            run_docker ps --filter "name=frontend" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
