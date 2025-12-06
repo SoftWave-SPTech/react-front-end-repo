@@ -10,7 +10,6 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
-    # define a imagem (tag) usada neste job
     env:
       FRONT_IMG: ${{ secrets.DOCKERHUB_USERNAME }}/react-front-end-repo:latest
 
@@ -23,21 +22,22 @@ jobs:
       - name: Create build shims (Option A)
         run: |
           set -euo pipefail
-          # cria shim utils/format.js se não existir
+
+          # cria shim src/utils/format.js se não existir
           if [ ! -f src/utils/format.js ]; then
             mkdir -p src/utils
             cat > src/utils/format.js <<'JS'
-            /**
-             * Build shim for src/utils/format.js
-             * Replace with real implementation later.
-             */
-            export function currencyFormat(v){ return (v === null || v === undefined) ? v : v }
-            export function dateFormat(d){ return d }
-            export default {
-              currencyFormat,
-              dateFormat
-            }
-            JS
+          /**
+           * Build shim for src/utils/format.js
+           * Replace with real implementation later.
+           */
+          export function currencyFormat(v){ return (v === null || v === undefined) ? v : v }
+          export function dateFormat(d){ return d }
+          export default {
+            currencyFormat,
+            dateFormat
+          }
+          JS
             echo "Created shim src/utils/format.js"
           else
             echo "src/utils/format.js already exists — skipping shim"
@@ -134,7 +134,6 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
 
-    # define FRONT_IMG novamente a partir do secrets (evita usar env.* em expressões)
     env:
       FRONT_IMG: ${{ secrets.DOCKERHUB_USERNAME }}/react-front-end-repo:latest
 
