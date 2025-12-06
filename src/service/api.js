@@ -1,18 +1,18 @@
 import axios from 'axios';
 
 export const api = axios.create({
-    baseURL: 'http://44.215.111.241:8080',
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
 export const apiGemini = axios.create({
-    baseURL: 'http://44.215.111.241:8082',
+  baseURL: process.env.REACT_APP_API_GEMINI_URL,
 });
 
 export const apiInfoSimples = axios.create({
-    baseURL: 'http://44.215.111.241:8084',
+  baseURL: process.env.REACT_APP_API_INFOSIMPLES_URL,
 });
 
 export const apiAuthEmail = axios.create({
-    baseURL: 'http://44.215.111.241:8080',
+  baseURL: process.env.REACT_APP_API_AUTHEMAIL_URL,
 });
 
