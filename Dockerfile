@@ -1,16 +1,14 @@
-# Dockerfile (para frontend estático já buildado)
+# Dockerfile (nginx serve static build)
+FROM node:20-alpine as build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN NODE_OPTIONS=--max_old_space_size=4096 npm run build
+
 FROM nginx:alpine
-
-# delete default nginx html (opcional)
+# Limpe a configuração default se quiser
 RUN rm -rf /usr/share/nginx/html/*
-
-# Copia build produzido localmente para a imagem
-COPY build/ /usr/share/nginx/html/
-
-# Se você tiver um nginx.conf customizado, copia também:
-# COPY nginx/nginx.conf /etc/nginx/nginx.conf
-
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
-
-# Mantém nginx rodando em foreground
 CMD ["nginx", "-g", "daemon off;"]
