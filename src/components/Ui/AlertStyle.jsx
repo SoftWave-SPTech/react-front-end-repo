@@ -8,9 +8,18 @@ export default function Alert({ type = "info", message, onClose }) {
     warning: "bg-yellow-100 border-yellow-400 text-yellow-700",
   };
 
+  // Se message vier vazia, undefined ou null → usa fallback
+  const finalMessage =
+    message && String(message).trim() !== ""
+      ? message
+      : "Ocorreu um erro inesperado.";
+
   return (
-    <div className={`border-l-4 p-4 mb-4 rounded flex items-center justify-between shadow ${colors[type]}`}>
-      <span>{message}</span>
+    <div
+      className={`border-l-4 p-4 mb-4 rounded flex items-center justify-between shadow ${colors[type]}`}
+    >
+      <span>{finalMessage}</span>
+
       {onClose && (
         <button
           className="ml-4 text-xl font-bold focus:outline-none"
