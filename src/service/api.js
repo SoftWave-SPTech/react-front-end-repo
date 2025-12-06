@@ -13,5 +13,5 @@ export const apiInfoSimples = axios.create({
 });
 
 export const apiAuthEmail = axios.create({
-    baseURL: 'http://localhost:8083',
+    baseURL: 'http://localhost:8080',
 });

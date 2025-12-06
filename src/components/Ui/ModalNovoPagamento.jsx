@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { api } from '../../service/api';
 
-// ===== Map enums do back para labels =====
 const METODOS = [
   { id: 'PIX', label: 'Pix' },
   { id: 'CARTAO_CREDITO', label: 'Cartão de Crédito' },
@@ -49,6 +48,7 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
     mes: '',
     ano: currentYear
   });
+
   const [erros, setErros] = useState({});
 
   useEffect(() => {
@@ -61,59 +61,56 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
       .catch(err => console.error('Erro ao buscar clientes:', err));
   }, [open]);
 
+  // 1. Carrega clientes
   useEffect(() => {
     if (!open) return;
 
-    if (initialData && mode === 'edit') {
-      const fetchProcessos = async () => {
-        try {
-          const res = await api.get(`/processos/usuario-id/${initialData.clienteId}`, {
-            headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
-          });
+    api.get('/usuarios/listar-clientes', {
+      headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+    })
+      .then(res => setClientes(Array.isArray(res.data) ? res.data : res.data.content || []))
+      .catch(err => console.error('Erro ao buscar clientes:', err));
+  }, [open]);
 
-          const processosCliente = res.data || [];
-          setProcessos(processosCliente);
+  // 2. Configura form quando clientes estiverem carregados
+  useEffect(() => {
+    if (!open || clientes.length === 0 || !initialData || mode !== 'edit') return;
 
-          setForm({
-            cliente: initialData.clienteId || '',
-            processo: initialData.processoId || (processosCliente[0]?.id || ''),
-            metodo: initialData.metodoPagamento || '',
-            tipo: initialData.tipoPagamento || '',
-            parcelaAtual: initialData.parcelaAtual || 1,
-            parcelaTotal: initialData.totalParcelas || 1,
-            valorParcela: initialData.valorParcela ?? '',
-            valorPago: initialData.valorPago ?? '',
-            valorPagar: initialData.valorPagar ?? '',
-            mes: initialData.mes || '',
-            ano: initialData.ano || currentYear
-          });
+    const clienteEncontrado = clientes.find(c => c.nome === initialData.cliente);
+    const clienteIdCorrigido = initialData.clienteId || clienteEncontrado?.id || null;
 
-          setErros({});
-        } catch (err) {
-          console.error('Erro ao buscar processos do cliente:', err);
+    if (!clienteIdCorrigido) return;
+
+    api.get(`/processos/usuario-id/${clienteIdCorrigido}`, {
+      headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+    })
+      .then(res => {
+        const lista = res.data || [];
+        setProcessos(lista);
+
+        let processoIdCorrigido = initialData.processoId;
+        if (!processoIdCorrigido && initialData.processo) {
+          const proc = lista.find(p => p.numeroProcesso === initialData.processo);
+          if (proc) processoIdCorrigido = proc.id;
         }
-      };
 
-      fetchProcessos();
-    } else {
-      setForm({
-        cliente: '',
-        processo: '',
-        metodo: '',
-        tipo: '',
-        parcelaAtual: 1,
-        parcelaTotal: 1,
-        valorParcela: '',
-        valorPago: '',
-        valorPagar: '',
-        mes: '',
-        ano: currentYear
-      });
+        setForm({
+          cliente: clienteIdCorrigido,
+          processo: processoIdCorrigido ?? '',
+          metodo: initialData.metodo ?? '',
+          tipo: initialData.tipo ?? '',
+          parcelaAtual: initialData.parcelas ?? 1,
+          parcelaTotal: initialData.parcelas ?? 1,
+          valorParcela: initialData.valorParcela ?? '',
+          valorPago: initialData.valorPago ?? '',
+          valorPagar: initialData.valorPagar ?? '',
+          mes: initialData.mes ?? '',
+          ano: initialData.ano ?? currentYear
+        });
+      })
+      .catch(err => console.error('Erro ao buscar processos:', err));
+  }, [clientes, initialData, mode, open]);
 
-      setProcessos([]);
-      setErros({});
-    }
-  }, [open, initialData, mode]);
 
   useEffect(() => {
     if (!form.cliente) {
@@ -122,7 +119,7 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
       return;
     }
 
-    if (mode === 'edit' && initialData && form.cliente === initialData.clienteId) return;
+    if (mode === 'edit') return;
 
     api.get(`/processos/usuario-id/${form.cliente}`, {
       headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
@@ -132,7 +129,7 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
         console.error('Erro ao buscar processos:', err);
         setProcessos([]);
       });
-  }, [form.cliente, mode, initialData]);
+  }, [form.cliente, mode]);
 
   useEffect(() => {
     if (form.tipo === 'A_VISTA') {
@@ -165,7 +162,6 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
     e.preventDefault();
     if (!validar()) return;
 
-    // BODY → somente o DTO do backend
     const payload = {
       metodoPagamento: form.metodo,
       tipoPagamento: form.tipo,
@@ -213,8 +209,7 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          
-          {/* Cliente */}
+
           <div>
             <label className="block text-sm font-medium">Cliente</label>
             <select value={form.cliente} onChange={handleChange('cliente')} className="border rounded w-full px-3 py-2">
@@ -224,7 +219,6 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
             {erros.cliente && <p className="text-red-500 text-xs">{erros.cliente}</p>}
           </div>
 
-          {/* Processo */}
           <div>
             <label className="block text-sm font-medium">Processo</label>
             <select value={form.processo} onChange={handleChange('processo')} className="border rounded w-full px-3 py-2" disabled={!form.cliente}>
@@ -234,7 +228,6 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
             {erros.processo && <p className="text-red-500 text-xs">{erros.processo}</p>}
           </div>
 
-          {/* Método */}
           <div>
             <label className="block text-sm font-medium">Método</label>
             <select value={form.metodo} onChange={handleChange('metodo')} className="border rounded w-full px-3 py-2">
@@ -244,7 +237,6 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
             {erros.metodo && <p className="text-red-500 text-xs">{erros.metodo}</p>}
           </div>
 
-          {/* Tipo */}
           <div>
             <label className="block text-sm font-medium">Tipo</label>
             <select value={form.tipo} onChange={handleChange('tipo')} className="border rounded w-full px-3 py-2">
@@ -254,7 +246,6 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
             {erros.tipo && <p className="text-red-500 text-xs">{erros.tipo}</p>}
           </div>
 
-          {/* Parcelas */}
           {form.tipo === 'PARCELADO' && (
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -264,6 +255,7 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
                 </select>
                 {erros.parcelaAtual && <p className="text-red-500 text-xs">{erros.parcelaAtual}</p>}
               </div>
+
               <div>
                 <label className="block text-sm font-medium">Total de Parcelas</label>
                 <select value={form.parcelaTotal} onChange={handleChange('parcelaTotal')} className="border rounded w-full px-3 py-2">
@@ -273,7 +265,6 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
             </div>
           )}
 
-          {/* Valores */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {form.tipo === 'PARCELADO' && (
               <div>
@@ -317,7 +308,6 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
             </div>
           </div>
 
-          {/* Mês e Ano */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium">Mês</label>
