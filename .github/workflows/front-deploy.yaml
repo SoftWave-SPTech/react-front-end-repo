@@ -36,6 +36,13 @@ jobs:
         run: |
           npm ci --prefer-offline --no-audit
 
+      - name: Set environment variables
+        run: |
+          echo "REACT_APP_API_URL=http://${{ secrets.EC2_HOST_PUBLIC }}:8080" >> $GITHUB_ENV
+          echo "REACT_APP_API_GEMINI_URL=http://${{ secrets.EC2_HOST_PUBLIC }}:8082" >> $GITHUB_ENV
+          echo "REACT_APP_API_INFOSIMPLES_URL=http://${{ secrets.EC2_HOST_PUBLIC }}:8084" >> $GITHUB_ENV
+          echo "REACT_APP_API_AUTHEMAIL_URL=http://${{ secrets.EC2_HOST_PUBLIC }}:8080" >> $GITHUB_ENV
+
       - name: Build (large-memory setting)
         run: |
           NODE_OPTIONS=--max_old_space_size=4096 npm run build
