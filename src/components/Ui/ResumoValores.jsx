@@ -1,6 +1,6 @@
 // src/components/Ui/ResumoValores.jsx
 import React from 'react';
-import { formatCurrencyBRL } from '../../Utils/format.js';
+import { formatCurrencyBRL } from '../../utils/formatCurrencyBRL';
 
 export default function ResumoValores({ titulo, valor }) {
   // aceita tanto string já formatada quanto número cru
