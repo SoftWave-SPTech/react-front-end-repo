@@ -1,4 +1,4 @@
-name: Deploy Frontend
+name: Deploy Frontend (Pull & Restart Only)
 
 on:
   push:
@@ -6,139 +6,15 @@ on:
   pull_request:
     branches: [ "release/sprint-5" ]
 
+env:
+  FRONT_IMG: ${{ secrets.DOCKERHUB_USERNAME }}/react-front-end-repo:latest
+
 jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
-
-    env:
-      FRONT_IMG: ${{ secrets.DOCKERHUB_USERNAME }}/react-front-end-repo:latest
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Create build shims (Option A)
-        run: |
-          set -euo pipefail
-
-          # cria shim src/utils/format.js se não existir
-          if [ ! -f src/utils/format.js ]; then
-            mkdir -p src/utils
-            cat > src/utils/format.js <<'JS'
-          /**
-           * Build shim for src/utils/format.js
-           * Replace with real implementation later.
-           */
-          export function currencyFormat(v){ return (v === null || v === undefined) ? v : v }
-          export function dateFormat(d){ return d }
-          export default {
-            currencyFormat,
-            dateFormat
-          }
-          JS
-            echo "Created shim src/utils/format.js"
-          else
-            echo "src/utils/format.js already exists — skipping shim"
-          fi
-
-          # shim for SiteInstitucional PlayerVideo (path reportado nos erros)
-          if [ ! -f src/components/SiteInstitucional/PlayerVideo.jsx ]; then
-            mkdir -p src/components/SiteInstitucional
-            cat > src/components/SiteInstitucional/PlayerVideo.jsx <<'JS'
-            import React from 'react';
-            export default function PlayerVideo(){
-              // Placeholder shim — replace with real player
-              return <div style={{width:'100%',padding:8}}>Player (placeholder)</div>;
-            }
-            JS
-            echo "Created shim src/components/SiteInstitucional/PlayerVideo.jsx"
-          else
-            echo "src/components/SiteInstitucional/PlayerVideo.jsx already exists — skipping"
-          fi
-
-          # shim for SiteInstitucional CatalogoVideos
-          if [ ! -f src/components/SiteInstitucional/CatalogoVideos.jsx ]; then
-            mkdir -p src/components/SiteInstitucional
-            cat > src/components/SiteInstitucional/CatalogoVideos.jsx <<'JS'
-            import React from 'react';
-            export default function CatalogoVideos(){
-              return <div>Catálogo (placeholder)</div>;
-            }
-            JS
-            echo "Created shim src/components/SiteInstitucional/CatalogoVideos.jsx"
-          else
-            echo "src/components/SiteInstitucional/CatalogoVideos.jsx already exists — skipping"
-          fi
-
-          # shim for Ui/TabelaPagamentos that imports utils/format
-          if [ ! -f src/components/Ui/TabelaPagamentos.jsx ]; then
-            mkdir -p src/components/Ui
-            cat > src/components/Ui/TabelaPagamentos.jsx <<'JS'
-            import React from 'react';
-            import { currencyFormat } from '../../utils/format';
-            export default function TabelaPagamentos(){
-              // Minimal placeholder table to satisfy imports at build time
-              return (
-                <table>
-                  <thead><tr><th>Pagamento</th><th>Valor</th></tr></thead>
-                  <tbody>
-                    <tr><td>Exemplo</td><td>{currencyFormat(0)}</td></tr>
-                  </tbody>
-                </table>
-              );
-            }
-            JS
-            echo "Created shim src/components/Ui/TabelaPagamentos.jsx"
-          else
-            echo "src/components/Ui/TabelaPagamentos.jsx already exists — skipping"
-          fi
-
-          # generic empty shim (optional helpers)
-          if [ ! -f src/shims/empty.js ]; then
-            mkdir -p src/shims
-            cat > src/shims/empty.js <<'JS'
-            export default {}
-            export const noop = (...a) => a
-            JS
-            echo "Created shim src/shims/empty.js"
-          else
-            echo "src/shims/empty.js already exists — skipping"
-          fi
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install deps & run build (fail-fast with logs)
-        run: |
-          npm ci --prefer-offline --no-audit
-          NODE_OPTIONS=--max_old_space_size=4096 npm run build
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ${{ env.FRONT_IMG }}
-
   deploy:
-    needs: build-and-push
     runs-on: ubuntu-latest
 
-    env:
-      FRONT_IMG: ${{ secrets.DOCKERHUB_USERNAME }}/react-front-end-repo:latest
-
     steps:
-      - name: Deploy frontend on EC2_A
+      - name: Deploy on EC2 A
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.EC2_IP_A }}
@@ -148,55 +24,29 @@ jobs:
           timeout: 10m
           command_timeout: 10m
           script: |
-            set -euo pipefail
+            set -e
 
-            # detecta docker e configura run_docker
-            if command -v docker >/dev/null 2>&1; then
-              DOCKER_CMD="$(command -v docker)"
-              SUDO_PREFIX=""
-            else
-              CANDS="/usr/bin/docker /usr/local/bin/docker /snap/bin/docker /bin/docker /usr/sbin/docker"
-              FOUND=""
-              for p in $CANDS; do
-                if [ -x "$p" ]; then FOUND="$p" && break; fi
-              done
-              if [ -n "$FOUND" ]; then
-                DOCKER_CMD="$FOUND"
-                SUDO_PREFIX="sudo"
-              else
-                if sudo -n docker info >/dev/null 2>&1; then
-                  DOCKER_CMD="docker"
-                  SUDO_PREFIX="sudo"
-                else
-                  echo "::error::docker not found"
-                  exit 2
-                fi
-              fi
-            fi
+            sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
 
-            run_docker() {
-              if [ -n "${SUDO_PREFIX:-}" ]; then
-                if [ "${DOCKER_CMD#/}" != "$DOCKER_CMD" ]; then
-                  sudo "$DOCKER_CMD" "$@"
-                else
-                  sudo docker "$@"
-                fi
-              else
-                "$DOCKER_CMD" "$@"
-              fi
-            }
+            echo "Pulling latest image..."
+            sudo docker pull "${{ env.FRONT_IMG }}"
 
-            # login docker hub (mais seguro: password-stdin)
-            printf '%s' "${{ secrets.DOCKERHUB_TOKEN }}" | run_docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin || true
+            echo "Stopping old container..."
+            sudo docker stop frontend || true
 
-            # pull -> stop -> rm -> run (usa variável de shell FRONT_IMG)
-            run_docker pull "${FRONT_IMG}"
-            run_docker stop frontend || true
-            run_docker rm frontend || true
-            run_docker run -d --name frontend -p 8080:80 --restart unless-stopped "${FRONT_IMG}"
-            run_docker ps --filter "name=frontend" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+            echo "Removing old container..."
+            sudo docker rm frontend || true
 
-      - name: Deploy frontend on EC2_B
+            echo "Starting new container..."
+            sudo docker run -d \
+              --name frontend \
+              -p 8080:80 \
+              --restart unless-stopped \
+              "${{ env.FRONT_IMG }}"
+
+            sudo docker ps
+
+      - name: Deploy on EC2 B
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.EC2_IP_B }}
@@ -206,47 +56,24 @@ jobs:
           timeout: 10m
           command_timeout: 10m
           script: |
-            set -euo pipefail
+            set -e
 
-            if command -v docker >/dev/null 2>&1; then
-              DOCKER_CMD="$(command -v docker)"
-              SUDO_PREFIX=""
-            else
-              CANDS="/usr/bin/docker /usr/local/bin/docker /snap/bin/docker /bin/docker /usr/sbin/docker"
-              FOUND=""
-              for p in $CANDS; do
-                if [ -x "$p" ]; then FOUND="$p" && break; fi
-              done
-              if [ -n "$FOUND" ]; then
-                DOCKER_CMD="$FOUND"
-                SUDO_PREFIX="sudo"
-              else
-                if sudo -n docker info >/dev/null 2>&1; then
-                  DOCKER_CMD="docker"
-                  SUDO_PREFIX="sudo"
-                else
-                  echo "::error::docker not found"
-                  exit 2
-                fi
-              fi
-            fi
+            sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
 
-            run_docker() {
-              if [ -n "${SUDO_PREFIX:-}" ]; then
-                if [ "${DOCKER_CMD#/}" != "$DOCKER_CMD" ]; then
-                  sudo "$DOCKER_CMD" "$@"
-                else
-                  sudo docker "$@"
-                fi
-              else
-                "$DOCKER_CMD" "$@"
-              fi
-            }
+            echo "Pulling latest image..."
+            sudo docker pull "${{ env.FRONT_IMG }}"
 
-            printf '%s' "${{ secrets.DOCKERHUB_TOKEN }}" | run_docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin || true
+            echo "Stopping old container..."
+            sudo docker stop frontend || true
 
-            run_docker pull "${FRONT_IMG}"
-            run_docker stop frontend || true
-            run_docker rm frontend || true
-            run_docker run -d --name frontend -p 8080:80 --restart unless-stopped "${FRONT_IMG}"
-            run_docker ps --filter "name=frontend" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+            echo "Removing old container..."
+            sudo docker rm frontend || true
+
+            echo "Starting new container..."
+            sudo docker run -d \
+              --name frontend \
+              -p 8080:80 \
+              --restart unless-stopped \
+              "${{ env.FRONT_IMG }}"
+
+            sudo docker ps
