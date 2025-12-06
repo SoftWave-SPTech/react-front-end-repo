@@ -1,21 +1,16 @@
-# build stage
-FROM node:20-alpine as build
-WORKDIR /app
+# Dockerfile (para frontend estático já buildado)
+FROM nginx:alpine
 
-# instalar dependências (npm ci é reprodutível)
-COPY package.json package-lock.json ./
-RUN npm ci --prefer-offline --no-audit
-
-# copiar fontes e build
-COPY . .
-# se tiver problema de memória, a linha abaixo ajuda:
-ENV NODE_OPTIONS=--max_old_space_size=4096
-RUN npm run build
-
-# production stage: serve static with nginx
-FROM nginx:alpine AS prod
-# limpa conteúdo default do nginx (opcional)
+# delete default nginx html (opcional)
 RUN rm -rf /usr/share/nginx/html/*
-COPY --from=build /app/build /usr/share/nginx/html
+
+# Copia build produzido localmente para a imagem
+COPY build/ /usr/share/nginx/html/
+
+# Se você tiver um nginx.conf customizado, copia também:
+# COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
 EXPOSE 80
+
+# Mantém nginx rodando em foreground
 CMD ["nginx", "-g", "daemon off;"]
