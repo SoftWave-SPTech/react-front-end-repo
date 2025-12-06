@@ -15,3 +15,4 @@ export const apiInfoSimples = axios.create({
 export const apiAuthEmail = axios.create({
     baseURL: 'http://44.215.111.241:8080',
 });
+

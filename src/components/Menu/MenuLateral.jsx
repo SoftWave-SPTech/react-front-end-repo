@@ -42,8 +42,8 @@ const MenuLateral = () => {
     const largura = novoEstado
       ? 70
       : isTablet
-      ? window.innerWidth
-      : window.innerWidth * 0.22;
+        ? window.innerWidth
+        : window.innerWidth * 0.22;
     sessionStorage.setItem("larguraMenu", largura.toString());
   };
 
@@ -57,7 +57,7 @@ const MenuLateral = () => {
   useEffect(() => {
     const userId = sessionStorage.getItem("id");
     const token = sessionStorage.getItem("token");
-    
+
     if (userId && token) {
       // Sempre busca a foto da API para garantir que está atualizada
       api.get(`/usuarios/foto-perfil/${userId}`, {
@@ -65,26 +65,26 @@ const MenuLateral = () => {
           Authorization: `Bearer ${token}`
         }
       })
-      .then((response) => {
-        if (response.data && response.data !== "null" && response.data !== "http://localhost:8080/null") {
-          sessionStorage.setItem("fotoPerfil", response.data);
-          setFotoPerfil(response.data);
-        } else {
-          // Se não houver foto válida, remove do sessionStorage
-          sessionStorage.removeItem("fotoPerfil");
-          setFotoPerfil(null);
-        }
-      })
-      .catch((error) => {
-        console.error("Erro ao buscar foto de perfil:", error);
-        // Se der erro, tenta usar o que está no sessionStorage
-        const fotoNoStorage = sessionStorage.getItem("fotoPerfil");
-        if (fotoNoStorage && fotoNoStorage !== "null" && fotoNoStorage !== "http://localhost:8080/null") {
-          setFotoPerfil(fotoNoStorage);
-        } else {
-          setFotoPerfil(null);
-        }
-      });
+        .then((response) => {
+          if (response.data && response.data !== "null" && response.data !== "http://localhost:8080/null") {
+            sessionStorage.setItem("fotoPerfil", response.data);
+            setFotoPerfil(response.data);
+          } else {
+            // Se não houver foto válida, remove do sessionStorage
+            sessionStorage.removeItem("fotoPerfil");
+            setFotoPerfil(null);
+          }
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar foto de perfil:", error);
+          // Se der erro, tenta usar o que está no sessionStorage
+          const fotoNoStorage = sessionStorage.getItem("fotoPerfil");
+          if (fotoNoStorage && fotoNoStorage !== "null" && fotoNoStorage !== "http://localhost:8080/null") {
+            setFotoPerfil(fotoNoStorage);
+          } else {
+            setFotoPerfil(null);
+          }
+        });
     }
   }, []);
 
@@ -93,10 +93,10 @@ const MenuLateral = () => {
     const handleStorageChange = () => {
       setFotoPerfil(sessionStorage.getItem("fotoPerfil"));
     };
-    
+
     // Listener para mudanças no sessionStorage
     window.addEventListener('storage', handleStorageChange);
-    
+
     // Polling para detectar mudanças no sessionStorage (já que storage event só funciona em outras abas)
     const interval = setInterval(() => {
       const novaFoto = sessionStorage.getItem("fotoPerfil");
@@ -206,19 +206,17 @@ const MenuLateral = () => {
     <div
       className={`menu-lateral sticky top-0 h-screen flex flex-col justify-between
       bg-[#050e26] text-white transition-all duration-300
-      ${
-        fechado
+      ${fechado
           ? "w-[70px]"
           : isTablet
-          ? "w-full"
-          : "w-[clamp(220px,18%,280px)]"
-      }`}
+            ? "w-full"
+            : "w-[clamp(220px,18%,280px)]"
+        }`}
     >
       <div>
         <div
-          className={`flex items-center ${
-            fechado ? "justify-center mb-6" : "justify-end mb-4"
-          } cursor-pointer px-3 pt-4 hover:text-[#D9B166]`}
+          className={`flex items-center ${fechado ? "justify-center mb-6" : "justify-end mb-4"
+            } cursor-pointer px-3 pt-4 hover:text-[#D9B166]`}
           onClick={alternarMenu}
         >
           <FiMenu className="text-[1.4rem]" />
@@ -228,8 +226,9 @@ const MenuLateral = () => {
           {!fechado && (
             <a
               href={rotaPerfil}
-              className="flex items-center gap-2 px-2 py-3 w-[clamp(190px,93%,250px)] mx-auto border border-white rounded-lg
-              transition-all duration-300 hover:border-[#D9B166] hover:text-[#D9B166] text-white no-underline"
+              className={`flex items-center gap-2 px-2 py-3 border border-white rounded-lg
+                transition-all duration-300 hover:border-[#D9B166] hover:text-[#D9B166] text-white no-underline
+                ${isTablet ? "w-[calc(100%-16px)] mx-[8px]" : "w-[clamp(190px,93%,250px)] mx-auto"}`}
             >
               <img
                 src={fotoPerfil && fotoPerfil !== "null" && fotoPerfil !== "http://localhost:8080/null" ? fotoPerfil : "/src/assets/images/boneco.png"}
@@ -270,11 +269,10 @@ const MenuLateral = () => {
                   }}
                   className={`flex items-center py-2 rounded-md
                   text-[clamp(0.9rem,1.2vw,1.1rem)] transition-colors
-                  ${
-                    fechado
+                  ${fechado
                       ? "justify-center px-2"
                       : "justify-start px-3 gap-2"
-                  }
+                    }
                   hover:text-[#D9B166] hover:bg-[#0F2A5E]`}
                 >
                   <span className="text-[1.3rem]">{item.icone}</span>
