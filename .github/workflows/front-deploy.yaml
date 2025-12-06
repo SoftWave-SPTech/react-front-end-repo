@@ -134,6 +134,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FRONT_IMG: ${{ env.FRONT_IMG }}
+
     steps:
       - name: Deploy frontend on EC2_A
         uses: appleboy/ssh-action@v0.1.8
@@ -190,7 +191,7 @@ jobs:
             run_docker pull "${{ env.FRONT_IMG }}"
             run_docker stop frontend || true
             run_docker rm frontend || true
-            run_docker run -d --name frontend -p 8080:80 --restart unless-stopped "${{ env.FRONT_IMG }}"
+            run_docker run -d --name frontend -p 8080:80 --restart unless-stopped "${FRONT_IMG}"
             run_docker ps --filter "name=frontend" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
       - name: Deploy frontend on EC2_B
@@ -246,5 +247,5 @@ jobs:
             run_docker pull "${{ env.FRONT_IMG }}"
             run_docker stop frontend || true
             run_docker rm frontend || true
-            run_docker run -d --name frontend -p 8080:80 --restart unless-stopped "${{ env.FRONT_IMG }}"
+            run_docker run -d --name frontend -p 8080:80 --restart unless-stopped "${FRONT_IMG}"
             run_docker ps --filter "name=frontend" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
