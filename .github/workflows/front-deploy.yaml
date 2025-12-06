@@ -28,10 +28,16 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install deps & run build
+      - name: npm i (mirror local)
+        run: |
+          npm i
+
+      - name: Install deps (ci)
         run: |
           npm ci --prefer-offline --no-audit
-          # ajustar memória para builds grandes
+
+      - name: Build (large-memory setting)
+        run: |
           NODE_OPTIONS=--max_old_space_size=4096 npm run build
 
       - name: Login to Docker Hub (runner)
@@ -65,6 +71,8 @@ jobs:
           command_timeout: 10m
           script: |
             set -euo pipefail
+
+            # detect docker and prepare run_docker helper
             if command -v docker >/dev/null 2>&1; then DOCKER_CMD="$(command -v docker)"; SUDO_PREFIX=""; else
               CANDS="/usr/bin/docker /usr/local/bin/docker /snap/bin/docker /bin/docker /usr/sbin/docker"
               FOUND=""
@@ -81,7 +89,11 @@ jobs:
                 "$DOCKER_CMD" "$@"
               fi
             }
-            # Pull / restart container (imagem já publicada pelo job anterior)
+
+            # login docker hub (mais seguro: password-stdin)
+            printf '%s' "${{ secrets.DOCKERHUB_TOKEN }}" | run_docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin || true
+
+            # pull -> stop -> rm -> run
             run_docker pull "${{ env.FRONT_IMG }}"
             run_docker stop frontend || true
             run_docker rm frontend || true
@@ -100,6 +112,7 @@ jobs:
           command_timeout: 10m
           script: |
             set -euo pipefail
+
             if command -v docker >/dev/null 2>&1; then DOCKER_CMD="$(command -v docker)"; SUDO_PREFIX=""; else
               CANDS="/usr/bin/docker /usr/local/bin/docker /snap/bin/docker /bin/docker /usr/sbin/docker"
               FOUND=""
@@ -116,6 +129,9 @@ jobs:
                 "$DOCKER_CMD" "$@"
               fi
             }
+
+            printf '%s' "${{ secrets.DOCKERHUB_TOKEN }}" | run_docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin || true
+
             run_docker pull "${{ env.FRONT_IMG }}"
             run_docker stop frontend || true
             run_docker rm frontend || true
