@@ -4,10 +4,10 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-import felipeAdvogado from '../assets/images/SiteInstitucional/felipeAdvogado.png';
-import raissaAdvogada from '../assets/images/SiteInstitucional/raissaAdvogada.png';
-import advogado1 from '../assets/images/SiteInstitucional/Advogado1.png';
-import advogada1 from '../assets/images/SiteInstitucional/advogada1.png';
+import felipeAdvogado from '../../assets/images/SiteInstitucional/felipeAdvogado.png';
+import raissaAdvogada from '../../assets/images/SiteInstitucional/raissaAdvogada.png';
+import advogado1 from '../../assets/images/SiteInstitucional/Advogado1.png';
+import advogada1 from '../../assets/images/SiteInstitucional/advogada1.png';
 
 function CarroselAdvogados() {
     const advogados = [
