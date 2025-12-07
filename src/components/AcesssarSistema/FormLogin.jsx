@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { api, apiAuthEmail } from '../../service/api';
 import Botao from '../Ui/Botao';
 import { Input } from '../Ui/Input';
-import { Link, useNavigate  } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AlertStyle from '../Ui/AlertStyle';
 import  {syncAuthSessionFromCookie} from '../../Utils/auth';
 import boneco from '../../assets/images/boneco.png';
@@ -13,7 +13,7 @@ export default function FormLogin() {
     const [senha, setsenha] = useState("");
     const [errors, setErrors] = useState({});
     const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
-    const navigate = useNavigate();
+
 
     const validarFormulario = () => {
         const novosErros = {};
@@ -54,13 +54,13 @@ export default function FormLogin() {
                  syncAuthSessionFromCookie();
                  syncAuthSessionFromCookie()
 
-                setTimeout(() => {
+                  setTimeout(() => {
                     if (response.data.role === "ROLE_USUARIO") {
-                        navigate ("/perfil-cliente");
+                        window.location.href = "/perfil-cliente";
                     } else if(response.data.role === "ROLE_ADMIN") {
-                             navigate("/dashboard");
+                        window.location.href = "/dashboard";
                     } else {
-                        navigate("/perfil-advogado");
+                        window.location.href = "/perfil-advogado";
                     }
                 }, 1200); 
             }
