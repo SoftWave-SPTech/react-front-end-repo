@@ -77,18 +77,3 @@ jobs:
             docker rm frontend || true
             docker run -d --name frontend -p 8080:80 --restart unless-stopped "${{ env.FRONT_IMG }}"
             docker ps --filter "name=frontend"
-
-      - name: Deploy frontend on EC2_B
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.EC2_IP_B }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
-          script: |
-            docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin <<< "${{ secrets.DOCKERHUB_TOKEN }}"
-            docker pull "${{ env.FRONT_IMG }}"
-            docker stop frontend || true
-            docker rm frontend || true
-            docker run -d --name frontend -p 8080:80 --restart unless-stopped "${{ env.FRONT_IMG }}"
-            docker ps --filter "name=frontend"
