@@ -2,9 +2,9 @@ name: Deploy Frontend
 
 on:
   push:
-    branches: ["release/sprint-5"]
+    branches: ["release/load-balance"]
   pull_request:
-    branches: ["release/sprint-5"]
+    branches: ["release/load-balance"]
 
 env:
   FRONT_IMG: ${{ secrets.DOCKERHUB_USERNAME }}/react-front-end-repo:latest
