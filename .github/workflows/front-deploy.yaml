@@ -2,9 +2,9 @@ name: Deploy Frontend
 
 on:
   push:
-    branches: ["release/sprint-5"]
+    branches: ["release/load-balance"]
   pull_request:
-    branches: ["release/sprint-5"]
+    branches: ["release/load-balance"]
 
 env:
   FRONT_IMG: ${{ secrets.DOCKERHUB_USERNAME }}/react-front-end-repo:latest
@@ -63,21 +63,6 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy frontend on EC2_A
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.EC2_IP_A }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
-          script: |
-            docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin <<< "${{ secrets.DOCKERHUB_TOKEN }}"
-            docker pull "${{ env.FRONT_IMG }}"
-            docker stop frontend || true
-            docker rm frontend || true
-            docker run -d --name frontend -p 8080:80 --restart unless-stopped "${{ env.FRONT_IMG }}"
-            docker ps --filter "name=frontend"
-
       - name: Deploy frontend on EC2_B
         uses: appleboy/ssh-action@v0.1.8
         with:
