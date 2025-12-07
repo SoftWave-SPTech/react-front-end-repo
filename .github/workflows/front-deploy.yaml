@@ -21,12 +21,12 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Render app.js (inject EC2 host)
+      - name: Render api.js (inject EC2 host)
         env:
           EC2_HOST_PUBLIC: ${{ secrets.EC2_HOST_PUBLIC }}
         run: |
-          TEMPLATE="src/app.js.template"
-          OUT="src/app.js"
+          TEMPLATE="src/service/api.js.template"
+          OUT="src/service/api.js"
       
           if [ -z "${EC2_HOST_PUBLIC:-}" ]; then
             echo "::error::EC2_HOST_PUBLIC is empty. Make sure the secret exists."
