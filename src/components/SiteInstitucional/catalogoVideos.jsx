@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const API_KEY = "AIzaSyA6nQ2oCiJP5x6jNHewGHKJYpKRBV2Nok8"; 
+const API_KEY = "AIzaSyA7uOGV1GKGlH8odwkMnNrwwGRwu7i8RoY"; 
 const CHANNEL_ID = "UCaqPFDHprzt6pUNBjyda87Q"; 
 const MAX_RESULTS = 10; 
 
