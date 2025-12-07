@@ -25,7 +25,7 @@ jobs:
         env:
           EC2_HOST_PUBLIC: ${{ secrets.EC2_HOST_PUBLIC }}
         run: |
-          TEMPLATE="src/service/api.js.template"
+          TEMPLATE="src/service/api.js"
           OUT="src/service/api.js"
       
           if [ -z "${EC2_HOST_PUBLIC:-}" ]; then
