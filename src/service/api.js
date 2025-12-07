@@ -1,18 +1,17 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: 'http://$EC2_HOST_PUBLIC:8080',
 });
 
 export const apiGemini = axios.create({
-  baseURL: process.env.REACT_APP_API_GEMINI_URL,
+  baseURL: 'http://$EC2_HOST_PUBLIC:8082',
 });
 
 export const apiInfoSimples = axios.create({
-  baseURL: process.env.REACT_APP_API_INFOSIMPLES_URL,
+  baseURL: 'http://$EC2_HOST_PUBLIC:8084',
 });
 
 export const apiAuthEmail = axios.create({
-  baseURL: process.env.REACT_APP_API_AUTHEMAIL_URL,
+  baseURL: 'http://$EC2_HOST_PUBLIC:8080',
 });
-
