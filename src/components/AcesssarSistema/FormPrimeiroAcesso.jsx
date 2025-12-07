@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { api, apiAuthEmail } from '../../service/api';
 import Botao from "../Ui/Botao";
 import { Input } from "../Ui/Input";
-import Alert from "../Ui/AlertStyle"; // importação do Alert
-import boneco from '../../assets/images/boneco.png'; // ajuste o caminho conforme a estrutura do seu projeto
+import Alert from "../Ui/AlertStyle"; 
+import boneco from '../../assets/images/boneco.png'; 
+import { Link } from 'react-router-dom';
 
 export default function FormPrimeiroAcesso() {
     const [email, setEmail] = useState("");
@@ -130,9 +131,9 @@ export default function FormPrimeiroAcesso() {
                 </Botao>
                 <p className="mt-4 text-center mb-4 text-black">
                     JÁ ACESSOU O SITE ANTES?{" "}
-                    <a href="/login" className="font-bold text-azulEscuroForte hover:underline hover:text-dourado">
+                    <Link to="/login" className="font-bold text-azulEscuroForte hover:underline hover:text-dourado">
                         ENTRE AQUI.
-                    </a>
+                    </Link>
                 </p>
                 <Botao
                     tamanho="pequeno"

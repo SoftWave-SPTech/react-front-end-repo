@@ -4,7 +4,7 @@ import { Input } from '../Ui/Input';
 import { api, apiAuthEmail } from '../../service/api';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../Ui/AlertStyle';
-import boneco from '../../assets/images/boneco.png'; // ajuste o caminho conforme a estrutura do seu projeto
+import boneco from '../../assets/images/boneco.png';
 
 const FormRedefinirSenha = () => {
 
