@@ -4,6 +4,7 @@ import Botao from '../Ui/Botao';
 import { Input } from '../Ui/Input';
 import { Link } from 'react-router-dom';
 import AlertStyle from '../Ui/AlertStyle';
+import boneco from '../../assets/images/boneco.png'; // ajuste o caminho conforme a estrutura do seu projeto
 
 export default function FormLogin() {
     const [email, setEmail] = useState("");
@@ -99,7 +100,11 @@ export default function FormLogin() {
                 onSubmit={handleSubmit}
             >
                 <div className="text-center">
-                    <img src="src/assets/images/boneco.png" alt="" className="w-32 h-32 mx-auto mb-2" />
+                    <img
+                        src={boneco}
+                        alt="Boneco"
+                        className="w-32 h-32 mx-auto mb-2"
+                    />
                     <h2 className="text-2xl">LOGIN</h2>
                 </div>
 
@@ -145,9 +150,9 @@ export default function FormLogin() {
 
                 <p className="mt-4 text-center mb-4 text-black">
                     É SEU PRIMEIRO ACESSO?{" "}
-                    <a href="/primeiro-acesso" className="font-bold text-azulEscuroForte hover:underline hover:text-dourado">
+                    <Link to="/primeiro-acesso" className="font-bold text-azulEscuroForte hover:underline hover:text-dourado">
                         ENTRE AQUI.
-                    </a>
+                    </Link>
                 </p>
 
                 <Botao

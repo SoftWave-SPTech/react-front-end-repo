@@ -3,6 +3,7 @@ import { api, apiAuthEmail } from '../../service/api';
 import Botao from "../Ui/Botao";
 import { Input } from "../Ui/Input";
 import Alert from "../Ui/AlertStyle"; // importação do Alert
+import boneco from '../../assets/images/boneco.png'; // ajuste o caminho conforme a estrutura do seu projeto
 
 export default function FormPrimeiroAcesso() {
     const [email, setEmail] = useState("");
@@ -93,8 +94,8 @@ export default function FormPrimeiroAcesso() {
             >
                 <div className="text-center mb-4">
                     <img
-                        src="src/assets/images/boneco.png"
-                        alt=""
+                        src={boneco}
+                        alt="Boneco"
                         className="w-32 h-32 mx-auto mb-2"
                     />
                     <h2 className="text-2xl">PRIMEIRO ACESSO</h2>
