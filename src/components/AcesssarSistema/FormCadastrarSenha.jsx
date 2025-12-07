@@ -3,6 +3,7 @@ import { api, apiAuthEmail } from '../../service/api';
 import Botao from "../Ui/Botao";
 import { Input } from "../Ui/Input";
 import Alert from "../Ui/AlertStyle";
+import  {syncAuthSessionFromCookie} from '../../Utils/auth';
 
 export default function FormCadastrarSenha() {
   const [senha, setSenha] = useState("");
@@ -54,18 +55,8 @@ export default function FormCadastrarSenha() {
         });
 
         if (loginResponse.status === 200) {
-          sessionStorage.setItem("id", loginResponse.data.id);
-          sessionStorage.setItem("email", loginResponse.data.email);
-          sessionStorage.setItem("token", loginResponse.data.token);
-          sessionStorage.setItem("tipoUsuario", loginResponse.data.tipoUsuario);
-          sessionStorage.setItem("role", loginResponse.data.role);
-          sessionStorage.setItem("nome", loginResponse.data.nome);
-          // Salva a foto diretamente (já vem como URL pré-assinada do S3 ou null)
-          if (loginResponse.data.foto) {
-              sessionStorage.setItem("fotoPerfil", loginResponse.data.foto);
-          } else {
-              sessionStorage.removeItem("fotoPerfil");
-          }
+          
+           syncAuthSessionFromCookie()
 
           setTimeout(() => {
             if (loginResponse.data.tipoUsuario === 'UsuarioFisico' || loginResponse.data.tipoUsuario === 'UsuarioJuridico') {
