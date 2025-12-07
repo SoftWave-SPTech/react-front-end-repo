@@ -134,7 +134,7 @@ function SiteInstitucional() {
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center">
               <img src={logo} alt="Logo" className="w-16 h-16 sm:w-20 sm:h-20 lg:w-[8rem] lg:h-[8.5rem] object-contain" />
-              <div className="text-white leading-tight ml-2 sm:ml-4">
+              <div className="text-azulEscuroForte leading-tight ml-2 sm:ml-4">
                 <p className="text-sm sm:text-lg md:text-xl xl:text-3xl font-bold">LAURIANO & LEÃO SOCIEDADE</p>
                 <p className="text-sm sm:text-lg md:text-xl xl:text-3xl font-bold">DE ADVOGADOS</p>
               </div>
@@ -180,7 +180,7 @@ function SiteInstitucional() {
 
         <section className="relative w-full min-h-screen flex flex-col items-center justify-center bg-transparent px-4 sm:px-6 lg:px-8 pt-10">
           <div className="relative z-20 flex flex-col items-center justify-center w-full h-full">
-            <h1 className="text-dourado text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-center mb-6 max-w-6xl leading-tight">
+            <h1 className="text-azulEscuroForte text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-center mb-6 max-w-6xl leading-tight">
               Compromisso com a excelência e soluções personalizadas em advocacia
             </h1>
             <p className="text-white text-center text-base sm:text-lg md:text-xl xl:text-2xl max-w-4xl leading-relaxed mb-8 px-2">
