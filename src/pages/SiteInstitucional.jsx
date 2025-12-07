@@ -5,7 +5,7 @@ import PlayerVideo from '../components/SiteInstitucional/playerVideo.jsx';
 import MidiaSocial from '../components/SiteInstitucional/midiaSocial.jsx';
 import CatalogoVideos from '../components/SiteInstitucional/catalogoVideos.jsx';
 import logo from '../assets/images/SiteInstitucional/leaoLogo.png';
-import justica from '../assets/images/SiteInstitucional/justica.webp';
+import justica from '../assets/images/SiteInstitucional/justica-martelo.png';
 import { GiScales, GiBriefcase, GiFamilyHouse, GiShoppingBag, GiHouseKeys, GiQuillInk, GiTalk } from "react-icons/gi";
 
 
