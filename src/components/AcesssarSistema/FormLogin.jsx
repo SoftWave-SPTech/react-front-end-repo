@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import { api, apiAuthEmail } from '../../service/api';
 import Botao from '../Ui/Botao';
 import { Input } from '../Ui/Input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate  } from 'react-router-dom';
 import AlertStyle from '../Ui/AlertStyle';
 import  {syncAuthSessionFromCookie} from '../../Utils/auth';
-import boneco from '../../assets/images/boneco.png'; // ajuste o caminho conforme a estrutura do seu projeto
+import boneco from '../../assets/images/boneco.png';
+
 
 export default function FormLogin() {
     const [email, setEmail] = useState("");
     const [senha, setsenha] = useState("");
     const [errors, setErrors] = useState({});
     const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
+    const navigate = useNavigate();
 
     const validarFormulario = () => {
         const novosErros = {};
@@ -54,11 +56,11 @@ export default function FormLogin() {
 
                 setTimeout(() => {
                     if (response.data.role === "ROLE_USUARIO") {
-                        window.location.href = "/perfil-cliente";
+                        navigate ("/perfil-cliente");
                     } else if(response.data.role === "ROLE_ADMIN") {
-                        window.location.href = "/dashboard";
+                             navigate("/dashboard");
                     } else {
-                        window.location.href = "/perfil-advogado";
+                        navigate("/perfil-advogado");
                     }
                 }, 1200); 
             }
