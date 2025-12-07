@@ -49,7 +49,7 @@ export default function FormLogin() {
 
             if (response.status === 200) {
                 setAlert({ show: true, message: "Login realizado com sucesso!", type: "success" });
-               
+                 syncAuthSessionFromCookie();
                  syncAuthSessionFromCookie()
 
                 setTimeout(() => {
