@@ -4,6 +4,7 @@ import { Input } from '../Ui/Input';
 import { api, apiAuthEmail } from '../../service/api';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../Ui/AlertStyle';
+import boneco from '../../assets/images/boneco.png';
 
 const FormRedefinirSenha = () => {
 
@@ -102,8 +103,8 @@ const FormRedefinirSenha = () => {
             >
                 <div className="text-center mb-2">
                     <img
-                        src="src/assets/images/boneco.png"
-                        alt=""
+                        src={boneco}
+                        alt="Boneco"
                         className="w-32 h-32 mx-auto mb-2"
                     />
                     <h2 className="text-2xl">ESQUECI A SENHA</h2>

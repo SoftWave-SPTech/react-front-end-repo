@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { api } from '../../service/api';
 
-// ===== Map enums do back para labels =====
 const METODOS = [
   { id: 'PIX', label: 'Pix' },
   { id: 'CARTAO_CREDITO', label: 'Cartão de Crédito' },
@@ -47,12 +46,11 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
     valorPago: '',
     valorPagar: '',
     mes: '',
-    ano: currentYear,
-    honorarioSucumbencia: 0,
+    ano: currentYear
   });
+
   const [erros, setErros] = useState({});
 
-  // ===== Buscar clientes =====
   useEffect(() => {
     if (!open) return;
 
@@ -63,63 +61,57 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
       .catch(err => console.error('Erro ao buscar clientes:', err));
   }, [open]);
 
-  // ===== Preencher formulário ao abrir modal =====
+  // 1. Carrega clientes
   useEffect(() => {
     if (!open) return;
 
-    if (initialData && mode === 'edit') {
-      // Busca processos do cliente antes de setar o form
-      const fetchProcessos = async () => {
-        try {
-          const res = await api.get(`/processos/usuario-id/${initialData.clienteId}`, {
-            headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
-          });
-          const processosCliente = res.data || [];
-          setProcessos(processosCliente);
+    api.get('/usuarios/listar-clientes', {
+      headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+    })
+      .then(res => setClientes(Array.isArray(res.data) ? res.data : res.data.content || []))
+      .catch(err => console.error('Erro ao buscar clientes:', err));
+  }, [open]);
 
-          setForm({
-            cliente: initialData.clienteId || '',
-            processo: initialData.processoId || (processosCliente[0]?.id || ''),
-            metodo: initialData.metodo || '',
-            tipo: initialData.tipo || '',
-            parcelaAtual: initialData.parcelaAtual || 1,
-            parcelaTotal: initialData.parcelas || 1,
-            valorParcela: initialData.valorParcela ?? '',
-            valorPago: initialData.valorPago ?? '',
-            valorPagar: initialData.valorPagar ?? '',
-            mes: initialData.mes || '',
-            ano: initialData.ano || currentYear,
-            honorarioSucumbencia: initialData.honorarioSucumbencia || 0,
-          });
-          setErros({});
-        } catch (err) {
-          console.error('Erro ao buscar processos do cliente:', err);
+  // 2. Configura form quando clientes estiverem carregados
+  useEffect(() => {
+    if (!open || clientes.length === 0 || !initialData || mode !== 'edit') return;
+
+    const clienteEncontrado = clientes.find(c => c.nome === initialData.cliente);
+    const clienteIdCorrigido = initialData.clienteId || clienteEncontrado?.id || null;
+
+    if (!clienteIdCorrigido) return;
+
+    api.get(`/processos/usuario-id/${clienteIdCorrigido}`, {
+      headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+    })
+      .then(res => {
+        const lista = res.data || [];
+        setProcessos(lista);
+
+        let processoIdCorrigido = initialData.processoId;
+        if (!processoIdCorrigido && initialData.processo) {
+          const proc = lista.find(p => p.numeroProcesso === initialData.processo);
+          if (proc) processoIdCorrigido = proc.id;
         }
-      };
 
-      fetchProcessos();
-    } else {
-      // Modo create ou sem initialData
-      setForm({
-        cliente: '',
-        processo: '',
-        metodo: '',
-        tipo: '',
-        parcelaAtual: 1,
-        parcelaTotal: 1,
-        valorParcela: '',
-        valorPago: '',
-        valorPagar: '',
-        mes: '',
-        ano: currentYear,
-        honorarioSucumbencia: 0,
-      });
-      setProcessos([]);
-      setErros({});
-    }
-  }, [open, initialData, mode]);
+        setForm({
+          cliente: clienteIdCorrigido,
+          processo: processoIdCorrigido ?? '',
+          metodo: initialData.metodo ?? '',
+          tipo: initialData.tipo ?? '',
+          parcelaAtual: initialData.parcelas ?? 1,
+          parcelaTotal: initialData.parcelas ?? 1,
+          valorParcela: initialData.valorParcela ?? '',
+          valorPago: initialData.valorPago ?? '',
+          valorPagar: initialData.valorPagar ?? '',
+          mes: initialData.mes ?? '',
+          ano: initialData.ano ?? currentYear
+        });
+      })
+      .catch(err => console.error('Erro ao buscar processos:', err));
+  }, [clientes, initialData, mode, open]);
 
-  // ===== Buscar processos quando cliente mudar (modo create ou troca de cliente) =====
+
   useEffect(() => {
     if (!form.cliente) {
       setProcessos([]);
@@ -127,8 +119,7 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
       return;
     }
 
-    // Não sobrescrever processo se estiver no modo edit e initialData já foi carregada
-    if (mode === 'edit' && initialData && form.cliente === initialData.clienteId) return;
+    if (mode === 'edit') return;
 
     api.get(`/processos/usuario-id/${form.cliente}`, {
       headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
@@ -138,17 +129,16 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
         console.error('Erro ao buscar processos:', err);
         setProcessos([]);
       });
-  }, [form.cliente, mode, initialData]);
+  }, [form.cliente, mode]);
 
-  // ===== Reset parcelas se tipo mudar para À vista =====
   useEffect(() => {
     if (form.tipo === 'A_VISTA') {
       setForm(prev => ({ ...prev, parcelaAtual: 1, parcelaTotal: 1, valorParcela: '' }));
     }
   }, [form.tipo]);
 
-  const handleChange = (field) => (e) => setForm(prev => ({ ...prev, [field]: e.target.value }));
-  const handleCurrencyChange = (field) => ({ value }) => setForm(prev => ({ ...prev, [field]: value }));
+  const handleChange = field => e => setForm(prev => ({ ...prev, [field]: e.target.value }));
+  const handleCurrencyChange = field => ({ value }) => setForm(prev => ({ ...prev, [field]: value }));
 
   const validar = () => {
     const e = {};
@@ -158,9 +148,9 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
     if (!form.tipo) e.tipo = 'Informe o tipo';
     if (!form.mes) e.mes = 'Informe o mês';
     if (!form.ano) e.ano = 'Informe o ano';
-    if (form.tipo === 'PARCELADO' && !form.valorParcela) e.valorParcela = 'Informe o valor da parcela';
     if (!form.valorPago) e.valorPago = 'Informe o valor pago';
     if (!form.valorPagar) e.valorPagar = 'Informe o valor a pagar';
+    if (form.tipo === 'PARCELADO' && !form.valorParcela) e.valorParcela = 'Informe o valor da parcela';
     if (form.tipo === 'PARCELADO' && Number(form.parcelaAtual) > Number(form.parcelaTotal)) {
       e.parcelaAtual = 'Parcela atual não pode exceder o total';
     }
@@ -168,14 +158,11 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
     return Object.keys(e).length === 0;
   };
 
-  // ===== Submit =====
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validar()) return;
 
     const payload = {
-      cliente: Number(form.cliente),
-      processo: Number(form.processo),
       metodoPagamento: form.metodo,
       tipoPagamento: form.tipo,
       parcelaAtual: Number(form.parcelaAtual),
@@ -184,24 +171,28 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
       valorPago: Number(form.valorPago || 0),
       valorPagar: Number(form.valorPagar || 0),
       mes: form.mes,
-      ano: Number(form.ano),
-      honorarioSucumbencia: Number(form.honorarioSucumbencia || 0),
+      ano: Number(form.ano)
     };
 
     try {
       if (mode === 'edit' && initialData?.id) {
         await api.put(`/registros-financeiros/${initialData.id}`, payload, {
-          params: { cliente: payload.cliente, processo: payload.processo },
+          params: {
+            cliente: Number(form.cliente),
+            processo: Number(form.processo),
+          },
           headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         });
       } else {
-        await api.post('/registros-financeiros', payload, {
-          params: { cliente: payload.cliente, processo: payload.processo },
+        await api.post(`/registros-financeiros`, payload, {
+          params: {
+            cliente: Number(form.cliente),
+            processo: Number(form.processo),
+          },
           headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         });
       }
 
-      // ✅ Força recarregar toda a página
       window.location.reload();
     } catch (err) {
       console.error('Erro ao salvar registro financeiro:', err);
@@ -218,7 +209,7 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Cliente */}
+
           <div>
             <label className="block text-sm font-medium">Cliente</label>
             <select value={form.cliente} onChange={handleChange('cliente')} className="border rounded w-full px-3 py-2">
@@ -228,7 +219,6 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
             {erros.cliente && <p className="text-red-500 text-xs">{erros.cliente}</p>}
           </div>
 
-          {/* Processo */}
           <div>
             <label className="block text-sm font-medium">Processo</label>
             <select value={form.processo} onChange={handleChange('processo')} className="border rounded w-full px-3 py-2" disabled={!form.cliente}>
@@ -238,7 +228,6 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
             {erros.processo && <p className="text-red-500 text-xs">{erros.processo}</p>}
           </div>
 
-          {/* Método */}
           <div>
             <label className="block text-sm font-medium">Método</label>
             <select value={form.metodo} onChange={handleChange('metodo')} className="border rounded w-full px-3 py-2">
@@ -248,7 +237,6 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
             {erros.metodo && <p className="text-red-500 text-xs">{erros.metodo}</p>}
           </div>
 
-          {/* Tipo */}
           <div>
             <label className="block text-sm font-medium">Tipo</label>
             <select value={form.tipo} onChange={handleChange('tipo')} className="border rounded w-full px-3 py-2">
@@ -258,7 +246,6 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
             {erros.tipo && <p className="text-red-500 text-xs">{erros.tipo}</p>}
           </div>
 
-          {/* Parcelas */}
           {form.tipo === 'PARCELADO' && (
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -268,6 +255,7 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
                 </select>
                 {erros.parcelaAtual && <p className="text-red-500 text-xs">{erros.parcelaAtual}</p>}
               </div>
+
               <div>
                 <label className="block text-sm font-medium">Total de Parcelas</label>
                 <select value={form.parcelaTotal} onChange={handleChange('parcelaTotal')} className="border rounded w-full px-3 py-2">
@@ -277,28 +265,49 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
             </div>
           )}
 
-          {/* Valores */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {form.tipo === 'PARCELADO' && (
               <div>
                 <label className="block text-sm font-medium">Valor da Parcela</label>
-                <NumericFormat value={form.valorParcela} onValueChange={handleCurrencyChange('valorParcela')} thousandSeparator="." decimalSeparator="," prefix="R$ " className="border rounded w-full px-3 py-2" />
+                <NumericFormat
+                  value={form.valorParcela}
+                  onValueChange={handleCurrencyChange('valorParcela')}
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  prefix="R$ "
+                  className="border rounded w-full px-3 py-2"
+                />
                 {erros.valorParcela && <p className="text-red-500 text-xs">{erros.valorParcela}</p>}
               </div>
             )}
+
             <div>
               <label className="block text-sm font-medium">Valor Pago</label>
-              <NumericFormat value={form.valorPago} onValueChange={handleCurrencyChange('valorPago')} thousandSeparator="." decimalSeparator="," prefix="R$ " className="border rounded w-full px-3 py-2" />
+              <NumericFormat
+                value={form.valorPago}
+                onValueChange={handleCurrencyChange('valorPago')}
+                thousandSeparator="."
+                decimalSeparator=","
+                prefix="R$ "
+                className="border rounded w-full px-3 py-2"
+              />
               {erros.valorPago && <p className="text-red-500 text-xs">{erros.valorPago}</p>}
             </div>
+
             <div>
               <label className="block text-sm font-medium">Valor a Pagar</label>
-              <NumericFormat value={form.valorPagar} onValueChange={handleCurrencyChange('valorPagar')} thousandSeparator="." decimalSeparator="," prefix="R$ " className="border rounded w-full px-3 py-2" />
+              <NumericFormat
+                value={form.valorPagar}
+                onValueChange={handleCurrencyChange('valorPagar')}
+                thousandSeparator="."
+                decimalSeparator=","
+                prefix="R$ "
+                className="border rounded w-full px-3 py-2"
+              />
               {erros.valorPagar && <p className="text-red-500 text-xs">{erros.valorPagar}</p>}
             </div>
           </div>
 
-          {/* Mês e Ano */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium">Mês</label>
@@ -308,6 +317,7 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
               </select>
               {erros.mes && <p className="text-red-500 text-xs">{erros.mes}</p>}
             </div>
+
             <div>
               <label className="block text-sm font-medium">Ano</label>
               <select value={form.ano} onChange={handleChange('ano')} className="border rounded w-full px-3 py-2">
@@ -318,9 +328,14 @@ export default function ModalNovoPagamento({ open, onClose, initialData = null, 
           </div>
 
           <div className="flex justify-end gap-2 mt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 rounded-md border border-AzulEscuro text-AzulEscuro hover:bg-AzulClaro hover:bg-azulClaro hover:text-dourado transition-colors duration-200 ">Cancelar</button>
-            <button type="submit" className="px-4 py-2 rounded-md bg-AzulEscuro text-white hover:bg-azulClaro hover:text-dourado">Salvar</button>
+            <button type="button" onClick={onClose} className="px-4 py-2 rounded-md border border-AzulEscuro text-AzulEscuro hover:bg-AzulClaro hover:text-dourado transition-colors duration-200">
+              Cancelar
+            </button>
+            <button type="submit" className="px-4 py-2 rounded-md bg-AzulEscuro text-white hover:bg-AzulClaro hover:text-dourado">
+              Salvar
+            </button>
           </div>
+
         </form>
       </div>
     </div>

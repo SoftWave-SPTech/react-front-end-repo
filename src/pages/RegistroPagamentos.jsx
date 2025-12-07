@@ -32,10 +32,12 @@ export default function RegistroPagamentos() {
         headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
       });
 
+      console.log("📌 DADOS RECEBIDOS DO BACK:", res.data);
+
       const dadosFormatados = res.data.map((item) => ({
         id: item.id,
         codigo: item.id,
-        cliente: item.clienteNome,
+        cliente: item.clienteNomeFantasia || item.clienteNome,
         processo: item.processoNumero,
         metodo: item.metodoPagamento,
         tipo: item.tipoPagamento,
@@ -132,14 +134,19 @@ export default function RegistroPagamentos() {
 
   const openCreate = () => { setModalMode('create'); setModalInitialData(null); setModalAberto(true); };
   const openEdit = () => {
-    if (!selectedItem) return;
-    const initialData = {
-      ...selectedItem,
-      clienteId: clientes.find((c) => c.nome === selectedItem.cliente)?.id || null,
-      processoId: processos.find((p) => p.numero === selectedItem.processo)?.id || null,
-    };
-    setModalMode('edit'); setModalInitialData(initialData); setModalAberto(true);
+  if (!selectedItem) return;
+
+  const initialData = {
+    ...selectedItem,
+    clienteId: clientes.find((c) => c.id === selectedItem.clienteId)?.id || selectedItem.clienteId || null,
+    processoId: processos.find((p) => p.id === selectedItem.processoId)?.id || selectedItem.processoId || null,
   };
+
+  setModalMode('edit');
+  setModalInitialData(initialData);
+  setModalAberto(true);
+};
+
 
   // 🔴 FORÇANDO RELOAD TOTAL
   const handleSave = async (dados) => {

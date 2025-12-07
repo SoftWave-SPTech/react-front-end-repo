@@ -140,52 +140,52 @@ const AreaCliente = () => {
                                     )}
                                   </div>
                                 </div>
-                    {/* Comentários */}
-                    <div className="bg-[#020E29] rounded-2xl shadow-lg p-4 flex flex-col h-[400px]">
-                        <div className="flex items-center justify-between mb-3">
-                            <h2 className="text-white text-lg lg:text-xl font-bold tracking-wide">Resumo Processo</h2>
-                            <a
-                                href={whatsappUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-[#25D366] flex items-center gap-2 text-white rounded-lg font-bold text-xs lg:text-sm px-2 lg:px-3 py-2 shadow-md transition-colors duration-200 hover:bg-[#128C7E] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="white" viewBox="0 0 24 24">
-                                    <path d="M12 2C6.477 2 2 6.477 2 12c0 1.657.406 3.221 1.117 4.604L2 22l5.396-1.117A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18c-1.485 0-2.91-.402-4.145-1.162l-.295-.176-3.203.662.662-3.203-.176-.295A7.963 7.963 0 0 1 4 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8zm4.297-6.255c-.237-.119-1.399-.691-1.616-.77-.217-.079-.375-.119-.532.119-.158.237-.609.77-.747.928-.138.158-.276.178-.513.059-.237-.119-.999-.368-1.903-1.174-.703-.627-1.179-1.403-1.318-1.64-.138-.237-.015-.364.104-.483.107-.106.237-.276.356-.414.119-.138.158-.237.237-.395.079-.158.04-.296-.02-.414-.059-.119-.532-1.287-.729-1.762-.192-.462-.388-.399-.532-.406-.138-.007-.296-.009-.454-.009-.158 0-.414.059-.63.296-.217.237-.827.808-.827 1.97s.847 2.285.965 2.445c.119.158 1.667 2.548 4.043 3.463.566.195 1.007.312 1.352.399.568.144 1.085.124 1.494.075.456-.055 1.399-.572 1.599-1.126.198-.553.198-1.027.139-1.126-.059-.099-.217-.158-.454-.277z"/>
+                    {/* Documentos */}
+                    <div className="bg-[#020E29] rounded-2xl shadow-lg p-4 flex flex-col h-[400px] text-white">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-3">
+                            <h2 className="text-white text-lg lg:text-xl font-bold tracking-wide">Documentos do Processo</h2>
+                            <div className="relative w-full sm:w-64">
+                                <input
+                                    type="text"
+                                    placeholder="Pesquisar documentos..."
+                                    value={filtroDocumentos}
+                                    onChange={(e) => setFiltroDocumentos(e.target.value)}
+                                    className="w-full bg-[#1a2a4a] text-white rounded-lg px-3 py-2 pl-10 text-sm border border-gray-600 focus:border-white focus:outline-none"
+                                />
+                                <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
-                                <span className="hidden sm:inline">WhatsApp</span>
-                            </a>
+                            </div>
                         </div>
-                        <div className="overflow-y-auto flex-1 pr-2">
-                            <ComentariosList comentarios={comentarios} />
-                        </div>
+                        <DocumentosList 
+                          documentos={documentos} 
+                          filtro={filtroDocumentos} 
+                          onVisualizar={visualizarDocumento}
+                        />
                     </div>
                     </div>
-                    {/* Andamento + Documentos em coluna */}
+                    {/* Andamento + Comentários em coluna */}
                     <div className="flex flex-col gap-6">
                         
-                        {/* Documentos */}
-                        <div className="bg-[#020E29] rounded-2xl shadow-lg p-4 flex flex-col h-[400px] text-white">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-3">
-                                <h2 className="text-white text-lg lg:text-xl font-bold tracking-wide">Documentos do Processo</h2>
-                                <div className="relative w-full sm:w-64">
-                                    <input
-                                        type="text"
-                                        placeholder="Pesquisar documentos..."
-                                        value={filtroDocumentos}
-                                        onChange={(e) => setFiltroDocumentos(e.target.value)}
-                                        className="w-full bg-[#1a2a4a] text-white rounded-lg px-3 py-2 pl-10 text-sm border border-gray-600 focus:border-white focus:outline-none"
-                                    />
-                                    <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        {/* Comentários */}
+                        <div className="bg-[#020E29] rounded-2xl shadow-lg p-4 flex flex-col h-[400px]">
+                            <div className="flex items-center justify-between mb-3">
+                                <h2 className="text-white text-lg lg:text-xl font-bold tracking-wide">Avaliação do Advogado</h2>
+                                <a
+                                    href={whatsappUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-[#25D366] flex items-center gap-2 text-white rounded-lg font-bold text-xs lg:text-sm px-2 lg:px-3 py-2 shadow-md transition-colors duration-200 hover:bg-[#128C7E] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="white" viewBox="0 0 24 24">
+                                        <path d="M12 2C6.477 2 2 6.477 2 12c0 1.657.406 3.221 1.117 4.604L2 22l5.396-1.117A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18c-1.485 0-2.91-.402-4.145-1.162l-.295-.176-3.203.662.662-3.203-.176-.295A7.963 7.963 0 0 1 4 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8zm4.297-6.255c-.237-.119-1.399-.691-1.616-.77-.217-.079-.375-.119-.532.119-.158.237-.609.77-.747.928-.138.158-.276.178-.513.059-.237-.119-.999-.368-1.903-1.174-.703-.627-1.179-1.403-1.318-1.64-.138-.237-.015-.364.104-.483.107-.106.237-.276.356-.414.119-.138.158-.237.237-.395.079-.158.04-.296-.02-.414-.059-.119-.532-1.287-.729-1.762-.192-.462-.388-.399-.532-.406-.138-.007-.296-.009-.454-.009-.158 0-.414.059-.63.296-.217.237-.827.808-.827 1.97s.847 2.285.965 2.445c.119.158 1.667 2.548 4.043 3.463.566.195 1.007.312 1.352.399.568.144 1.085.124 1.494.075.456-.055 1.399-.572 1.599-1.126.198-.553.198-1.027.139-1.126-.059-.099-.217-.158-.454-.277z"/>
                                     </svg>
-                                </div>
+                                    <span className="hidden sm:inline">WhatsApp</span>
+                                </a>
                             </div>
-                            <DocumentosList 
-                              documentos={documentos} 
-                              filtro={filtroDocumentos} 
-                              onVisualizar={visualizarDocumento}
-                            />
+                            <div className="overflow-y-auto flex-1 pr-2">
+                                <ComentariosList comentarios={comentarios} />
+                            </div>
                         </div>
                         {/* Andamento */}
                         <div className="bg-[#020E29] rounded-2xl shadow-lg p-4 flex flex-col h-[400px] text-white">
@@ -196,7 +196,17 @@ const AreaCliente = () => {
                                         type="text"
                                         placeholder="Pesquisar andamento..."
                                         value={filtroAndamentos}
-                                        onChange={(e) => setFiltroAndamentos(e.target.value)}
+                                        onChange={(e) => {
+                                            e.stopPropagation();
+                                            setFiltroAndamentos(e.target.value);
+                                        }}
+                                        onClick={(e) => e.stopPropagation()}
+                                        onKeyDown={(e) => {
+                                            e.stopPropagation();
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                            }
+                                        }}
                                         className="w-full bg-[#1a2a4a] text-white rounded-lg px-3 py-2 pl-10 text-sm border border-gray-600 focus:border-white focus:outline-none"
                                     />
                                     <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
