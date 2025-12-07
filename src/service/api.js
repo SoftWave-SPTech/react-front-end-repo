@@ -43,6 +43,6 @@ export const apiInfoSimples = axios.create({
 });
 
 export const apiAuthEmail = axios.create({
-  baseURL: 'http://$EC2_HOST_PUBLIC:8083',
+  baseURL: 'http://$EC2_HOST_PUBLIC:8080',
   withCredentials: true,
 });
