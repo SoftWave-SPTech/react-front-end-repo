@@ -4,7 +4,7 @@ import Botao from "../Ui/Botao";
 import { Input } from "../Ui/Input";
 import Alert from "../Ui/AlertStyle"; 
 import boneco from '../../assets/images/boneco.png'; 
-import { Link } from 'react-router-dom';
+import { Link, createHashRouter } from 'react-router-dom';
 
 export default function FormPrimeiroAcesso() {
     const [email, setEmail] = useState("");
