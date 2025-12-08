@@ -14,7 +14,6 @@ import {
 } from "react-icons/fi";
 import { jwtDecode } from "jwt-decode";
 import { api } from "../../service/api";
-import { clearAuthData } from "../../Utils/auth";
 
 const token = sessionStorage.getItem("token") || "";
 let decoded = "";
@@ -290,7 +289,6 @@ const MenuLateral = () => {
         ${fechado ? "justify-center px-2" : "justify-start px-3 gap-2"}`}
         onClick={() => {
           sessionStorage.clear();
-          clearAuthData();
           window.location.href = "/";
         }}
       >
