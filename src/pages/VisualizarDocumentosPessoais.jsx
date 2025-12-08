@@ -13,7 +13,6 @@ export default function VisualizarDocumentosPessoais() {
   const [modalAberto, setModalAberto] = useState(false);
   const [filtro, setFiltro] = useState('');
   const [modalExcluir, setModalExcluir] = useState({ aberto: false, index: null, id: null });
-  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
 
   const TOKEN = `Bearer ${sessionStorage.getItem('token')}`;
   const idUsuario = sessionStorage.getItem('id');
